@@ -1,5 +1,4 @@
 'use strict';
-console.log('yes');
 const entire = document.getElementById('entire');
 let correct = ['たかなわ', 'かめいど', 'こうじまち', 'おなりもん', 'とどろき', 'しゃくじい', 'ぞうしき', 'おかちまち', 'ししぼね', 'こぐれ'];
 let uncorrect1 = ['こうわ', 'かめと', 'おかとまち', 'おかどもん', 'たたりき', 'いじい', 'ざっしき', 'ごしろちょう', 'ろっこつ', 'こばく'];
@@ -28,14 +27,20 @@ let text = [
     "江戸川区にあります。",
     "正解は「こぐれ」です！",
 ]
+let adImg=["https://posse-ap.com/img/posseLogo.png","","",""];
+let adLink=["https://posse-ap.com/","","",""];
+let adAlt=["広告1です","広告2です","広告3です","広告4です"]
 const overlay = document.getElementById('overlay');
 const overlayButton = document.getElementById('overlay-button');
 const body = document.getElementsByTagName('body');
 
-let main1 = "";
-for (let i = 1; i <= 4; i++) {
-    console.log('ok');
-    main1 += `<span id="question${i}" class="question">`
+let main = "";
+for (let i = 1; i <= 10; i++) {
+    if((i-1)%3==0){
+        main+=`<a href=${adLink[((i-1)/3)]}　class="ad-space">`
+        +`<img src=${adImg[((i-1)/3)]} class="ad" alt=${adAlt[((i-1)/3)]}>`
+        +`</a>`
+        +`<span id="question${i}" class="question">`
         + `<h2 class="question-title">${i}.この地名はなんて読む？</h2>`
         + `<img src=${img[i - 1]}>`
         + `<section id="section${i}">`
@@ -51,15 +56,11 @@ for (let i = 1; i <= 4; i++) {
         + `</section>`
         + `<div id="text-box${i}" class="text-box">`
         + `<div id="answer${i}" class="answer"></div>`
-        + `<div id="text${i}" class="show-explanation">${text[i-1]}</div>`
+        + `<div id="text${i}" class="show-explanation">${text[i - 1]}</div>`
         + `</div>`
         + `</span>`
-    entire1.innerHTML = main1;
-}
-let main2 = "";
-for (let i = 5; i <= 7; i++) {
-    console.log('ok');
-    main2 += `<span id="question${i}" class="question">`
+    }else{
+        main+=`<span id="question${i}" class="question">`
         + `<h2 class="question-title">${i}.この地名はなんて読む？</h2>`
         + `<img src=${img[i - 1]}>`
         + `<section id="section${i}">`
@@ -75,36 +76,13 @@ for (let i = 5; i <= 7; i++) {
         + `</section>`
         + `<div id="text-box${i}" class="text-box">`
         + `<div id="answer${i}" class="answer"></div>`
-        + `<div id="text${i}" class="show-explanation">${text[i-1]}</div>`
+        + `<div id="text${i}" class="show-explanation">${text[i - 1]}</div>`
         + `</div>`
         + `</span>`
-    entire2.innerHTML = main2;
+    }
+    entire.innerHTML = main;   
 }
-let main3 = "";
-for (let i = 8; i <= 10; i++) {
-    console.log('ok');
-    main3 += `<span id="question${i}" class="question">`
-        + `<h2 class="question-title">${i}.この地名はなんて読む？</h2>`
-        + `<img src=${img[i - 1]}>`
-        + `<section id="section${i}">`
-        + `<a href="#question${i + 1}">`
-        + `<div id="correct-choice${i}" class="choice">${correct[i - 1]}</div>`
-        + `</a>`
-        + `<a href="#question${i + 1}">`
-        + `<div id="uncorrect-choice${i}1" class="choice">${uncorrect1[i - 1]}</div>`
-        + `</a>`
-        + `<a href="#question${i + 1}">`
-        + `<div id="uncorrect-choice${i}2" class="choice">${uncorrect2[i - 1]}</div>`
-        + `</a>`
-        + `</section>`
-        + `<div id="text-box${i}" class="text-box">`
-        + `<div id="answer${i}" class="answer"></div>`
-        + `<div id="text${i}" class="show-explanation">${text[i-1]}</div>`
-        + `</div>`
-        + `</span>`
-    entire3.innerHTML = main3;
-}
-for (let i = 1; i <= 4; i++) {
+for (let i = 1; i <= 10; i++) {
     function shuffle() {
         for (let j = document.getElementById(`section${i}`).children.length; j >= 0; j--) {
             document.getElementById(`section${i}`).appendChild(document.getElementById(`section${i}`).children[Math.random() * j | 0]);
@@ -115,34 +93,9 @@ for (let i = 1; i <= 4; i++) {
         shuffle();
     });
 }
-for (let i = 5; i <= 7; i++) {
-    function shuffle() {
-        for (let j = document.getElementById(`section${i}`).children.length; j >= 0; j--) {
-            document.getElementById(`section${i}`).appendChild(document.getElementById(`section${i}`).children[Math.random() * j | 0]);
-        }
-    }
-    window.addEventListener("load", function () {
-        document.getElementById(`text-box${i}`).classList.toggle('switch-display');
-        shuffle();
-    });
-}
-for (let i = 8; i <= 10; i++) {
-    function shuffle() {
-        for (let j = document.getElementById(`section${i}`).children.length; j >= 0; j--) {
-            document.getElementById(`section${i}`).appendChild(document.getElementById(`section${i}`).children[Math.random() * j | 0]);
-        }
-    }
-    window.addEventListener("load", function () {
-        document.getElementById(`text-box${i}`).classList.toggle('switch-display');
-        shuffle();
-    });
-}
-
-
 // innerHTMLとロード時とクリック時の文を分ける
 for (let i = 1; i <= 10; i++) {
     document.getElementById(`correct-choice${i}`).onclick = function () {
-        console.log('chosen correct');
         document.getElementById(`correct-choice${i}`).classList.toggle('unclickable');//一度押したら押せない
         document.getElementById(`uncorrect-choice${i}1`).classList.toggle('unclickable');
         document.getElementById(`uncorrect-choice${i}2`).classList.toggle('unclickable');
@@ -152,7 +105,6 @@ for (let i = 1; i <= 10; i++) {
         document.getElementById(`correct-choice${i}`).classList.toggle('white-color');
     };
     document.getElementById(`uncorrect-choice${i}1`).onclick = function () {
-        console.log('uncorrect1')
         document.getElementById(`correct-choice${i}`).classList.toggle('unclickable');//一度押したら押せない
         document.getElementById(`uncorrect-choice${i}1`).classList.toggle('unclickable');
         document.getElementById(`uncorrect-choice${i}2`).classList.toggle('unclickable');
@@ -163,7 +115,6 @@ for (let i = 1; i <= 10; i++) {
         document.getElementById(`uncorrect-choice${i}1`).classList.toggle('white-color');
     };
     document.getElementById(`uncorrect-choice${i}2`).onclick = function () {
-        console.log('uncorrect2')
         document.getElementById(`correct-choice${i}`).classList.toggle('unclickable');//一度押したら押せない
         document.getElementById(`uncorrect-choice${i}1`).classList.toggle('unclickable');
         document.getElementById(`uncorrect-choice${i}2`).classList.toggle('unclickable');
@@ -178,81 +129,13 @@ for (let i = 1; i <= 10; i++) {
 overlayButton.addEventListener("click", function () {
     overlayButton.classList.toggle('unclickable');
     overlay.classList.add('show-overlay');
-    console.log('1');
+    document.getElementById('fade-filter').classList.add('show-fade-filter');
 })
 document.body.addEventListener("click", function (event) {
     let x = event.pageX / window.screen.width;
     if (x > 0.5 && overlay.classList.contains('show-overlay')) {
-        console.log('yes');
         overlay.classList.remove('show-overlay')
         overlayButton.classList.remove('unclickable');
+        document.getElementById('fade-filter').classList.remove('show-fade-filter');
     }
 })
-// 何度も表示非表示切り替えに成功
-
-
-
-
-
-
-
-// オーバーレイ以外をクリックしたときの動作を入れればいい
-
-// while(overlay.classList.contains('show-overlay')){
-//     console.log('no');
-//     document.body.addEventListener("click",function(event){
-//         let x=event.pageX;
-//         console.log('yes');
-//         if(x>750){
-//             overlay.classList.remove('show-overlay');
-//             overlayButton.classList.toggle('unclickable');
-//             console.log('2');
-//         }
-//     })
-// }
-// whileでやれば無限回数できるのでは
-
-
-// function unshowOverlay(event){
-//     let x=event.pageX/window.screen.width;
-//     if(x>0.5&&overlay.classList.contains('unshow-overlay')){
-//         overlay.classList.toggle('unshow-overlay');
-//         console.log('ok');
-//     }
-// };
-// オーバーレイ表示される
-// function overlayToggle(){
-//     overlay.classList.toggle('show-overlay');
-// }
-// // ボタン押すとオーバーレイ表示
-// overlayButton.addEventListener("click",overlayToggle);
-// // ボタン押すと押せなくなる
-// // overlayButton.addEventListener("click",function(){
-// //     overlayButton.classList.toggle('unclickable');
-// //     document.body.addEventListener("click",function(event){
-// //         let x=event.pageX;
-// //         if(x>750){
-// //             overlayToggle();
-// //             console.log('ok');
-// //             overlayButton.classList.toggle('unclickable');
-// //             // これの問題点は無限に続くこと
-// //         }
-// //     })
-// // })
-// // if文の条件でクラスリストにクラスを含むとかできれば理想
-// if(overlay.classList.contains('show-overlay')){
-//     // オーバーレイ以外クリック時オーバーレイ消える
-//     overlayButton.classList.toggle('unclickable');
-//    }
-// overlayButton.classList.toggle('unclickable');
-// document.body.addEventListener("click",function(event){
-//     let x=event.pageX;
-//     if(x>750){
-//         overlayToggle();
-//         console.log('ok');
-// });        
-
-// ボタン押された状態でボディクリックでオーバーレイ消える
-// if(overlayButton.classList.contains('unclickable')){
-// }
-// 今からやろうとしてるのはボタン押せない時（オーバーレイ表示時）クリック時のｘ座標が右半分だったらoverlayToggleという関数発動
