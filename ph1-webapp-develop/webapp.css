@@ -5,6 +5,7 @@ body{
     height:100vh;
     width:100%;
 }
+/* ヘッダー */
 header{
     position:absolute;
     display:flex;
@@ -18,12 +19,21 @@ header{
 .logo{
     height:100%;
 }
-.logo-div{
+.header-left{
     margin:auto 0;
     width:50%;
     height:100%;
+    display:flex;
+    align-items:center;
+    margin-right:20px;
 }
-.header-button-div{
+.header-left>img{
+    margin-right:50px;
+}
+.week{
+    color:gray;
+}
+.header-right{
     margin:auto 10px auto 0;
 }
 .header-button{
@@ -38,6 +48,7 @@ header{
     cursor: pointer;
     box-shadow: 0 7px 10px #aecffa;
 }
+/* メインコンテンツ */
 .content-container{
     display:flex;
     width:90%;
@@ -47,6 +58,7 @@ header{
 .right-container{
     display:flex;
     width:50%;
+    height:78vh;
 }
 .left-container{
     width:50%;
@@ -93,21 +105,21 @@ header{
 }
 .piechart{
     width:100%;
-    height:100px;
+    height:200px;
 }
-.language>li,.material>li{
+.language>li{
     float:left;
     margin:20px;
 }
+.material>li{
+    margin:20px;
+}
+/* 月移動 */
 .calender{
     display:flex;
     justify-content:center;
     height:7.5vh;
-    /* display:table; */
     text-align:middle;
     padding:auto;
+    align-items:center;
 }
-/* .calender>div{
-    display:table-cell;
-    vertical-align:middle;
-} */
