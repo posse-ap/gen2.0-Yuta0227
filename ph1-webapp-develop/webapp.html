@@ -13,17 +13,17 @@
 
 <body>
     <header>
-        <div class="header-left">
+        <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
         </div>
-        <div class="header-right">
+        <div class="button-container">
             <button id="header-button" class="post-button">記録・投稿</button>
         </div>
     </header>
     <div class="content-container">
-        <div class="left-container">
-            <div class="top-left-container">
+        <div class="first-container">
+            <div class="today-month-total-container">
                 <div class="today">
                     <div>Today</div>
                     <div>3</div>
@@ -40,15 +40,15 @@
                     <div>hour</div>
                 </div>
             </div>
-            <div class="bottom-left-container">
-                <img class="bargraph" src="./img/bargraph1.png" alt="bargraph">
+            <div class="bargraph-container">
+                <!-- <img class="bargraph" src="./img/bargraph1.png" alt="bargraph"> -->
             </div>
         </div>
-        <div class="right-container">
-            <div class="right-left-container">
+        <div class="second-container">
+            <div class="language-chart-container">
                 <div class="piechart-title">学習言語</div>
                 <div>
-                    <img class="piechart" src="./img/piechart-first.png">
+                    <!-- <img class="piechart" src="./img/piechart-first.png"> -->
                 </div>
                 <div>
                     <ul class="language">
@@ -63,10 +63,10 @@
                     </ul>
                 </div>
             </div>
-            <div class="right-right-container">
+            <div class="material-chart-container">
                 <div class="piechart-title">学習コンテンツ</div>
                 <div>
-                    <img class="piechart" src="./img/piechart-second.png">
+                    <!-- <img class="piechart" src="./img/piechart-second.png"> -->
                 </div>
                 <div>
                     <ul class="material">
@@ -86,143 +86,105 @@
     <div id="fullOverlay" hidden>
         <div class="overlay">
             <div class="form">
-                <div class="top">
-                    <div>
+                <div class="form-left">
+                    <div class="date-container">
                         <div>学習日</div>
                         <input id="date" type="date" size="20" class="textbox" required>
                     </div>
+                    <div class="study-content-container">
+                        <div>学習コンテンツ</div>
+                        <label id="label1">
+                            <input id="checkbox1" type="checkbox">
+                            <i id="my-checkbox1" class="fas fa-check-circle"></i>
+                            N予備校
+                        </label>
+                        <label id="label2">
+                            <input id="checkbox2" type="checkbox">
+                            <i id="my-checkbox2" class="fas fa-check-circle"></i>
+                            ドットインストール
+                        </label>
+                        <label id="label3">
+                            <input id="checkbox3" type="checkbox">
+                            <i id="my-checkbox3" class="fas fa-check-circle"></i>
+                            POSSE課題
+                        </label>
+                    </div>
+                    <div class="language-container">
+                        <div>学習言語</div>
+                        <label id="label4">
+                            <input id="checkbox4" type="checkbox">
+                            <i id="my-checkbox4" class="fas fa-check-circle"></i>
+                            HTML
+                        </label>
+                        <label id="label5">
+                            <input id="checkbox5" type="checkbox">
+                            <i id="my-checkbox5" class="fas fa-check-circle"></i>
+                            CSS
+                        </label>
+                        <label id="label6">
+                            <input id="checkbox6" type="checkbox">
+                            <i id="my-checkbox6" class="fas fa-check-circle"></i>
+                            Javascript
+                        </label>
+                        <label id="label7">
+                            <input id="checkbox7" type="checkbox">
+                            <i id="my-checkbox7" class="fas fa-check-circle"></i>
+                            PHP
+                        </label>
+                        <label id="label8">
+                            <input id="checkbox8" type="checkbox">
+                            <i id="my-checkbox8" class="fas fa-check-circle"></i>
+                            Lavarel
+                        </label>
+                        <label id="label9">
+                            <input id="checkbox9" type="checkbox">
+                            <i id="my-checkbox9" class="fas fa-check-circle"></i>
+                            SQL
+                        </label>
+                        <label id="label10">
+                            <input id="checkbox10" type="checkbox">
+                            <i id="my-checkbox10" class="fas fa-check-circle"></i>
+                            SHELL
+                        </label>
+                        <label id="label11">
+                            <input id="checkbox11" type="checkbox">
+                            <i id="my-checkbox11" class="fas fa-check-circle"></i>
+                            情報システム基礎知識(その他)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-right">
                     <div>
                         <div>学習時間</div>
-                        <input id="time" type="text" size="20" class="textbox" oninput="value = value.replace(/[^\d]+/i,'');" / required>
+                        <input id="time" placeholder="半角数字で入力してください" size="20" class="textbox"
+                            oninput="value = value.replace(/[^\d]+/i,'');" / required></textarea>
                         <!-- 半角数字以外入力無効 -->
                     </div>
-                </div>
-                <div class="bottom">
-                    <div class="bottom-left">
-                        <div>
-                            <div>学習コンテンツ</div>
-
-
-
-                            <label id="label1">
-                                <input id="checkbox1" type="checkbox">
-                                <i id="my-checkbox1" class="fas fa-check-circle"></i>
-
-                                N予備校
-                            </label>
-
-
-
-                            <label id="label2">
-                                <input id="checkbox2" type="checkbox">
-                                <i id="my-checkbox2" class="fas fa-check-circle"></i>
-
-                                ドットインストール
-                            </label>
-
-
-
-                            <label id="label3">
-                                <input id="checkbox3" type="checkbox">
-                                <i id="my-checkbox3" class="fas fa-check-circle"></i>
-
-                                POSSE課題
-                            </label>
-                        </div>
-                        <div>
-                            <div>学習言語</div>
-
-
-
-                            <label id="label4">
-                                <input id="checkbox4" type="checkbox">
-                                <i id="my-checkbox4" class="fas fa-check-circle"></i>
-
-                                HTML
-                            </label>
-
-
-
-                            <label id="label5">
-                                <input id="checkbox5" type="checkbox">
-                                <i id="my-checkbox5" class="fas fa-check-circle"></i>
-
-                                CSS
-                            </label>
-
-
-
-                            <label id="label6">
-                                <input id="checkbox6" type="checkbox">
-                                <i id="my-checkbox6" class="fas fa-check-circle"></i>
-
-                                Javascript
-                            </label>
-
-
-
-                            <label id="label7">
-                                <input id="checkbox7" type="checkbox">
-                                <i id="my-checkbox7" class="fas fa-check-circle"></i>
-
-                                PHP
-                            </label>
-
-
-
-                            <label id="label8">
-                                <input id="checkbox8" type="checkbox">
-                                <i id="my-checkbox8" class="fas fa-check-circle"></i>
-                                Lavarel
-                            </label>
-
-
-
-                            <label id="label9">
-                                <input id="checkbox9" type="checkbox">
-                                <i id="my-checkbox9" class="fas fa-check-circle"></i>
-
-                                SQL
-                            </label>
-
-
-
-                            <label id="label10">
-                                <input id="checkbox10" type="checkbox">
-                                <i id="my-checkbox10" class="fas fa-check-circle"></i>
-
-                                SHELL
-                            </label>
-
-
-
-                            <label id="label11">
-                                <input id="checkbox11" type="checkbox">
-                                <i id="my-checkbox11" class="fas fa-check-circle"></i>
-
-                                情報システム基礎知識(その他)
-                            </label>
-                        </div>
+                    <div class="comment-container">
+                        <div>Twitter用コメント</div>
+                        <textarea id="comment" class="twitter-comment textbox" placeholder="ツイート内容を入力してください"></textarea>
                     </div>
-                    <div class="bottom-right">
-                        <div>
-                            <div>Twitter用コメント</div>
-                            <input id="comment" type="text" class="twitter-comment textbox">
-                        </div>
-                        <div>
-                            <label id="label12">
-                                <input id="checkbox12" type="checkbox">
-                                <i  id="my-checkbox12" class="fas fa-check-circle"></i>
-                                Twitterにシェアする
-                            </label>
-                        </div>
+                    <div>
+                        <label id="label12">
+                            <input id="checkbox12" type="checkbox">
+                            <i id="my-checkbox12" class="fas fa-check-circle"></i>
+                            Twitterにシェアする
+                        </label>
                     </div>
-                </div>
-                <div class="overlay-button-container">
-                    <button id="post-button" class="post-button">記録・投稿</button>
                 </div>
             </div>
+            <div class="overlay-button-container">
+                <button id="post-button" class="post-button">
+                    記録・投稿
+                </button>
+            </div>
             <button id="exit" class="exit"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+    <div id="animation-filter" class="animation-filter" hidden>
+        <div class="animation-container">
+            <div id="animation-text"></div>
+            <div class="animation"></div>
         </div>
     </div>
 </body>
