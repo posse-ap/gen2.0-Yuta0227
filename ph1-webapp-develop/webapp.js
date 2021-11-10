@@ -62,12 +62,12 @@ function stopLoading(){
             document.getElementById(`checkbox${i}`).checked = false;
         }
     }
+    fullOverlay.setAttribute("hidden","");
 }
 pcPost.addEventListener('click', function () {
     
     setTimeout(startLoading,1000);
     setTimeout(stopLoading,3000);
-    
 });
 //スマホで画面下部のボタン押すとオーバーレイ表示する
 smartphoneButton.addEventListener('click',function(){
@@ -78,5 +78,6 @@ smartphoneButton.addEventListener('click',function(){
     smartphonePostButton.addEventListener('click',function(){
         setTimeout(startLoading,1000);
         setTimeout(stopLoading,3000);
+        smartphonePostButton.id="smartphoneButton";
     })
 })

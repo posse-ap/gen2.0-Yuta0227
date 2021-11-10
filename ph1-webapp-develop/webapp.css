@@ -253,7 +253,7 @@ header{
     width:70vw;
     height:70vh;
     background-color:rgb(182, 180, 180);
-    z-index:10;
+    z-index:1000000;
     position:absolute;
     top:50%;
     left:50%;
