@@ -102,6 +102,9 @@ header{
     height:100%;
     padding-left:20px;
 }
+.material, .language{
+    padding-left:10px;
+}
 .piechart-title{
     padding:20px;
 }
@@ -124,6 +127,24 @@ header{
     text-align:middle;
     padding:auto;
     align-items:center;
+}
+/* PC画面の時は非表示。画面下部に配置 */
+.smartphone-button-container{
+    margin:0 auto;
+    display:none;
+    z-index:10000;
+}
+.smartphone-button{
+    text-align: center;
+    background-image: linear-gradient(90deg, #137DC4 40%, #38C7F9 100%);
+    border-radius: 30px;
+    height: 5vh;
+    color: #fff;
+    font-size: 20px;
+    border:none; 
+    cursor: pointer;
+    box-shadow: 0 7px 10px #aecffa;
+    width:250px;
 }
 /* オーバーレイ */
 #fullOverlay{
@@ -319,20 +340,22 @@ header{
     }
   }
 @media screen and (max-width:479px){
+    html{
+        height:100vh;
+        width:100vw;
+    }
     body{
         box-sizing:border-box;
-        width:375px;
-        height:667px;
+        width:100vw;
+        height:calc(100vh - 40px);
     }
     .header{
         width:100%;
-        height:64px;
+        height:9.27536vh;
         position:fixed;
     }
     .button-container{
-        /* display:none; */
-        position:fixed;
-        bottom:20px;
+        display:none;
     }
     .content-container{
         display:flex;
@@ -352,14 +375,60 @@ header{
         height:unset;
         width:100%;
     }
+    .bargraph-container{
+        height:100px;
+        /* 実際にグラフいれてから高さ決める */
+    }
     .second-container{
         width:100%;
+        height:100px;
+        /* 実際にグラフいれてから高さ決める */
     }
     .language-chart-container{
-        margin-left:0;
+        height:100px;
+        order:1;
+        margin-left:16px;
+        /* 実際にグラフいれてから高さ決める */
     }
     .material-chart-container{
-        margin-left:16px;
+        height:100px;
+        order:0;
+        margin-left:0;
+        /* 実際にグラフいれてから高さ決める */
     }
-    
+    .overlay{
+        position:relative;
+        top:60px;
+        left:0;
+        transform:translate(0,0);
+        width:100vw;
+        height:calc(100vh - 60px);
+        border-bottom-left-radius:0px;
+        border-bottom-right-radius:0px;
+    }
+    .form{
+        display:flex;
+        flex-direction:column;
+    }
+    .form-left>div{
+        width:100vw;
+    }
+    .smartphone-button-container{
+        display:flex;
+        z-index:10000;
+    }
+    /* 位置調整めんどくさいため位置が不変のsmartphone-button-containerをずっと表示。ボタンの役割はjsでidを変えて対応 */
+    .overlay-button-container{
+        display:none;
+    }
+    .animation-filter{
+        position:absolute;
+        top:60px;
+        left:0;
+        transform:translate(0,0);
+        width:100vw;
+        height:calc(100vh - 60px);
+        border-bottom-left-radius:0;
+        border-bottom-right-radius:0;
+    }
 }

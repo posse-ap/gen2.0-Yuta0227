@@ -1,9 +1,10 @@
 const headerButton = document.getElementById('header-button');
+const smartphoneButton=document.getElementById('smartphone-button');
 const fullOverlay = document.getElementById('fullOverlay');
 const exit = document.getElementById('exit');
 const time = document.getElementById('time');
 const date = document.getElementById('date');
-const post = document.getElementById('post-button');
+const pcPost = document.getElementById('post-button');
 const animationFilter=document.getElementById('animation-filter');
 const animationText=document.getElementById('animation-text')
 //ラベルクリック時checked==trueならば青色をつける
@@ -62,9 +63,20 @@ function stopLoading(){
         }
     }
 }
-post.addEventListener('click', function () {
+pcPost.addEventListener('click', function () {
     
     setTimeout(startLoading,1000);
     setTimeout(stopLoading,3000);
     
 });
+//スマホで画面下部のボタン押すとオーバーレイ表示する
+smartphoneButton.addEventListener('click',function(){
+    fullOverlay.removeAttribute('hidden')
+    smartphoneButton.id="smartphone-post-button";
+    //IDが変わったボタンを押すとロード画面に入る
+    const smartphonePostButton=document.getElementById('smartphone-post-button');
+    smartphonePostButton.addEventListener('click',function(){
+        setTimeout(startLoading,1000);
+        setTimeout(stopLoading,3000);
+    })
+})
