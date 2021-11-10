@@ -84,10 +84,10 @@ smartphoneButton.addEventListener('click',function(){
     smartphoneButton.id="smartphone-post-button";
     //IDが変わったボタンを押すとロード画面に入る
     const smartphonePostButton=document.getElementById('smartphone-post-button');
-    // smartphonePostButton.addEventListener('click',function(){
-    //     setTimeout(startLoading,1000);
-    //     setTimeout(stopLoading,3000);
-    //     smartphonePostButton.id="smartphoneButton";
-    // })
+    smartphonePostButton.addEventListener('click',function(){
+        setTimeout(startLoading,1000);
+        setTimeout(stopLoading,3000);
+        smartphonePostButton.id="smartphoneButton";
+    })
     //PCでやると一度ボタンクリックした後カーソル動かしただけでクリックした判定になってしまう。だけどスマホなら平気なのかも
 })
