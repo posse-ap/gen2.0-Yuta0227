@@ -8,15 +8,24 @@ const pcPost = document.getElementById('post-button');
 const animationFilter=document.getElementById('animation-filter');
 const animationText=document.getElementById('animation-text')
 //ラベルクリック時checked==trueならば青色をつける
-for (let i = 1; i <= 12; i++) {
+for (let i = 1; i <= 11; i++) {
     document.getElementById(`label${i}`).addEventListener('click', function () {
         if (document.getElementById(`checkbox${i}`).checked == true) {
             document.getElementById(`my-checkbox${i}`).classList.add('color-blue');
+            document.getElementById(`label${i}`).style.backgroundColor="#e7f5ff";
         } else if (document.getElementById(`checkbox${i}`).checked == false) {
             document.getElementById(`my-checkbox${i}`).classList.remove('color-blue');
+            document.getElementById(`label${i}`).style.backgroundColor="rgb(215,215,215)";
         }
     })
 }
+document.getElementById(`label12`).addEventListener('click', function () {
+    if (document.getElementById(`checkbox12`).checked == true) {
+        document.getElementById(`my-checkbox12`).classList.add('color-blue');
+    } else if (document.getElementById(`checkbox12`).checked == false) {
+        document.getElementById(`my-checkbox12`).classList.remove('color-blue');
+    }
+})
 //右上の記録・投稿ボタン押すとオーバーレイ表示する
 headerButton.addEventListener('click', function () {
     fullOverlay.removeAttribute('hidden');
@@ -75,9 +84,10 @@ smartphoneButton.addEventListener('click',function(){
     smartphoneButton.id="smartphone-post-button";
     //IDが変わったボタンを押すとロード画面に入る
     const smartphonePostButton=document.getElementById('smartphone-post-button');
-    smartphonePostButton.addEventListener('click',function(){
-        setTimeout(startLoading,1000);
-        setTimeout(stopLoading,3000);
-        smartphonePostButton.id="smartphoneButton";
-    })
+    // smartphonePostButton.addEventListener('click',function(){
+    //     setTimeout(startLoading,1000);
+    //     setTimeout(stopLoading,3000);
+    //     smartphonePostButton.id="smartphoneButton";
+    // })
+    //PCでやると一度ボタンクリックした後カーソル動かしただけでクリックした判定になってしまう。だけどスマホなら平気なのかも
 })

@@ -1,7 +1,7 @@
 body{
     display:flex;
     flex-direction:column;
-    background-color: gray;
+    background-color:#f5f5f8;
     height:100vh;
     width:100vw;
 }
@@ -31,7 +31,7 @@ header{
     margin-right:50px;
 }
 .week{
-    color:gray;
+    color:#97b9d1;
 }
 .button-container{
     margin:auto 10px auto 0;
@@ -56,11 +56,7 @@ header{
     height:90%;
     margin:100px auto 0 auto;
 }
-.second-container{
-    display:flex;
-    width:50%;
-    height:78vh;
-}
+/* 一段目 */
 .first-container{
     width:50%;
 }
@@ -68,7 +64,7 @@ header{
     display:flex;
     height:25vh;
 }
-.today-month-total-container>div{
+.today-container, .month-container, .total-container{
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -76,6 +72,15 @@ header{
     text-align:center;
     background-color:white;
     border-radius:5px;
+}
+.today, .month, .total{
+    color:#0f71bc;
+}
+.number{
+    font-weight:bold;
+}
+.hour{
+    color:#97b9d1;
 }
 .today-month-total-container>div+div{
     margin-left:3vh;
@@ -92,6 +97,12 @@ header{
     width:100%;
     border-radius:5px;
 }
+/* 二段目 */
+.second-container{
+    display:flex;
+    width:50%;
+    height:78vh;
+}
 .language-chart-container,.material-chart-container{
     background-color: white;
     display:flex;
@@ -106,7 +117,8 @@ header{
     padding-left:10px;
 }
 .piechart-title{
-    padding:20px;
+    padding:20px 0;
+    font-weight:bold;
 }
 .piechart{
     width:100%;
@@ -128,6 +140,12 @@ header{
     padding:auto;
     align-items:center;
 }
+.calender>div+div{
+    margin-left:2px;
+}
+.calender-arrow{
+    color:#97b9d1;
+}
 /* PC画面の時は非表示。画面下部に配置 */
 .smartphone-button-container{
     margin:0 auto;
@@ -144,7 +162,7 @@ header{
     border:none; 
     cursor: pointer;
     box-shadow: 0 7px 10px #aecffa;
-    width:250px;
+    width:calc(100vw - 40px);
 }
 /* オーバーレイ */
 #fullOverlay{
@@ -191,24 +209,20 @@ header{
     width:45%;
     height:50vh;
 }
-.checkbox{
-    background-color: gray;
-    height:5vh;
-    white-space:pre-line;
-}
 /* 中途半端な位置で折り返さない */
 .form-left>div>label{
     white-space:nowrap;
-    background-color:gray;
+    background-color:rgb(215,215,215);
     border-radius:10px;
-    margin:20px;
+    margin:0 8px 8px 0;
     line-height:2;
 }
-.form-right>div>label{
-    white-space:nowrap;
-    background-color: gray;
-    border-radius:10px;
-    line-height:2;
+.share-container{
+    margin:10px 0 22px 0;
+}
+.share-container>label{
+    align-items:center;
+    display:flex;
 }
 /* デフォルトのチェックマーク消してる */
 .form-left>div>label>input, .form-right>div>label>input{
@@ -234,6 +248,7 @@ header{
     right:10px;
     top:10px;
     border-radius:100px;
+    border:solid 1px gray;
     padding:10px;
     width:40px;
     height:40px;
@@ -398,24 +413,49 @@ header{
     }
     .overlay{
         position:relative;
-        top:60px;
+        top:61.013px;
         left:0;
         transform:translate(0,0);
         width:100vw;
-        height:calc(100vh - 60px);
+        height:calc(100% - 61.013px);
         border-bottom-left-radius:0px;
         border-bottom-right-radius:0px;
     }
     .form{
+        left:0;
+        top:0;
         display:flex;
         flex-direction:column;
-    }
-    .form-left>div{
+        box-sizing:border-box;
         width:100vw;
+        transform:translate(0,0);
+    }
+    .form-left, .form-right{
+        margin:0 auto;
+        width:calc(100% - 40px);
+    }
+    .form-left>div, .form-right>div{
+        width:calc(100vw - 40px);
+    }
+    .study-content-container, .comment-container{
+        margin-top:0;
+    }
+    .hour-container{
+        margin:24px 0 10px 0;
+    }
+    .form-left>div>div{
+        margin:24px 0 10px 0;
     }
     .smartphone-button-container{
         display:flex;
         z-index:10000;
+    }
+    .comment-container{
+        margin-top:24px;
+    }
+    .twitter-comment{
+        height:10vh;
+        margin-top:10px;
     }
     /* 位置調整めんどくさいため位置が不変のsmartphone-button-containerをずっと表示。ボタンの役割はjsでidを変えて対応 */
     .overlay-button-container{

@@ -22,28 +22,30 @@
         </div>
     </header>
     <div class="content-container">
+        <!-- 一段目 -->
         <div class="first-container">
             <div class="today-month-total-container">
-                <div class="today">
-                    <div>Today</div>
-                    <div>3</div>
-                    <div>hour</div>
+                <div class="today-container">
+                    <div class="today">Today</div>
+                    <div class="number">3</div>
+                    <div class="hour">hour</div>
                 </div>
-                <div class="month">
-                    <div>Month</div>
-                    <div>120</div>
-                    <div>hour</div>
+                <div class="month-container">
+                    <div class="month">Month</div>
+                    <div class="number">120</div>
+                    <div class="hour">hour</div>
                 </div>
-                <div class="total">
-                    <div>Total</div>
-                    <div>1348</div>
-                    <div>hour</div>
+                <div class="total-container">
+                    <div class="total">Total</div>
+                    <div class="number">1348</div>
+                    <div class="hour">hour</div>
                 </div>
             </div>
             <div class="bargraph-container">
                 <!-- <img class="bargraph" src="./img/bargraph1.png" alt="bargraph"> -->
             </div>
         </div>
+        <!-- 二段目 -->
         <div class="second-container">
             <div class="language-chart-container">
                 <div class="piechart-title">学習言語</div>
@@ -78,11 +80,13 @@
             </div>
         </div>
     </div>
+    <!-- 月移動 -->
     <div class="calender">
-        <div>&lt;</div>
+        <div class="calender-arrow">&lt;</div>
         <div>2020年10月</div>
-        <div>&gt;</div>
+        <div class="calender-arrow">&gt;</div>
     </div>
+    <!-- スマホ用のボタンPCでは非表示 -->
     <div class="smartphone-button-container">
         <button id="smartphone-button" class="smartphone-button">記録・投稿</button>
     </div>
@@ -158,7 +162,7 @@
                     </div>
                 </div>
                 <div class="form-right">
-                    <div>
+                    <div class="hour-container">
                         <div>学習時間</div>
                         <input id="time" placeholder="半角数字で入力してください" size="20" class="textbox"
                             oninput="value = value.replace(/[^\d]+/i,'');" / required></textarea>
@@ -168,10 +172,10 @@
                         <div>Twitter用コメント</div>
                         <textarea id="comment" class="twitter-comment textbox" placeholder="ツイート内容を入力してください"></textarea>
                     </div>
-                    <div>
+                    <div class="share-container">
                         <label id="label12">
                             <input id="checkbox12" type="checkbox">
-                            <i id="my-checkbox12" class="fas fa-check-circle"></i>
+                            <i id="my-checkbox12" class="fas fa-check-circle fa-2x"></i>
                             Twitterにシェアする
                         </label>
                     </div>
@@ -185,6 +189,7 @@
             <button id="exit" class="exit"><i class="fas fa-times"></i></button>
         </div>
     </div>
+    <!-- ロード画面のアニメーション -->
     <div id="animation-filter" class="animation-filter" hidden>
         <div class="animation-container">
             <div id="animation-text"></div>
