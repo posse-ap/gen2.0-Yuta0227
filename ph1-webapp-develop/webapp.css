@@ -126,12 +126,9 @@ header{
 ul{
     list-style:none;
 }
-.language>li{
+li{
     float:left;
-    margin:0 20px 20px 0;
-}
-.material>li{
-    margin:0 20px 20px 0;
+    margin:0 8px 8px 0;
 }
 /* 月移動 */
 .calender{
@@ -364,7 +361,7 @@ ul{
     body{
         box-sizing:border-box;
         width:100vw;
-        height:calc(100vh - 40px);
+        height:100vh;
     }
     .header{
         width:100%;
@@ -398,20 +395,21 @@ ul{
     }
     .second-container{
         width:100%;
-        height:100px;
+        height:100%;
         /* 実際にグラフいれてから高さ決める */
     }
     .language-chart-container{
-        height:100px;
         order:1;
+        width:calc(50% - 8px);
         margin-left:16px;
-        /* 実際にグラフいれてから高さ決める */
     }
     .material-chart-container{
-        height:100px;
         order:0;
+        width:calc(50% - 8px);
         margin-left:0;
-        /* 実際にグラフいれてから高さ決める */
+    }
+    li{
+        font-size:10px;
     }
     .overlay{
         position:relative;
@@ -451,6 +449,7 @@ ul{
     .smartphone-button-container{
         display:flex;
         z-index:10000;
+        margin-bottom:20px;
     }
     .comment-container{
         margin-top:24px;
