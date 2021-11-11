@@ -91,6 +91,97 @@ smartphoneButton.addEventListener('click', function () {
     })
     //PCでやると一度ボタンクリックした後カーソル動かしただけでクリックした判定になってしまう。だけどスマホなら平気なのかも
 })
+var hourBargraph = document.getElementById("hour-bargraph").getContext('2d');
+var gradient = hourBargraph.createLinearGradient(15,250, 15, 0);
+//今はバーグラフの左上を基準にしたのグラデーション。各バーを基準にしたグラデーション。数値が12じゃないときグラデーション崩れる
+gradient.addColorStop(0, '#137DC4');
+gradient.addColorStop(0.4, '#38C7F9');
+var myChart = new Chart(hourBargraph, {
+    type: "bar",    // ★必須　グラフの種類
+    data: {
+        labels: ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30"],  // Ｘ軸のラベル
+        datasets: [
+            {
+                label: "Data",                            // 系列名
+                data: [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12],                 // ★必須　系列Ａのデータ
+                backgroundColor: gradient,                  // 棒の塗りつぶし色
+                borderColor: gradient,                         // 棒の枠線の色
+                borderWidth: 1,                              // 枠線の太さ
+            }
+        ]
+    },
+
+    options: {                       // オプション
+        responsive: false,  // canvasサイズ自動設定機能を使わない。HTMLで指定したサイズに固定
+        title: {                           // タイトル
+            display: false,                     // 表示設定
+            fontSize: 18,                      // フォントサイズ
+            fontFamily: "sans-serif",
+            text: 'タイトル'                   // タイトルのラベル
+        },
+        legend: {                          // 凡例
+            display: false                     // 表示の有無
+            // position: 'bottom'              // 表示位置
+        },
+        scales: {                          // 軸設定
+            xAxes: [                           // Ｘ軸設定
+                {
+                    display: true,                // 表示の有無
+                    barPercentage: 0.8,           // カテゴリ幅に対する棒の幅の割合
+                    //categoryPercentage: 0.8,    // 複数棒のスケールに対する幅の割合
+                    scaleLabel: {                 // 軸ラベル
+                        display: false,                // 表示設定
+                        labelString: '横軸ラベル',    // ラベル
+                        fontColor: "#97b9d1",             // 文字の色
+                        fontSize: 16                  // フォントサイズ
+                    },
+                    gridLines: {                   // 補助線
+                        display: false               // 補助線なし
+                    },
+                    ticks: {                      // 目盛り
+                        fontColor: "#97b9d1",             // 目盛りの色
+                        fontSize: 14                  // フォントサイズ
+                    },
+                }
+            ],
+            yAxes: [                           // Ｙ軸設定
+                {
+                    display: true,                 // 表示の有無
+                    scaleLabel: {                  // 軸ラベル
+                        display: false,                 // 表示の有無
+                        labelString: '縦軸ラベル',     // ラベル
+                        fontFamily: "sans-serif",      // フォントファミリー
+                        fontColor: "#97b9d1",             // 文字の色
+                        fontSize: 16                   // フォントサイズ
+                    },
+                    gridLines: {                   // 補助線
+                        display: false,            // 補助線なし
+                        color: "rgba(0, 0, 255, 0.2)", // 補助線の色
+                        zeroLineColor: "black"         // y=0（Ｘ軸の色）
+                    },
+                    ticks: {                       // 目盛り
+                        min: 0,                        // 最小値
+                        max: 12,                       // 最大値
+                        stepSize: 2,                   // 軸間隔
+                        fontColor: "#97b9d1",             // 目盛りの色
+                        fontSize: 14                   // フォントサイズ
+                    },
+                }
+            ],
+        },
+        layout: {                          // 全体のレイアウト
+            padding: {                         // 余白
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0
+            }
+        }
+    }
+});
+
+
+
 //学習言語と学習コンテンツのチャート
 var language = document.getElementById('language-chart-doughnut');
 var myLanguageChart = new Chart(language, {
