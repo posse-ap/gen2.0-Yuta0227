@@ -91,12 +91,13 @@ smartphoneButton.addEventListener('click', function () {
     })
     //PCでやると一度ボタンクリックした後カーソル動かしただけでクリックした判定になってしまう。だけどスマホなら平気なのかも
 })
-var hourBargraph = document.getElementById("hour-bargraph").getContext('2d');
-var gradient = hourBargraph.createLinearGradient(15,250, 15, 0);
+var hourBargraphCtx = document.getElementById("hour-bargraph").getContext('2d');
+var gradient = hourBargraphCtx.createLinearGradient(15,0, 15, 300);
 //今はバーグラフの左上を基準にしたのグラデーション。各バーを基準にしたグラデーション。数値が12じゃないときグラデーション崩れる
 gradient.addColorStop(0, '#137DC4');
-gradient.addColorStop(0.4, '#38C7F9');
-var myChart = new Chart(hourBargraph, {
+gradient.addColorStop(0.9, '#38C7F9');
+
+var myChart = new Chart(hourBargraphCtx, {
     type: "bar",    // ★必須　グラフの種類
     data: {
         labels: ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30"],  // Ｘ軸のラベル
@@ -112,7 +113,7 @@ var myChart = new Chart(hourBargraph, {
     },
 
     options: {                       // オプション
-        responsive: false,  // canvasサイズ自動設定機能を使わない。HTMLで指定したサイズに固定
+        responsive: true,  // canvasサイズ自動設定機能を使わない。HTMLで指定したサイズに固定
         title: {                           // タイトル
             display: false,                     // 表示設定
             fontSize: 18,                      // フォントサイズ
@@ -173,10 +174,18 @@ var myChart = new Chart(hourBargraph, {
             padding: {                         // 余白
                 left: 0,
                 right: 0,
-                top: 0,
+                top: 50,
                 bottom: 0
             }
-        }
+        },
+        plugins:{
+            labels:{
+                display:false,
+                render:'percentage',
+                fontColor:'white',
+                fontSize:20
+            }
+        },
     }
 });
 
