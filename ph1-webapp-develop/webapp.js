@@ -1,21 +1,21 @@
 const headerButton = document.getElementById('header-button');
-const smartphoneButton=document.getElementById('smartphone-button');
+const smartphoneButton = document.getElementById('smartphone-button');
 const fullOverlay = document.getElementById('fullOverlay');
 const exit = document.getElementById('exit');
 const time = document.getElementById('time');
 const date = document.getElementById('date');
 const pcPost = document.getElementById('post-button');
-const animationFilter=document.getElementById('animation-filter');
-const animationText=document.getElementById('animation-text')
+const animationFilter = document.getElementById('animation-filter');
+const animationText = document.getElementById('animation-text')
 //ラベルクリック時checked==trueならば青色をつける
 for (let i = 1; i <= 11; i++) {
     document.getElementById(`label${i}`).addEventListener('click', function () {
         if (document.getElementById(`checkbox${i}`).checked == true) {
             document.getElementById(`my-checkbox${i}`).classList.add('color-blue');
-            document.getElementById(`label${i}`).style.backgroundColor="#e7f5ff";
+            document.getElementById(`label${i}`).style.backgroundColor = "#e7f5ff";
         } else if (document.getElementById(`checkbox${i}`).checked == false) {
             document.getElementById(`my-checkbox${i}`).classList.remove('color-blue');
-            document.getElementById(`label${i}`).style.backgroundColor="rgb(215,215,215)";
+            document.getElementById(`label${i}`).style.backgroundColor = "rgb(215,215,215)";
         }
     })
 }
@@ -45,23 +45,23 @@ exit.addEventListener('click', function () {
 });
 //ツイートボタン押してるかつ投稿ボタン押してるとツイートするロード画面始まる
 //ロード完了と出てから消える入力内容も消える
-function tweetPage(){
+function tweetPage() {
     if (document.getElementById('checkbox12').checked) {
         let comment = document.getElementById('comment').value;
         window.open("https://twitter.com/intent/tweet?text=" + comment);
     }
 }
-function startLoading(){
+function startLoading() {
     animationFilter.removeAttribute("hidden");
-    animationText.innerText="Loading ...";
+    animationText.innerText = "Loading ...";
 }
-function hideLoading(){
-    animationFilter.setAttribute("hidden","")
+function hideLoading() {
+    animationFilter.setAttribute("hidden", "")
 }
-function stopLoading(){
-    animationText.innerText="Loading Complete!";
+function stopLoading() {
+    animationText.innerText = "Loading Complete!";
     tweetPage();
-    setTimeout(hideLoading,1000);
+    setTimeout(hideLoading, 1000);
     comment.value = "";
     time.value = "";
     date.value = "";
@@ -71,23 +71,80 @@ function stopLoading(){
             document.getElementById(`checkbox${i}`).checked = false;
         }
     }
-    fullOverlay.setAttribute("hidden","");
+    fullOverlay.setAttribute("hidden", "");
 }
 pcPost.addEventListener('click', function () {
-    
-    setTimeout(startLoading,1000);
-    setTimeout(stopLoading,3000);
+
+    setTimeout(startLoading, 1000);
+    setTimeout(stopLoading, 3000);
 });
 //スマホで画面下部のボタン押すとオーバーレイ表示する
-smartphoneButton.addEventListener('click',function(){
+smartphoneButton.addEventListener('click', function () {
     fullOverlay.removeAttribute('hidden')
-    smartphoneButton.id="smartphone-post-button";
+    smartphoneButton.id = "smartphone-post-button";
     //IDが変わったボタンを押すとロード画面に入る
-    const smartphonePostButton=document.getElementById('smartphone-post-button');
-    smartphonePostButton.addEventListener('click',function(){
-        setTimeout(startLoading,1000);
-        setTimeout(stopLoading,3000);
-        smartphonePostButton.id="smartphoneButton";
+    const smartphonePostButton = document.getElementById('smartphone-post-button');
+    smartphonePostButton.addEventListener('click', function () {
+        setTimeout(startLoading, 1000);
+        setTimeout(stopLoading, 3000);
+        smartphonePostButton.id = "smartphoneButton";
     })
     //PCでやると一度ボタンクリックした後カーソル動かしただけでクリックした判定になってしまう。だけどスマホなら平気なのかも
 })
+//学習言語と学習コンテンツのチャート
+var language = document.getElementById('language-chart-doughnut');
+var myLanguageChart = new Chart(language, {
+    type: 'doughnut',
+    data: {
+        labels: ['Javascript', 'CSS', 'PHP', 'HTML', 'Lavarel', 'SQL', 'SHELL', '情報システム基礎知識（その他）'],
+        datasets: [{
+            data: [10, 20, 20, 10, 10, 10, 10, 10],
+            backgroundColor: ['#0345EC', '#0F71BD', '#20BDDE', '#3CCEFE', '#B29EF3', '#6D46EC', '#4A17EF', '#3105C0'],
+            weight: 100,
+        }],
+    },
+    options: {
+        legend: {
+            display: false
+        },
+        title: {
+            display: true,
+            text: '割合'
+        },
+        plugins: {
+            labels: {
+                render: 'percentage',
+                fontColor: 'white',
+                fontSize: 20
+            }
+        }
+    }
+});
+var material = document.getElementById('material-chart-doughnut');
+var myMaterialChart = new Chart(material, {
+    type: 'doughnut',
+    data: {
+        labels: ['ドットインストール', 'N予備校', 'POSSE課題'],
+        datasets: [{
+            data: [10, 20, 70],
+            backgroundColor: ['#0345EC', '#0F71BD', '#20BDDE'],
+            weight: 100,
+        }],
+    },
+    options: {
+        legend: {
+            display: false
+        },
+        title: {
+            display: true,
+            text: '割合'
+        },
+        plugins: {
+            labels: {
+                render: 'percentage',
+                fontColor: 'white',
+                fontSize: 20
+            }
+        }
+    }
+});
