@@ -92,6 +92,11 @@ smartphoneButton.addEventListener('click', function () {
     //PCでやると一度ボタンクリックした後カーソル動かしただけでクリックした判定になってしまう。だけどスマホなら平気なのかも
 })
 var hourBargraphCtx = document.getElementById("hour-bargraph").getContext('2d');
+var hourBargraph=document.getElementById('hour-bragraph');
+var bargraphContainer=document.getElementById('bargraph-container');
+// hourBargraphCtx.canvas.height=bargraphContainer.style.height;
+// hourBargraphCtx.canvas.width=bargraphContainer.style.width;
+
 var gradient = hourBargraphCtx.createLinearGradient(15,0, 15, 300);
 //今はバーグラフの左上を基準にしたのグラデーション。各バーを基準にしたグラデーション。数値が12じゃないときグラデーション崩れる
 gradient.addColorStop(0, '#137DC4');
@@ -184,8 +189,9 @@ var myChart = new Chart(hourBargraphCtx, {
                 render:'percentage',
                 fontColor:'white',
                 fontSize:20
-            }
+            },
         },
+        maintainAspectRatio:true
     }
 });
 
@@ -215,7 +221,7 @@ var myLanguageChart = new Chart(language, {
             labels: {
                 render: 'percentage',
                 fontColor: 'white',
-                fontSize: 20
+                fontSize: 10
             }
         }
     }
@@ -231,6 +237,7 @@ var myMaterialChart = new Chart(material, {
             weight: 100,
         }],
     },
+    //表示順を大きい順にする方法がわからん。おそらくこのままだと数値は順番変更できてもそれがラベルの内容とずれるかも
     options: {
         legend: {
             display: false
@@ -243,7 +250,7 @@ var myMaterialChart = new Chart(material, {
             labels: {
                 render: 'percentage',
                 fontColor: 'white',
-                fontSize: 20
+                fontSize: 10
             }
         }
     }

@@ -7,12 +7,11 @@ body{
 }
 /* ヘッダー */
 header{
-    position:absolute;
     display:flex;
     justify-content: space-between;
     top:0;
     left:0;
-    height:7.5vh;
+    height:64px;
     width:100vw;
     background-color: white;
 }
@@ -52,15 +51,17 @@ header{
     display:flex;
     width:90%;
     height:90%;
-    margin:100px auto 0 auto;
+    margin:20px auto 0 auto;
 }
 /* 一段目 */
 .first-container{
-    width:50%;
+    width:calc(50% - 10px);
+    margin-right:20px;
+    height:calc(100vh - 7.5vh - 84px);
 }
 .today-month-total-container{
     display:flex;
-    height:25vh;
+    height:25%;
 }
 .today-container, .month-container, .total-container{
     display:flex;
@@ -81,22 +82,21 @@ header{
     color:#97b9d1;
 }
 .today-month-total-container>div+div{
-    margin-left:3vh;
+    margin-left:20px;
 }
 .bargraph-container{
-    height:50vh;
     width:100%;
     border-radius:5px;
     background-color: white;
-    margin-top:3vh;
+    margin-top:20px;
+    height:calc(100% - 25% - 20px);
     box-sizing:border-box;
-    padding:20px;
 }
 /* 二段目 */
 .second-container{
     display:flex;
-    width:50%;
-    height:78vh;
+    width:calc(50% - 10px);
+    height:calc(100vh - 7.5vh - 84px);
 }
 .language-chart-container,.material-chart-container{
     background-color: white;
@@ -104,8 +104,10 @@ header{
     flex-direction: column;
     width:50%;
     border-radius:5px;
-    margin-left:20px;
     height:100%;
+}
+.language-chart-container+.material-chart-container{
+    margin-left:20px;
 }
 .material, .language{
     padding-left:20px;
@@ -133,6 +135,7 @@ li{
     text-align:middle;
     padding:auto;
     align-items:center;
+    width:100%;
 }
 .calender>div+div{
     margin-left:2px;
@@ -351,11 +354,11 @@ li{
 @media screen and (max-width:479px){
     html{
         height:100vh;
-        width:100vw;
+        width:100%;
     }
     body{
         box-sizing:border-box;
-        width:100vw;
+        width:100%;
         height:100vh;
     }
     .header{
@@ -369,8 +372,8 @@ li{
     .content-container{
         display:flex;
         flex-direction:column;
-        margin:84px auto 20px auto;
         box-sizing:border-box;
+        margin:0 auto;
         height:100%;
         width:calc(100vw - 40px);
     }
@@ -379,29 +382,38 @@ li{
     }
     .first-container{
         width:100%;
+        height:100%;
+        margin-right:0;
+        margin-top:20px;
     }
     .today-month-total-container{
         display:flex;
-        height:unset;
+        height:25%;
         width:100%;
     }
+    .today-month-total-container>div+div{
+        margin-left:16px;
+    }
     .bargraph-container{
-        height:unset;
+        height:100%;
+        margin-top:16px;
     }
     .second-container{
         width:100%;
-        height:100%;
+        height:unset;
         /* 実際にグラフいれてから高さ決める */
+    }
+    .language-chart-container+.material-chart-container{
+        margin-right:16px;
+        margin-left:0;
     }
     .language-chart-container{
         order:1;
         width:calc(50% - 8px);
-        margin-left:16px;
     }
     .material-chart-container{
         order:0;
         width:calc(50% - 8px);
-        margin-left:0;
     }
     li{
         font-size:10px;
