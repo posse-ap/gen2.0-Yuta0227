@@ -1,0 +1,16 @@
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "centos/7"
+  config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "quizy-php"
+    vb.gui = false
+    vb.memory = "2048"
+  end
+  config.ssh.private_key_path = "c:/Users/yutahonjo/.vagrant.d/insecure_private_key"
+  config.ssh.insert_key = false
+  if Object.const_defined? 'VagrantVbguest'
+    config.vbguest.auto_update = false
+    config.vbguest.no_remote = true
+  end
+end
