@@ -18,13 +18,19 @@ services:
       - db
 
   db:
+    build: ./mysql
     image: mysql:5.7
     ports:
       - 13306:3306
     volumes:
       - ./mysql/data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: 2884Hyuta
+      MYSQL_USER: yuta
+      MYSQL_PASSWORD: 2884Hyuta
+      MYSQL_DATABASE: quizy
+      TZ: 'Asia/Tokyo'
+    stdin_open: true
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
