@@ -23,8 +23,10 @@ services:
       - 13306:3306
     volumes:
       - ./mysql/data:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
       MYSQL_ROOT_PASSWORD: secret
+    stdin_open: true
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
