@@ -37,7 +37,7 @@ const body = document.getElementsByTagName('body');
 let main = "";
 for (let i = 1; i <= 10; i++) {
     if((i-1)%3==0){
-        main+=`<a href=${adLink[((i-1)/3)]}　class="ad-space">`
+        main+=`<a href=${adLink[((i-1)/3)]} class="ad-space">`
         +`<img src=${adImg[((i-1)/3)]} class="ad" alt=${adAlt[((i-1)/3)]}>`
         +`</a>`
         +`<span id="question${i}" class="question">`
