@@ -4,6 +4,7 @@ use quizy;
 drop table if exists big_questions;
 drop table if exists questions;
 drop table if exists choices;
+drop table if exists mix;
 create table big_questions (
     id int auto_increment,
     name varchar(255),
