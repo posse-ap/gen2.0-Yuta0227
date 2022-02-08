@@ -18,7 +18,7 @@ require "db-connect.php";
         $stmt3 = $pdo->query("SELECT question_id from mix where big_question_id=$id");
         $stmt4 = $pdo->query("SELECT name from mix where valid=1 and big_question_id=$id");
         $stmt5 = $pdo->query("SELECT name from mix where valid=0 and big_question_id=$id");
-        $stmt6 = $pdo->query("SELECT image from mix where big_question_id=$id");
+        $stmt6 = $pdo->query("SELECT distinct image from mix where big_question_id=$id");
         $stmt7 = $pdo->query("SELECT big_question_name from big_questions where id=$id");
         $stmt8 = $pdo->query("SELECT place from place where id=$id");
         // (4) 登録するデータをセット
@@ -62,7 +62,7 @@ let main = "";
 <?php for ($i = 0; $i < 2; $i++) {?>
         main+=`<span id="question<?php echo $i;?>" class="question">`
         + `<h2 class="question-title"><?php echo $i+1;?>.この地名はなんて読む？</h2>`
-        + `<img src="./asset/<?php echo $data2[$i]["image"];?>">`
+        + `<img src="./asset/<?php echo $data6[$i]["image"];?>">`
         + `<section id="section<?php echo $i;?>">`
         + `<a href="#question<?php echo $i+1;?>}">`
         + `<div id="correct-choice<?php echo $i;?>" class="choice">${correct[<?php echo $i;?>]}</div>`
@@ -80,21 +80,19 @@ let main = "";
         + `</div>`
         + `</span>`
     entire.innerHTML = main;   
-<?php };?>
-<?php for ($i = 0; $i < 2; $i++) {?>
-    console.log("<?php echo $i;?>");
     function shuffle() {
-        for (let j = document.getElementById(`section<?php echo $i;?>`).children.length; j >=0; j--) {
+        for (let j = document.getElementById(`section<?php echo $i;?>`).children.length; j >0; j--) {
             document.getElementById(`section<?php echo $i;?>`).appendChild(document.getElementById(`section<?php echo $i;?>`).children[Math.random() * j | 0]);
+            console.log('<?= $i;?>回目のループ(0スタート）シャッフル機能のループ');
         }
+        console.log('<?= $i;?>回目のループ(0スタート）シャッフル機能');
     }
     window.addEventListener("load", function () {
         document.getElementById(`text-box<?php echo $i;?>`).classList.toggle('switch-display');
         shuffle();
+        console.log('<?= $i;?>回目のループ(0スタート）ロード時');
     });
-<?php };?>
 // innerHTMLとロード時とクリック時の文を分ける
-<?php for ($i = 0; $i < 2; $i++) {?>
     document.getElementById(`correct-choice<?php echo $i;?>`).onclick = function () {
         document.getElementById(`correct-choice<?php echo $i;?>`).classList.toggle('unclickable');//一度押したら押せない
         document.getElementById(`uncorrect-choice<?php echo $i;?>1`).classList.toggle('unclickable');
