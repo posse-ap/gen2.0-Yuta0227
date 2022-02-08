@@ -10,35 +10,37 @@ require "db-connect.php";
 <body>
     <div id="fade-filter"></div>
     <div id="content-container" class="content-container">
-        <?php include 'common.php';
+        <?php 
         $id = $_GET['id'];
         // (3) SQL作成
-        $stmt1 = $pdo->query("SELECT * FROM big_questions");
-        $stmt2 = $pdo->query("SELECT image from questions where big_question_id=$id");
+        $stmt1 = $pdo->query("SELECT * from mix where big_question_id=$id");
+        $stmt2 = $pdo->query("SELECT id from mix where big_question_id=$id");
+        $stmt3 = $pdo->query("SELECT question_id from mix where big_question_id=$id");
+        $stmt4 = $pdo->query("SELECT name from mix where valid=1 and big_question_id=$id");
+        $stmt5 = $pdo->query("SELECT name from mix where valid=0 and big_question_id=$id");
+        $stmt6 = $pdo->query("SELECT image from mix where big_question_id=$id");
+        $stmt7 = $pdo->query("SELECT big_question_name from big_questions where id=$id");
+        $stmt8 = $pdo->query("SELECT place from place where id=$id");
         // (4) 登録するデータをセット
         // $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        
         // (5) SQL実行
         // $res = $stmt->execute();
-        
         // (6) 該当するデータを取得
         // if ($res) {
             ?>
         <pre>
             <?php
             // $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $data1 = $stmt1->fetchAll();
-            $data2 = $stmt2->fetchAll();
-            print_r($data1[$id-1]["id"]);
-            print_r($data1[$id-1]["name"].PHP_EOL);
+            for($i=1;$i<9;$i++){
+                ${"data".$i}= ${"stmt".$i}->fetchAll();
+            };
             ?>
-            <!-- <img src="./asset/<?php echo($data2[0]["image"].PHP_EOL);?>">
-            <img src="./asset/<?php echo($data2[1]["image"].PHP_EOL);?>"> -->
         </pre>
         <?php
         // }
         // (7) データベースの接続解除
         $pdo = null; ?>
+        <?php include 'common.php';?>
         <div id="entire"></div>
     </div>
 </body>
@@ -47,41 +49,15 @@ require "db-connect.php";
 <script>
 'use strict';
 const entire = document.getElementById('entire');
-let correct = ['たかなわ', 'かめいど', 'こうじまち', 'おなりもん', 'とどろき', 'しゃくじい', 'ぞうしき', 'おかちまち', 'ししぼね', 'こぐれ'];
-let uncorrect1 = ['こうわ', 'かめと', 'おかとまち', 'おかどもん', 'たたりき', 'いじい', 'ざっしき', 'ごしろちょう', 'ろっこつ', 'こばく'];
-let uncorrect2 = ['たかわ', 'かめど', 'かゆまち', 'ごせいもん', 'たたら', 'せきこうい', 'ざっしょく', 'みとちょう', 'しこね', 'こしゃく'];
-let img = [
-    "https://d1khcm40x1j0f.cloudfront.net/quiz/34d20397a2a506fe2c1ee636dc011a07.png",
-    "https://d1khcm40x1j0f.cloudfront.net/quiz/512b8146e7661821c45dbb8fefedf731.png",
-    "https://d1khcm40x1j0f.cloudfront.net/quiz/ad4f8badd896f1a9b527c530ebf8ac7f.png",
-    "https://d1khcm40x1j0f.cloudfront.net/quiz/ee645c9f43be1ab3992d121ee9e780fb.png",
-    "https://d1khcm40x1j0f.cloudfront.net/quiz/6a235aaa10f0bd3ca57871f76907797b.png",
-    "https://d1khcm40x1j0f.cloudfront.net/quiz/0b6789cf496fb75191edf1e3a6e05039.png",
-    "https://d1khcm40x1j0f.cloudfront.net/quiz/23e698eec548ff20a4f7969ca8823c53.png",
-    "https://d1khcm40x1j0f.cloudfront.net/quiz/50a753d151d35f8602d2c3e2790ea6e4.png",
-    "https://d1khcm40x1j0f.cloudfront.net/words/8cad76c39c43e2b651041c6d812ea26e.png",
-    "https://d1khcm40x1j0f.cloudfront.net/words/34508ddb0789ee73471b9f17977e7c9c.png"
-];
-let text = [
-    "正解は「たかなわ」です！",
-    "正解は「かめいど」です！",
-    "正解は「こうじまち」です！",
-    "正解は「おなりもん」です！",
-    "正解は「とどろき」です！",
-    "正解は「しゃくじい」です！",
-    "正解は「ぞうしき」です！",
-    "正解は「おかちまち」です！",
-    "江戸川区にあります。",
-    "正解は「こぐれ」です！",
-]
-let adImg=["","","",""];
-let adLink=["","","",""];
-let adAlt=["広告1です","あいうえお","広告3です","広告4です"]
+let correct = ['<?php echo $data4[0]["name"];?>', '<?php echo $data4[1]["name"];?>',];
+let uncorrect1 = ['<?php echo $data5[0]["name"];?>', '<?php echo $data5[2]["name"];?>',];
+let uncorrect2 = ['<?php echo $data5[1]["name"];?>', '<?php echo $data5[3]["name"];?>',];
 const overlay = document.getElementById('overlay');
 const overlayButton = document.getElementById('overlay-button');
 const body = document.getElementsByTagName('body');
 
-//一応見た目はできてる。画像はmysqlからとれてる。選択肢、問題番号とれてない。正解表示のテキストmysqlからとれてない
+//一応見た目はできてる。画像はmysqlからとれてる。
+//シャッフル二つ目以降の問題しかできてない。テキストと正誤判定のシャッフル別になってる
 let main = "";
 <?php for ($i = 0; $i < 2; $i++) {?>
         main+=`<span id="question<?php echo $i;?>" class="question">`
@@ -100,15 +76,16 @@ let main = "";
         + `</section>`
         + `<div id="text-box<?php echo $i;?>" class="text-box">`
         + `<div id="answer<?php echo $i;?>" class="answer"></div>`
-        + `<div id="text<?php echo $i;?>" class="show-explanation">${text[<?php echo $i;?>]}</div>`
+        + `<div id="text<?php echo $i;?>" class="show-explanation">正解は「<?php echo $data4[$i]["name"];?>」です!</div>`
         + `</div>`
         + `</span>`
     entire.innerHTML = main;   
 <?php };?>
 <?php for ($i = 0; $i < 2; $i++) {?>
+    console.log("<?php echo $i;?>");
     function shuffle() {
-        for (let j = document.getElementById(`section<?php echo $i;?>`).children.length; j >= 0; j--) {
-            document.getElementById(`section<?php echo $i-1;?>`).appendChild(document.getElementById(`section<?php echo $i-1;?>`).children[Math.random() * j | 0]);
+        for (let j = document.getElementById(`section<?php echo $i;?>`).children.length; j >=0; j--) {
+            document.getElementById(`section<?php echo $i;?>`).appendChild(document.getElementById(`section<?php echo $i;?>`).children[Math.random() * j | 0]);
         }
     }
     window.addEventListener("load", function () {

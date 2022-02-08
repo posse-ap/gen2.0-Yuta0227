@@ -137,7 +137,6 @@ html{
   }
   /* 対人ゲーム */
   .pvp-game{
-    border-bottom:solid 2px black;
     color:black;
     padding:10px 0;
   }
