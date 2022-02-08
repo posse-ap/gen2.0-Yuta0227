@@ -85,17 +85,13 @@ require "db-connect.php";
         <?php for ($j = 3; $j > 0; $j--){;?>
             <?php for ($i = 0;$i < 2;$i++){;?>
             document.getElementById(`section<?php echo $data3[$i]["question_id"]-1;?>`).appendChild(document.getElementById(`section<?php echo $data3[$i]["question_id"]-1; ?>`).children[Math.random() * <?php echo $j;?> | 0]);
-            console.log('<?= $data3[$i]["question_id"]-1;?> 回目のループ(0スタート）シャッフル機能のループ');
             <?php };?>
         <?php };?>
-        console.log('<?= $i; ?>回目のループ(0スタート）シャッフル機能');
     };
     <?php for ($i = 0; $i < 2; $i++) { ?>
-        console.log('no');
         window.addEventListener("load", function() {
             document.getElementById(`text-box<?php echo $i; ?>`).classList.toggle('switch-display');
             shuffle();
-            console.log('<?= $i; ?>回目のループ(0スタート）ロード時');
         });
     <?php };?>
     <?php for ($i = 0; $i < 2; $i++) { ?>
