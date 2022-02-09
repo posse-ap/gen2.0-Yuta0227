@@ -84,7 +84,7 @@ require "db-connect.php";
     function shuffle() {
         <?php for ($j = 3; $j > 0; $j--){;?>
             <?php for ($i = 0;$i < 2;$i++){;?>
-            document.getElementById(`section<?php echo $data3[$i]["question_id"]-1;?>`).appendChild(document.getElementById(`section<?php echo $data3[$i]["question_id"]-1; ?>`).children[Math.random() * <?php echo $j;?> | 0]);
+                document.getElementById(`section<?php echo $i;?>`).appendChild(document.getElementById(`section<?php echo $i; ?>`).children[Math.random() * <?php echo $j;?> | 0]);
             <?php };?>
         <?php };?>
     };
