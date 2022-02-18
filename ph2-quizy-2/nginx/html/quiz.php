@@ -13,14 +13,14 @@ require "db-connect.php";
         <?php
         $id = $_GET['id'];
         // (3) SQL作成
-        $stmt1 = $pdo->query("SELECT * from mix where big_question_id=$id");
-        $stmt2 = $pdo->query("SELECT id from mix where big_question_id=$id");
-        $stmt3 = $pdo->query("SELECT distinct question_id from mix where big_question_id=$id");
-        $stmt4 = $pdo->query("SELECT name from mix where valid=1 and big_question_id=$id");
-        $stmt5 = $pdo->query("SELECT name from mix where valid=0 and big_question_id=$id");
-        $stmt6 = $pdo->query("SELECT distinct image from mix where big_question_id=$id");
-        $stmt7 = $pdo->query("SELECT big_question_name from big_questions where id=$id");
-        $stmt8 = $pdo->query("SELECT place from place where id=$id");
+        $stmt1 = $pdo->prepare("SELECT * from mix where big_question_id=?");
+        $stmt2 = $pdo->prepare("SELECT id from mix where big_question_id=?");
+        $stmt3 = $pdo->prepare("SELECT distinct question_id from mix where big_question_id=?");
+        $stmt4 = $pdo->prepare("SELECT name from mix where valid=1 and big_question_id=?");
+        $stmt5 = $pdo->prepare("SELECT name from mix where valid=0 and big_question_id=?");
+        $stmt6 = $pdo->prepare("SELECT distinct image from mix where big_question_id=?");
+        $stmt7 = $pdo->prepare("SELECT big_question_name from big_questions where id=?");
+        $stmt8 = $pdo->prepare("SELECT place from place where id=?");
         // (4) 登録するデータをセット
         // $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         // (5) SQL実行
@@ -32,8 +32,13 @@ require "db-connect.php";
             <?php
             // $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             for ($i = 1; $i < 9; $i++) {
+                ${"stmt".$i}->execute([$id]);
                 ${"data" . $i} = ${"stmt" . $i}->fetchAll();
             };
+            // foreach($data2 as $data){
+            //     echo ($data["id"].PHP_EOL);
+            // }
+            // foreach使い方
             ?>
         </pre>
         <?php
@@ -49,15 +54,13 @@ require "db-connect.php";
 <script>
     'use strict';
     const entire = document.getElementById('entire');
-    let correct = ['<?php echo $data4[0]["name"]; ?>', '<?php echo $data4[1]["name"]; ?>', 'あ'];
-    let uncorrect1 = ['<?php echo $data5[0]["name"]; ?>', '<?php echo $data5[2]["name"]; ?>', 'い'];
-    let uncorrect2 = ['<?php echo $data5[1]["name"]; ?>', '<?php echo $data5[3]["name"]; ?>', 'う'];
+    let correct = ['<?php echo $data4[0]["name"]; ?>', '<?php echo $data4[1]["name"]; ?>', ''];//2,3,4,5,6,
+    let uncorrect1 = ['<?php echo $data5[0]["name"]; ?>', '<?php echo $data5[2]["name"]; ?>', ''];//4,6,8,
+    let uncorrect2 = ['<?php echo $data5[1]["name"]; ?>', '<?php echo $data5[3]["name"]; ?>', ''];//5,7,9,
     const overlay = document.getElementById('overlay');
     const overlayButton = document.getElementById('overlay-button');
     const body = document.getElementsByTagName('body');
 
-    //一応見た目はできてる。画像はmysqlからとれてる。
-    //シャッフル二つ目以降の問題しかできてない。テキストと正誤判定のシャッフル別になってる
     let main = "";
     <?php for ($i = 0; $i < 2; $i++) { ?>
         main += `<span id="question<?php echo $i; ?>" class="question">` +
