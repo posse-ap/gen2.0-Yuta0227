@@ -5,7 +5,6 @@ services:
     image: mysql:latest
     environment:
         MYSQL_DATABASE: webapp
-        MYSQL_USER: root
         MYSQL_PASSWORD: secret
         MYSQL_ROOT_PASSWORD: secret
     ports:
@@ -13,6 +12,8 @@ services:
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./db/mysql:/var/lib/mysql
+      - ./db/mysql/sql/:/docker-entrypoint-initdb.d/
+    stdin_open: true
 
   php:
     build: ./php
