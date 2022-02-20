@@ -1,7 +1,8 @@
 body{
     display:flex;
     flex-direction:column;
-    background-color:#f5f5f8;
+    /* background-color:#f5f5f8; */
+    background-color:blue;
     height:100vh;
     width:100vw;
 }
@@ -57,11 +58,11 @@ header{
 .first-container{
     width:calc(50% - 10px);
     margin-right:20px;
-    height:calc(100vh - 7.5vh - 84px);
+    height:100%;
 }
 .today-month-total-container{
     display:flex;
-    height:25%;
+    height:50%;
 }
 .today-container, .month-container, .total-container{
     display:flex;
@@ -89,14 +90,14 @@ header{
     border-radius:5px;
     background-color: white;
     margin-top:20px;
-    height:calc(100% - 25% - 20px);
-    box-sizing:border-box;
+    background-color:green;
 }
 /* 二段目 */
 .second-container{
     display:flex;
     width:calc(50% - 10px);
     height:calc(100vh - 7.5vh - 84px);
+    padding-top:20px;
 }
 .language-chart-container,.material-chart-container{
     background-color: white;
@@ -353,13 +354,13 @@ li{
   }
 @media screen and (max-width:479px){
     html{
-        height:100vh;
+        height:100%;
         width:100%;
     }
     body{
         box-sizing:border-box;
         width:100%;
-        height:100vh;
+        height:100%;
     }
     .header{
         width:100%;
@@ -382,7 +383,7 @@ li{
     }
     .first-container{
         width:100%;
-        height:100%;
+        height:max-content;
         margin-right:0;
         margin-top:20px;
     }
@@ -395,7 +396,7 @@ li{
         margin-left:16px;
     }
     .bargraph-container{
-        height:100%;
+        height:10%;
         margin-top:16px;
     }
     .second-container{

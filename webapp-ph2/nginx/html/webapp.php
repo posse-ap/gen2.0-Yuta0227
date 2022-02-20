@@ -10,7 +10,9 @@
     <title>Document</title>
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
-
+<?php
+echo phpinfo();
+?>
 <body>
     <header>
         <div class="logo-week">
@@ -41,15 +43,15 @@
                     <div class="hour">hour</div>
                 </div>
             </div>
-            <div id="bargraph-container" class="bargraph-container">
-                <canvas id="hour-bargraph" class="bargraph"></canvas>
+            <div id="bargraph-container" >
+                <canvas id="hour-bargraph" class="bargraph-container" width="20" height="10"></canvas>
             </div>
         </div>
         <!-- 二段目 -->
         <div class="second-container">
             <div class="language-chart-container">
                 <div class="piechart-title">学習言語</div>
-                <canvas id="language-chart-doughnut" width="400" height="400"></canvas>
+                <canvas id="language-chart-doughnut" width="15" height="10"></canvas>
                 <div>
                     <ul class="language">
                         <li><i class="fas fa-circle" style="color:#0345EC"></i>Javascript</li>
@@ -65,7 +67,7 @@
             </div>
             <div class="material-chart-container">
                 <div class="piechart-title">学習コンテンツ</div>
-                <canvas id="material-chart-doughnut" width="400" height="400"></canvas>
+                <canvas id="material-chart-doughnut" width="15" height="10"></canvas>
                 <div>
                     <ul class="material">
                         <li><i class="fas fa-circle" style="color:#0345EC"></i>ドットインストール</li>

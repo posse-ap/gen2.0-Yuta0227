@@ -133,20 +133,20 @@ var myChart = new Chart(hourBargraphCtx, {
             xAxes: [                           // Ｘ軸設定
                 {
                     display: true,                // 表示の有無
-                    barPercentage: 0.8,           // カテゴリ幅に対する棒の幅の割合
+                    barPercentage: 0.4,           // カテゴリ幅に対する棒の幅の割合
                     //categoryPercentage: 0.8,    // 複数棒のスケールに対する幅の割合
                     scaleLabel: {                 // 軸ラベル
                         display: false,                // 表示設定
                         labelString: '横軸ラベル',    // ラベル
                         fontColor: "#97b9d1",             // 文字の色
-                        fontSize: 16                  // フォントサイズ
+                        fontSize: 8                  // フォントサイズ
                     },
                     gridLines: {                   // 補助線
                         display: false               // 補助線なし
                     },
                     ticks: {                      // 目盛り
                         fontColor: "#97b9d1",             // 目盛りの色
-                        fontSize: 14                  // フォントサイズ
+                        fontSize: 14,                  // フォントサイズ
                     },
                 }
             ],
