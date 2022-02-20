@@ -3,6 +3,7 @@ version: "3"
 services:
   db:
     image: mysql:latest
+    restart: always
     environment:
         MYSQL_DATABASE: webapp
         MYSQL_PASSWORD: secret
@@ -11,8 +12,9 @@ services:
         - "4306:3306"
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - ./db/mysql:/var/lib/mysql
-      - ./db/mysql/sql/:/docker-entrypoint-initdb.d/
+      # - ./sql/mysql:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+      # - ./sql/mysql/sql/:/docker-entrypoint-initdb.d/
     stdin_open: true
 
   php:
