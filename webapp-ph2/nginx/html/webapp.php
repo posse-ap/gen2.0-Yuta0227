@@ -1,10 +1,16 @@
 <?php
 include "db-connect.php";
-$stmt1=$dbh->query("SELECT SUM(hours) from time where date=4 AND month=3 AND year=2022;");
-$stmt2=$dbh->query("SELECT SUM(hours) from time where month=3 AND year=2022;");
+$time=new DateTime('now');
+$date=$time->format('d');
+$month=$time->format('m');
+$year=$time->format('Y');
+$stmt1=$dbh->query("SELECT SUM(hours) from time where date=$date AND month=$month AND year=$year;");
+$stmt2=$dbh->query("SELECT SUM(hours) from time where month=$month AND year=$year;");
 $stmt3=$dbh->query("SELECT SUM(hours) from time;");
+
+
 for($i=1;$i<4;$i++){
-    // ${"stmt".$i}->execute([$id]);
+    ${"stmt".$i}->execute([$date,$month,$year]);
     ${"data".$i}=${"stmt".$i}->fetchAll();
 }
 // date=,month=のところはgetTimeとかで時間情報取得して変数にいれてこの?のところにexecuteする
