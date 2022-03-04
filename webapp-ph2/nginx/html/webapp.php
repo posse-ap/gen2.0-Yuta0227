@@ -1,13 +1,12 @@
 <?php
 include "db-connect.php";
-$stmt1=$dbh->prepare("SELECT SUM(hours) from time where date=4 AND month=3 AND year=2022;");
-$stmt2=$dbh->prepare("SELECT SUM(hours) from time where month=3 AND year=2022;");
-$stmt3=$dbh->prepare("SELECT SUM(hours) from time;");
+$stmt1=$dbh->query("SELECT SUM(hours) from time where date=4 AND month=3 AND year=2022;");
+$stmt2=$dbh->query("SELECT SUM(hours) from time where month=3 AND year=2022;");
+$stmt3=$dbh->query("SELECT SUM(hours) from time;");
 for($i=1;$i<4;$i++){
     // ${"stmt".$i}->execute([$id]);
     ${"data".$i}=${"stmt".$i}->fetchAll();
 }
-echo var_dump($data1);
 // date=,month=のところはgetTimeとかで時間情報取得して変数にいれてこの?のところにexecuteする
 ?>
 <!DOCTYPE html>
@@ -39,17 +38,23 @@ echo var_dump($data1);
             <div class="today-month-total-container">
                 <div class="today-container">
                     <div class="today">Today</div>
-                    <div class="number">3</div>
+                    <div class="number">
+                        <?php echo $data1[0][0];?>
+                    </div>
                     <div class="hour">hour</div>
                 </div>
                 <div class="month-container">
                     <div class="month">Month</div>
-                    <div class="number">120</div>
+                    <div class="number">
+                        <?php echo $data2[0][0];?>
+                    </div>
                     <div class="hour">hour</div>
                 </div>
                 <div class="total-container">
                     <div class="total">Total</div>
-                    <div class="number">1348</div>
+                    <div class="number">
+                        <?php echo $data3[0][0];?>
+                    </div>
                     <div class="hour">hour</div>
                 </div>
             </div>
