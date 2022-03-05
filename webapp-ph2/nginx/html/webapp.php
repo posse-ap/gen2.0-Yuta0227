@@ -1,8 +1,20 @@
+<script>
+    window.onload=function(){
+        window.open("localhost:8080/webapp.php?month="+month+"?year="+year);
+    }
+    //開くときurl設定して月移動しても反映するようにしたい
+    // json必須
+
+
+
+    //最重要
+    
+</script>
 <?php
 require "db-connect.php";
-require "request.php";
+// require "request.php";
 ?>
-<script>
+<!-- <script>
 var month;
 var year;
 var paramArray;
@@ -17,43 +29,38 @@ window.onload = function () {
         body:JSON.stringify(paramArray)
     }).then(response=>response.json())  
 };
-</script>
+</script> -->
 <?php 
 $time = new DateTime('now');
-$date = $time->format('d');
-$stmt1 = $dbh->prepare("SELECT SUM(hours) from time where date=? AND month=? AND year=?;");
-$stmt2 = $dbh->prepare("SELECT SUM(hours) from time where month=? AND year=?;"); //該当月
+$date = (int)$time->format('d');
+$month= (int)date('n');
+$year= (int)$time->format('Y');
+$stmt1 = $dbh->prepare("SELECT SUM(hours) from time where date=:date AND month=:month AND year=:year;");//today専用
+$stmt2 = $dbh->prepare("SELECT SUM(hours) from time where month=:month AND year=:year;"); //該当月
 $stmt3 = $dbh->prepare("SELECT SUM(hours) from time;");
-echo var_dump($time_param[0]);
-echo var_dump($time_param[1]);
-// $date_array = [];
-$execute_array=[$date,$time_param[0],$time_param[1]];
-$execute_array2=array_slice($execute_array,1,2);
-for ($j = 1; $j <= 31; $j++) {
-    $execute_array3=[$j,$time_param[0],$time_param[1]];
-    ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date=:date month=:month AND year=:year group by date;"); //日付の合計時間
-    ${"date_stmt" . $j}->bindValue(':date',$j);
-    ${"date_stmt" . $j}->bindValue(':month',$time_param[0]);
-    ${"date_stmt" . $j}->bindValue(':year',$time_param[1]);
-    ${"date_stmt" . $j}->execute();
-    ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
-    array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
-};
-// echo $date_array[1];
-// var_dump($date_array);
-$stmt1->execute($execute_array);
+$stmt1->bindValue(':date',$date,PDO::PARAM_INT);
+$stmt1->bindValue(":month",$month,PDO::PARAM_INT);
+$stmt1->bindValue(":year",$year,PDO::PARAM_INT);
+$stmt1->execute();
 $data1=$stmt1->fetchAll();
-$stmt2->execute($execute_array2);
+$stmt2->bindValue(":month",$month,PDO::PARAM_INT);
+$stmt2->bindValue(":year",$year,PDO::PARAM_INT);
+$stmt2->execute();
 $data2=$stmt2->fetchAll();
 $stmt3->execute();
 $data3=$stmt3->fetchAll();
-// for ($i = 1; $i < 4; $i++) {
-    //     ${"stmt" . $i}->bindValue("date",$date);
-    //     ${"stmt" . $i}->bindValue("month",$time_param[0]);
-    //     ${"stmt" . $i}->bindValue("year",$time_param[1]);
-    //     ${"stmt" . $i}->execute();
-    //     ${"data" . $i} = ${"stmt" . $i}->fetchAll();
-    // };
+$date_array = [];
+for ($j = 1; $j <= 31; $j++) {
+    $execute_array3=[$j,$month,$year];
+    ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date=:date month=:month AND year=:year group by date;"); //日付の合計時間
+    ${"date_stmt" . $j}->bindValue(":date",$j);
+    ${"date_stmt" . $j}->bindValue(":month",$month);
+    ${"date_stmt" . $j}->bindValue(":year",$year);
+    ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
+    array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
+};
+echo $date_array[1];
+var_dump($date_array);
     ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -444,6 +451,5 @@ $data3=$stmt3->fetchAll();
         }
     });
 </script>
-
 </html>
 <!-- 最初はurlから情報取得せず現在の日時などを表示月移動するときurlから数値取得して$monthから引いたり足したりする -->
