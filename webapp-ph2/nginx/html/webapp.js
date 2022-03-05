@@ -90,4 +90,31 @@ smartphoneButton.addEventListener('click', function () {
         smartphonePostButton.id = "smartphoneButton";
     })
     //PCでやると一度ボタンクリックした後カーソル動かしただけでクリックした判定になってしまう。だけどスマホなら平気なのかも
-})
+});
+const previousMonth = document.getElementById('previous-month');
+const nextMonth = document.getElementById('next-month');
+const yearMonth = document.getElementById('year-month');
+var month;
+var today;
+window.onload = function () {
+    var today = new Date();
+    month = today.getMonth() + 1;
+    year = today.getFullYear();
+    yearMonth.innerHTML = `${year}年${month}月`;
+};
+previousMonth.addEventListener('click', function () {
+    month--;
+    if (month == 0) {
+        month = month + 12;
+        year--;
+    }
+    yearMonth.innerHTML = `${year}年${month}月`;
+});
+nextMonth.addEventListener('click', function () {
+    month++;
+    if (month == 13) {
+        month = month - 12;
+        year++;
+    }
+    yearMonth.innerHTML = `${year}年${month}月`;
+});

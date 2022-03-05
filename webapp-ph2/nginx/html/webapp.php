@@ -7,12 +7,12 @@ $year = $time->format('Y');
 $stmt1 = $dbh->query("SELECT SUM(hours) from time where date=$date AND month=$month AND year=$year;");
 $stmt2 = $dbh->query("SELECT SUM(hours) from time where month=$month AND year=$year;"); //該当月
 $stmt3 = $dbh->query("SELECT SUM(hours) from time;");
-$date_array=[];
-for ($j=1;$j<=31;$j++){
-    ${"date_stmt".$j} = $dbh->query("SELECT date,sum(hours) from time where date=$j AND month=$month AND year=$year group by date;"); //日付の合計時間
-    ${"date_stmt".$j}->execute([$j,$month,$year]);
-    ${"date_data".$j}=${"date_stmt".$j}->fetchAll();
-    array_push($date_array,${"date_data".$j}[0]["sum(hours)"]);
+$date_array = [];
+for ($j = 1; $j <= 31; $j++) {
+    ${"date_stmt" . $j} = $dbh->query("SELECT date,sum(hours) from time where date=$j AND month=$month AND year=$year group by date;"); //日付の合計時間
+    ${"date_stmt" . $j}->execute([$j, $month, $year]);
+    ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
+    array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
 }
 for ($i = 1; $i < 4; $i++) {
     ${"stmt" . $i}->execute([$date, $month, $year]);
@@ -21,23 +21,17 @@ for ($i = 1; $i < 4; $i++) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-    
-    
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="./reset.css">
-        <link rel="stylesheet" type="text/css" href="./webapp.css">
-        <title>Document</title>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./reset.css">
+    <link rel="stylesheet" type="text/css" href="./webapp.css">
+    <title>Document</title>
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
 
-<pre>
-    <?php
-    echo var_dump($date_array);
-    ?>
-</pre>
+
 <body>
     <header>
         <div class="logo-week">
@@ -112,9 +106,9 @@ for ($i = 1; $i < 4; $i++) {
     </div>
     <!-- 月移動 -->
     <div class="calender">
-        <div id="previous-month" class="calender-arrow">&lt;</div>
-        <div><?php echo $year;?>年<?php echo $month;?>月</div>
-        <div id="next-month" class="calender-arrow">&gt;</div>
+        <button id="previous-month" class="calender-arrow">&lt;</button>
+        <div id="year-month"></div>
+        <button id="next-month" class="calender-arrow">&gt;</button>
     </div>
     <!-- スマホ用のボタンPCでは非表示 -->
     <div class="smartphone-button-container">
@@ -250,22 +244,22 @@ for ($i = 1; $i < 4; $i++) {
             datasets: [{
                 label: "Data", // 系列名
                 data: [
-                    <?php echo $date_array[1];?>, 
-                    <?php echo $date_array[3];?>,
-                    <?php echo $date_array[5];?>,
-                    <?php echo $date_array[7];?>,
-                    <?php echo $date_array[9];?>,
-                    <?php echo $date_array[11];?>,
-                    <?php echo $date_array[13];?>,
-                    <?php echo $date_array[15];?>,
-                    <?php echo $date_array[17];?>,
-                    <?php echo $date_array[19];?>,
-                    <?php echo $date_array[21];?>,
-                    <?php echo $date_array[23];?>,
-                    <?php echo $date_array[25];?>,
-                    <?php echo $date_array[27];?>,
-                    <?php echo $date_array[29];?>,
-                    ], // ★必須　系列Ａのデータ
+                    <?php echo $date_array[1]; ?>,
+                    <?php echo $date_array[3]; ?>,
+                    <?php echo $date_array[5]; ?>,
+                    <?php echo $date_array[7]; ?>,
+                    <?php echo $date_array[9]; ?>,
+                    <?php echo $date_array[11]; ?>,
+                    <?php echo $date_array[13]; ?>,
+                    <?php echo $date_array[15]; ?>,
+                    <?php echo $date_array[17]; ?>,
+                    <?php echo $date_array[19]; ?>,
+                    <?php echo $date_array[21]; ?>,
+                    <?php echo $date_array[23]; ?>,
+                    <?php echo $date_array[25]; ?>,
+                    <?php echo $date_array[27]; ?>,
+                    <?php echo $date_array[29]; ?>,
+                ], // ★必須　系列Ａのデータ
                 backgroundColor: gradient, // 棒の塗りつぶし色
                 borderColor: gradient, // 棒の枠線の色
                 borderWidth: 1, // 枠線の太さ
@@ -411,29 +405,6 @@ for ($i = 1; $i < 4; $i++) {
         }
     });
 </script>
-<script>
-    const previousMonth=document.getElementById('previous-month');
-    previousMonth.addEventListener('click',function(){
-        <?php 
-        $month--;
-        if($month==0){
-            $month=$month+12;
-            $year--;
-        }
-        ?>
-        console.log('<?php echo $month;?>');
-        console.log('<?php echo $year;?>');
-    });
-    const nextMonth=document.getElementById('next-month');
-    nextMonth.addEventListener('click',function(){
-        <?php $month++;
-        if($month==13){
-            $month=$month-12;
-            $year++;
-        }
-        ?>
-        console.log('<?php echo $month;?>');
-        console.log('<?php echo $year;?>');
-    });
-</script>
+
 </html>
+<!-- 最初はurlから情報取得せず現在の日時などを表示月移動するときurlから数値取得して$monthから引いたり足したりする -->
