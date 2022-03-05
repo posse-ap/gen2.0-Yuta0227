@@ -1,26 +1,65 @@
 <?php
-include "db-connect.php";
+require "db-connect.php";
+require "request.php";
+?>
+<script>
+var month;
+var year;
+var paramArray;
+window.onload = function () {
+    var today = new Date();
+    month = today.getMonth() + 1;
+    year = today.getFullYear();
+    paramArray=[month,year]
+    fetch('webapp.php',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(paramArray)
+    }).then(response=>response.json())  
+};
+</script>
+<?php 
 $time = new DateTime('now');
 $date = $time->format('d');
-$month = $time->format('m');
-$year = $time->format('Y');
-$stmt1 = $dbh->query("SELECT SUM(hours) from time where date=$date AND month=$month AND year=$year;");
-$stmt2 = $dbh->query("SELECT SUM(hours) from time where month=$month AND year=$year;"); //該当月
-$stmt3 = $dbh->query("SELECT SUM(hours) from time;");
-$date_array = [];
+$stmt1 = $dbh->prepare("SELECT SUM(hours) from time where date=? AND month=? AND year=?;");
+$stmt2 = $dbh->prepare("SELECT SUM(hours) from time where month=? AND year=?;"); //該当月
+$stmt3 = $dbh->prepare("SELECT SUM(hours) from time;");
+echo var_dump($time_param[0]);
+echo var_dump($time_param[1]);
+// $date_array = [];
+$execute_array=[$date,$time_param[0],$time_param[1]];
+$execute_array2=array_slice($execute_array,1,2);
 for ($j = 1; $j <= 31; $j++) {
-    ${"date_stmt" . $j} = $dbh->query("SELECT date,sum(hours) from time where date=$j AND month=$month AND year=$year group by date;"); //日付の合計時間
-    ${"date_stmt" . $j}->execute([$j, $month, $year]);
+    $execute_array3=[$j,$time_param[0],$time_param[1]];
+    ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date=:date month=:month AND year=:year group by date;"); //日付の合計時間
+    ${"date_stmt" . $j}->bindValue(':date',$j);
+    ${"date_stmt" . $j}->bindValue(':month',$time_param[0]);
+    ${"date_stmt" . $j}->bindValue(':year',$time_param[1]);
+    ${"date_stmt" . $j}->execute();
     ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
     array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
-}
-for ($i = 1; $i < 4; $i++) {
-    ${"stmt" . $i}->execute([$date, $month, $year]);
-    ${"data" . $i} = ${"stmt" . $i}->fetchAll();
-}
-?>
+};
+// echo $date_array[1];
+// var_dump($date_array);
+$stmt1->execute($execute_array);
+$data1=$stmt1->fetchAll();
+$stmt2->execute($execute_array2);
+$data2=$stmt2->fetchAll();
+$stmt3->execute();
+$data3=$stmt3->fetchAll();
+// for ($i = 1; $i < 4; $i++) {
+    //     ${"stmt" . $i}->bindValue("date",$date);
+    //     ${"stmt" . $i}->bindValue("month",$time_param[0]);
+    //     ${"stmt" . $i}->bindValue("year",$time_param[1]);
+    //     ${"stmt" . $i}->execute();
+    //     ${"data" . $i} = ${"stmt" . $i}->fetchAll();
+    // };
+    ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
+    <pre>
+        <?php var_dump($date_array);?>
+    </pre>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

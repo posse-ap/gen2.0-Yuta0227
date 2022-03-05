@@ -94,14 +94,25 @@ smartphoneButton.addEventListener('click', function () {
 const previousMonth = document.getElementById('previous-month');
 const nextMonth = document.getElementById('next-month');
 const yearMonth = document.getElementById('year-month');
-var month;
-var today;
-window.onload = function () {
-    var today = new Date();
-    month = today.getMonth() + 1;
-    year = today.getFullYear();
-    yearMonth.innerHTML = `${year}年${month}月`;
-};
+// var month;
+// var year;
+// var paramArray;
+// window.onload = function () {
+//     var today = new Date();
+//     month = today.getMonth() + 1;
+//     year = today.getFullYear();
+//     paramArray=[month,year]
+//     yearMonth.innerHTML = `${year}年${month}月`;
+//     fetch('webapp.php',{
+//         method:'POST',
+//         headers:{'Content-Type':'application/json'},
+//         body:JSON.stringify(paramArray)
+//     }).then(response=>response.json())
+    
+// };
+window.onload=function(){
+    yearMonth.innerHTML= `${year}年${month}月`;
+}
 previousMonth.addEventListener('click', function () {
     month--;
     if (month == 0) {
