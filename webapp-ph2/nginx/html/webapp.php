@@ -1,71 +1,57 @@
 <script>
-    window.onload=function(){
-        window.open("localhost:8080/webapp.php?month="+month+"?year="+year);
-    }
+    <?php
+    //最初は現在日程のテーブル表示
+    //下の方でクリック時$date$month$yearを増減しurlを再度読み込む
+    $time = new DateTime('now');
+    $date = (int)$time->format('d');
+    $month= (int)date('n');
+    $year= (int)$time->format('Y');
+    ?>
+    // window.onload=function(){
+    //     window.open("localhost:8080/webapp.php?date="+<?php echo $date;?>+"?month="+<?php echo $month;?>+"?year="+<?php echo $year;?>);
+    // };
     //開くときurl設定して月移動しても反映するようにしたい
-    // json必須
-
-
-
-    //最重要
-    
+    //最重要    
 </script>
 <?php
 require "db-connect.php";
 // require "request.php";
 ?>
-<!-- <script>
-var month;
-var year;
-var paramArray;
-window.onload = function () {
-    var today = new Date();
-    month = today.getMonth() + 1;
-    year = today.getFullYear();
-    paramArray=[month,year]
-    fetch('webapp.php',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(paramArray)
-    }).then(response=>response.json())  
-};
-</script> -->
 <?php 
-$time = new DateTime('now');
-$date = (int)$time->format('d');
-$month= (int)date('n');
-$year= (int)$time->format('Y');
-$stmt1 = $dbh->prepare("SELECT SUM(hours) from time where date=:date AND month=:month AND year=:year;");//today専用
-$stmt2 = $dbh->prepare("SELECT SUM(hours) from time where month=:month AND year=:year;"); //該当月
-$stmt3 = $dbh->prepare("SELECT SUM(hours) from time;");
-$stmt1->bindValue(':date',$date,PDO::PARAM_INT);
-$stmt1->bindValue(":month",$month,PDO::PARAM_INT);
-$stmt1->bindValue(":year",$year,PDO::PARAM_INT);
+$stmt1 = $dbh->prepare("SELECT sum(hours) from time where date=$date AND month=$month AND year=$year;");//today専用
+$stmt2 = $dbh->prepare("SELECT sum(hours) from time where month=$month AND year=$year;"); //該当月
+$stmt3 = $dbh->prepare("SELECT sum(hours) from time;");
 $stmt1->execute();
 $data1=$stmt1->fetchAll();
-$stmt2->bindValue(":month",$month,PDO::PARAM_INT);
-$stmt2->bindValue(":year",$year,PDO::PARAM_INT);
 $stmt2->execute();
 $data2=$stmt2->fetchAll();
 $stmt3->execute();
 $data3=$stmt3->fetchAll();
-$date_array = [];
+for($a=1;$a<=3;$a++){
+    if(${"data".$a}[0]['sum(hours)']==NULL){
+        ${"data".$a}[0]['sum(hours)']=0;
+    }
+}
+$date_array=[];
 for ($j = 1; $j <= 31; $j++) {
-    $execute_array3=[$j,$month,$year];
-    ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date=:date month=:month AND year=:year group by date;"); //日付の合計時間
-    ${"date_stmt" . $j}->bindValue(":date",$j);
-    ${"date_stmt" . $j}->bindValue(":month",$month);
-    ${"date_stmt" . $j}->bindValue(":year",$year);
-    ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
-    array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
+    ${"date_stmt".$j} = $dbh->prepare("SELECT date,sum(hours) from time where date =".$j." AND month = ".$month." AND year = ".$year.";"); //日付の合計時間
+    ${"date_stmt".$j}->execute();
+    ${"date_data".$j} = ${"date_stmt".$j}->fetchAll();
+    if(${"date_data".$j}[0]['sum(hours)']==NULL){
+        ${"date_data".$j}[0]['sum(hours)']=0;
+    }
+    array_push($date_array, ${"date_data".$j}[0]["sum(hours)"]);
+    // array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
 };
 echo $date_array[1];
-var_dump($date_array);
-    ?>
+// var_dump($date_data1);
+// echo $date_array[1]["sum(hours)"];
+// var_dump($date_array);
+?>
 <!DOCTYPE html>
 <html lang="ja">
     <pre>
-        <?php var_dump($date_array);?>
+        <?php print_r($date_array);?>
     </pre>
 <head>
     <meta charset="UTF-8">
@@ -96,21 +82,21 @@ var_dump($date_array);
                 <div class="today-container">
                     <div class="today">Today</div>
                     <div class="number">
-                        <?php echo $data1[0]['SUM(hours)']; ?>
+                        <?php echo $data1[0]['sum(hours)']; ?>
                     </div>
                     <div class="hour">hour</div>
                 </div>
                 <div class="month-container">
                     <div class="month">Month</div>
                     <div class="number">
-                        <?php echo $data2[0]['SUM(hours)']; ?>
+                        <?php echo $data2[0]['sum(hours)']; ?>
                     </div>
                     <div class="hour">hour</div>
                 </div>
                 <div class="total-container">
                     <div class="total">Total</div>
                     <div class="number">
-                        <?php echo $data3[0]['SUM(hours)']; ?>
+                        <?php echo $data3[0]['sum(hours)']; ?>
                     </div>
                     <div class="hour">hour</div>
                 </div>
@@ -289,6 +275,9 @@ var_dump($date_array);
             labels: ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30"], // Ｘ軸のラベル
             datasets: [{
                 label: "Data", // 系列名
+                datalabels: {
+                    display:false
+                },
                 data: [
                     <?php echo $date_array[1]; ?>,
                     <?php echo $date_array[3]; ?>,
@@ -381,10 +370,13 @@ var_dump($date_array);
             plugins: {
                 labels: {
                     display: false,
-                    render: 'percentage',
-                    fontColor: 'white',
-                    fontSize: 20
+                    // render: 'percentage',
+                    fontColor: '#00000000',
+                    fontSize: 20,
                 },
+                datalabels: {
+                    display: false
+                }
             },
             maintainAspectRatio: true
         }

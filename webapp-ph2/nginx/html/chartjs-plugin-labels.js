@@ -280,7 +280,8 @@
         }
       }
       this.percentage = percentage;
-      return percentage;
+      return 0;
+      // return percentage;
     };
   
     Label.prototype.getRenderInfo = function (element, label) {

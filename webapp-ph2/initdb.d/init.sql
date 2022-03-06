@@ -12,7 +12,7 @@ insert into time (date, month, year, language, content, hours) values
     (5, 3, 2022, "PHP", "POSSE課題", 3),
     (4, 3, 2022, "PHP", "POSSE課題", 5),
     (23, 5, 2022, "PHP", "POSSE課題", 5),
-    (20,3,2022,"PHP","POSSE課題",5),
+    (20,3,2022,"PHP","POSSE課題",18),
     (5,3,2022,"PHP","POSSE課題",7)
     ;
 -- update time set hours = concat
