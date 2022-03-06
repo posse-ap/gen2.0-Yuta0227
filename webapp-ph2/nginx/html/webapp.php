@@ -4,11 +4,11 @@
     //下の方でクリック時$date$month$yearを増減しurlを再度読み込む
     $time = new DateTime('now');
     $date = (int)$time->format('d');
-    $month= (int)date('n');
-    $year= (int)$time->format('Y');
+    $month = (int)date('n');
+    $year = (int)$time->format('Y');
     ?>
     // window.onload=function(){
-    //     window.open("localhost:8080/webapp.php?date="+<?php echo $date;?>+"?month="+<?php echo $month;?>+"?year="+<?php echo $year;?>);
+    //     window.open("localhost:8080/webapp.php?date="+<?php echo $date; ?>+"?month="+<?php echo $month; ?>+"?year="+<?php echo $year; ?>);
     // };
     //開くときurl設定して月移動しても反映するようにしたい
     //最重要    
@@ -17,42 +17,117 @@
 require "db-connect.php";
 // require "request.php";
 ?>
-<?php 
-$stmt1 = $dbh->prepare("SELECT sum(hours) from time where date=$date AND month=$month AND year=$year;");//today専用
+<?php
+$stmt1 = $dbh->prepare("SELECT sum(hours) from time where date=$date AND month=$month AND year=$year;"); //today専用
 $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month=$month AND year=$year;"); //該当月
-$stmt3 = $dbh->prepare("SELECT sum(hours) from time;");
-$stmt1->execute();
-$data1=$stmt1->fetchAll();
-$stmt2->execute();
-$data2=$stmt2->fetchAll();
-$stmt3->execute();
-$data3=$stmt3->fetchAll();
-for($a=1;$a<=3;$a++){
-    if(${"data".$a}[0]['sum(hours)']==NULL){
-        ${"data".$a}[0]['sum(hours)']=0;
+$stmt3 = $dbh->prepare("SELECT sum(hours) from time;"); //合計
+$stmt4 = $dbh->prepare("SELECT sum(hours) from time where content_id=1;");
+$stmt5 = $dbh->prepare("SELECT sum(hours) from time where content_id=2;");
+$stmt6 = $dbh->prepare("SELECT sum(hours) from time where content_id=3;");
+$stmt7 = $dbh->prepare("SELECT sum(hours) from time where language_id=1;");
+$stmt8 = $dbh->prepare("SELECT sum(hours) from time where language_id=2;");
+$stmt9 = $dbh->prepare("SELECT sum(hours) from time where language_id=3;");
+$stmt10 = $dbh->prepare("SELECT sum(hours) from time where language_id=4;");
+$stmt11 = $dbh->prepare("SELECT sum(hours) from time where language_id=5;");
+$stmt12 = $dbh->prepare("SELECT sum(hours) from time where language_id=6;");
+$stmt13 = $dbh->prepare("SELECT sum(hours) from time where language_id=7;");
+$stmt14 = $dbh->prepare("SELECT sum(hours) from time where language_id=8;");
+$content4 = $dbh->prepare("SELECT distinct content from time where content_id=1;"); //1=>POSSE課題
+$content5 = $dbh->prepare("SELECT distinct content from time where content_id=2;"); //2=>ドットインストール
+$content6 = $dbh->prepare("SELECT distinct content from time where content_id=3;"); //3=>N予備校
+$language7 = $dbh->prepare("SELECT distinct language from time where language_id=1;"); //1=>Javascript
+$language8 = $dbh->prepare("SELECT distinct language from time where language_id=2;"); //2=>CSS
+$language9 = $dbh->prepare("SELECT distinct language from time where language_id=3;"); //3=>PHP
+$language10 = $dbh->prepare("SELECT distinct language from time where language_id=4;"); //4=>HTML
+$language11 = $dbh->prepare("SELECT distinct language from time where language_id=5;"); //5=>Laravel
+$language12 = $dbh->prepare("SELECT distinct language from time where language_id=6;"); //6=>SQL
+$language13 = $dbh->prepare("SELECT distinct language from time where language_id=7;"); //7=>SHELL
+$language14 = $dbh->prepare("SELECT distinct language from time where language_id=8;"); //8=>情報システム基礎知識(その他)
+
+for ($i = 1; $i <= 14; $i++) {
+    ${"stmt" . $i}->execute();
+    ${"data" . $i} = ${"stmt" . $i}->fetchAll();
+}
+for ($g = 4; $g <= 6; $g++) {
+    ${"content" . $g}->execute();
+    ${"content_data" . $g} = ${"content" . $g}->fetchAll();
+}
+for ($h = 7; $h <= 14; $h++) {
+    ${"language" . $h}->execute();
+    ${"language_data" . $h} = ${"language" . $h}->fetchAll();
+}
+for ($a = 1; $a <= 14; $a++) {
+    if (${"data" . $a}[0]['sum(hours)'] == NULL) {
+        ${"data" . $a}[0]['sum(hours)'] = 0;
     }
 }
-$date_array=[];
-for ($j = 1; $j <= 31; $j++) {
-    ${"date_stmt".$j} = $dbh->prepare("SELECT date,sum(hours) from time where date =".$j." AND month = ".$month." AND year = ".$year.";"); //日付の合計時間
-    ${"date_stmt".$j}->execute();
-    ${"date_data".$j} = ${"date_stmt".$j}->fetchAll();
-    if(${"date_data".$j}[0]['sum(hours)']==NULL){
-        ${"date_data".$j}[0]['sum(hours)']=0;
+// <?php echo $content_array[0]; ,
+$content_hour_array = [
+    (int)$data4[0]['sum(hours)'],
+    (int)$data5[0]['sum(hours)'],
+    (int)$data6[0]['sum(hours)'],
+];
+$language_hour_array = [
+    (int)$data7[0]['sum(hours)'],
+    (int)$data8[0]['sum(hours)'],
+    (int)$data9[0]['sum(hours)'],
+    (int)$data10[0]['sum(hours)'],
+    (int)$data11[0]['sum(hours)'],
+    (int)$data12[0]['sum(hours)'],
+    (int)$data13[0]['sum(hours)'],
+    (int)$data14[0]['sum(hours)'],
+];
+rsort($content_hour_array);
+rsort($language_hour_array);
+$content_color_array = [];
+for ($u = 0; $u <= 2; $u++) {
+    for ($m = 4; $m <= 6; $m++) {
+        if ($content_hour_array[$u] == (int)${"data" . ($m)}[0]['sum(hours)']) {
+            if (count($content_color_array) == $u) {
+                array_push($content_color_array, ${"content_data" . ($u + 4)}[0]['content']);
+            }
+            // array_push($content_color_array, ${"content_data" . $c}[0]['content']);
+
+        }
     }
-    array_push($date_array, ${"date_data".$j}[0]["sum(hours)"]);
+}
+// var_dump($content_color_array);
+$language_color_array = [];
+for ($k = 0; $k <= 7; $k++) {
+    for($z=7;$z<=14;$z++){
+        if ($language_hour_array[$k] == (int)${"data" . $z}[0]['sum(hours)']) {
+            if (count($language_color_array) == $k) {
+                array_push($language_color_array, ${"language_data" . ($k + 7)}[0]['language']);
+                echo ${"language_data".($k+7)}[0]['language'];
+            }
+        }
+    }
+}
+print_r($language_color_array);
+// print_r($language_color_array);
+// var_dump($language_color_array);
+// var_dump($content_color_array);
+// var_dump($content_color_array);
+// var_dump($language_color_array);
+$date_array = [];
+for ($j = 1; $j <= 31; $j++) {
+    ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month = " . $month . " AND year = " . $year . ";"); //日付の合計時間
+    ${"date_stmt" . $j}->execute();
+    ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
+    if (${"date_data" . $j}[0]['sum(hours)'] == NULL) {
+        ${"date_data" . $j}[0]['sum(hours)'] = 0;
+    }
+    array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
     // array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
 };
-echo $date_array[1];
 // var_dump($date_data1);
 // echo $date_array[1]["sum(hours)"];
 // var_dump($date_array);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
-    <pre>
-        <?php print_r($date_array);?>
-    </pre>
+
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -62,7 +137,11 @@ echo $date_array[1];
     <title>Document</title>
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
-
+<!-- <pre>
+        <!-- <?php var_dump($language_color_array); ?> -->
+<!-- <?php var_dump($language_hour_array); ?> -->
+<!-- javascript,css,sqlが同列4位で3回ループしてる時間のランキングでは正常 -->
+<!-- </pre> -->
 
 <body>
     <header>
@@ -70,6 +149,7 @@ echo $date_array[1];
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
             とりあえず汚くていいから完成させるフィードバックもらう
+            パーセント表示反映できてないplugin.jsを編集
         </div>
         <div class="button-container">
             <button id="header-button" class="post-button">記録・投稿</button>
@@ -112,14 +192,14 @@ echo $date_array[1];
                 <canvas id="language-chart-doughnut" width="15" height="10"></canvas>
                 <div>
                     <ul class="language">
-                        <li><i class="fas fa-circle" style="color:#0345EC"></i>Javascript</li>
-                        <li><i class="fas fa-circle" style="color:#0F71BD"></i>CSS</li>
-                        <li><i class="fas fa-circle" style="color:#20BDDE"></i>PHP</li>
-                        <li><i class="fas fa-circle" style="color:#3CCEFE"></i>HTML</li>
-                        <li><i class="fas fa-circle" style="color:#B29EF3"></i>Lavarel</li>
-                        <li><i class="fas fa-circle" style="color:#6D46EC"></i>SQL</li>
-                        <li><i class="fas fa-circle" style="color:#4A17EF"></i>SHELL</li>
-                        <li><i class="fas fa-circle" style="color:#3105C0"></i>情報システム基礎知識(その他)</li>
+                        <li><i class="fas fa-circle" style="color:#0345EC"></i><?php echo $language_color_array[0]; ?></li>
+                        <li><i class="fas fa-circle" style="color:#0F71BD"></i><?php echo $language_color_array[1]; ?></li>
+                        <li><i class="fas fa-circle" style="color:#20BDDE"></i><?php echo $language_color_array[2]; ?></li>
+                        <li><i class="fas fa-circle" style="color:#3CCEFE"></i><?php echo $language_color_array[3]; ?></li>
+                        <li><i class="fas fa-circle" style="color:#B29EF3"></i><?php echo $language_color_array[4]; ?></li>
+                        <li><i class="fas fa-circle" style="color:#6D46EC"></i><?php echo $language_color_array[5]; ?></li>
+                        <li><i class="fas fa-circle" style="color:#4A17EF"></i><?php echo $language_color_array[6]; ?></li>
+                        <li><i class="fas fa-circle" style="color:#3105C0"></i><?php echo $language_color_array[7]; ?></li>
                     </ul>
                 </div>
             </div>
@@ -128,9 +208,9 @@ echo $date_array[1];
                 <canvas id="material-chart-doughnut" width="15" height="10"></canvas>
                 <div>
                     <ul class="material">
-                        <li><i class="fas fa-circle" style="color:#0345EC"></i>ドットインストール</li>
-                        <li><i class="fas fa-circle" style="color:#0F71BD"></i>N予備校</li>
-                        <li><i class="fas fa-circle" style="color:#20BDDE"></i>POSSE課題</li>
+                        <li><i class="fas fa-circle" style="color:#0345EC"></i><?php echo $content_color_array[0]; ?></li>
+                        <li><i class="fas fa-circle" style="color:#0F71BD"></i><?php echo $content_color_array[1]; ?></li>
+                        <li><i class="fas fa-circle" style="color:#20BDDE"></i><?php echo $content_color_array[2]; ?></li>
                     </ul>
                 </div>
             </div>
@@ -198,7 +278,7 @@ echo $date_array[1];
                         <label id="label8">
                             <input id="checkbox8" type="checkbox">
                             <i id="my-checkbox8" class="fas fa-check-circle"></i>
-                            Lavarel
+                            Laravel
                         </label>
                         <label id="label9">
                             <input id="checkbox9" type="checkbox">
@@ -275,9 +355,6 @@ echo $date_array[1];
             labels: ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30"], // Ｘ軸のラベル
             datasets: [{
                 label: "Data", // 系列名
-                datalabels: {
-                    display:false
-                },
                 data: [
                     <?php echo $date_array[1]; ?>,
                     <?php echo $date_array[3]; ?>,
@@ -389,9 +466,27 @@ echo $date_array[1];
     var myLanguageChart = new Chart(language, {
         type: 'doughnut',
         data: {
-            labels: ['Javascript', 'CSS', 'PHP', 'HTML', 'Lavarel', 'SQL', 'SHELL', '情報システム基礎知識（その他）'],
+            labels: [
+                '<?php echo $language_color_array[0]; ?>',
+                '<?php echo $language_color_array[1]; ?>',
+                '<?php echo $language_color_array[2]; ?>',
+                '<?php echo $language_color_array[3]; ?>',
+                '<?php echo $language_color_array[4]; ?>',
+                '<?php echo $language_color_array[5]; ?>',
+                '<?php echo $language_color_array[6]; ?>',
+                '<?php echo $language_color_array[7]; ?>'
+            ],
             datasets: [{
-                data: [10, 20, 20, 10, 10, 10, 10, 10],
+                data: [
+                    <?php echo $language_hour_array[0]; ?>,
+                    <?php echo $language_hour_array[1]; ?>,
+                    <?php echo $language_hour_array[2]; ?>,
+                    <?php echo $language_hour_array[3]; ?>,
+                    <?php echo $language_hour_array[4]; ?>,
+                    <?php echo $language_hour_array[5]; ?>,
+                    <?php echo $language_hour_array[6]; ?>,
+                    <?php echo $language_hour_array[7]; ?>,
+                ],
                 backgroundColor: ['#0345EC', '#0F71BD', '#20BDDE', '#3CCEFE', '#B29EF3', '#6D46EC', '#4A17EF', '#3105C0'],
                 weight: 100,
             }],
@@ -407,7 +502,7 @@ echo $date_array[1];
             plugins: {
                 labels: {
                     render: 'percentage',
-                    fontColor: 'white',
+                    fontColor: '#00000000',
                     fontSize: 10
                 }
             }
@@ -417,9 +512,13 @@ echo $date_array[1];
     var myMaterialChart = new Chart(material, {
         type: 'doughnut',
         data: {
-            labels: ['ドットインストール', 'N予備校', 'POSSE課題'],
+            labels: ["<?php echo $content_color_array[0]; ?>", "<?php echo $content_color_array[1]; ?>", "<?php echo $content_color_array[2]; ?>"],
             datasets: [{
-                data: [10, 20, 70],
+                data: [
+                    <?php echo $content_hour_array[0]; ?>,
+                    <?php echo $content_hour_array[1]; ?>,
+                    <?php echo $content_hour_array[2]; ?>
+                ],
                 backgroundColor: ['#0345EC', '#0F71BD', '#20BDDE'],
                 weight: 100,
             }],
@@ -436,12 +535,13 @@ echo $date_array[1];
             plugins: {
                 labels: {
                     render: 'percentage',
-                    fontColor: 'white',
+                    fontColor: '#00000000',
                     fontSize: 10
                 }
             }
         }
     });
 </script>
+
 </html>
 <!-- 最初はurlから情報取得せず現在の日時などを表示月移動するときurlから数値取得して$monthから引いたり足したりする -->
