@@ -92,18 +92,19 @@ for ($u = 0; $u <= 2; $u++) {
     }
 }
 // var_dump($content_color_array);
-$language_color_array = [];
+$language_color_array = [
+    0,0,0,0,0,0,0,0
+];
 for ($k = 0; $k <= 7; $k++) {
     for($z=7;$z<=14;$z++){
         if ($language_hour_array[$k] == (int)${"data" . $z}[0]['sum(hours)']) {
-            if (count($language_color_array) == $k) {
-                array_push($language_color_array, ${"language_data" . ($k + 7)}[0]['language']);
-                echo ${"language_data".($k+7)}[0]['language'];
-            }
+                if($language_color_array[$k]==0){
+                    $language_color_array[$k]=${"language_data" . $z}[0]['language'];
+                };
+                print_r($language_color_array[$k]);
         }
     }
 }
-print_r($language_color_array);
 // print_r($language_color_array);
 // var_dump($language_color_array);
 // var_dump($content_color_array);
