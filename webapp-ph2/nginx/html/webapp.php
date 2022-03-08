@@ -9,18 +9,16 @@
     $date = (int)date('d');
     $month = (int)date('n');
     $year = (int)date('Y');
-    if (isset($_GET['month'])) {
+    if (isset($_GET['month']) && isset($_GET['year'])) {
         $moveMonth = $_GET['month'];
-    };
-    if (isset($_GET['year'])) {
         $moveYear = $_GET['year'];
+        $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month = $moveMonth AND year = $moveYear;"); //該当月
     };
     ?>
     <?php
     // echo $date;
     // echo $date;
     $stmt1 = $dbh->prepare("SELECT sum(hours) from time where date = $date AND month = $month AND year = $year;"); //today専用
-    $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month = $moveMonth AND year = $moveYear;"); //該当月
     $stmt3 = $dbh->prepare("SELECT sum(hours) from time;"); //合計
     $stmt4 = $dbh->prepare("SELECT sum(hours) from time where content_id=1;");
     $stmt5 = $dbh->prepare("SELECT sum(hours) from time where content_id=2;");
@@ -46,6 +44,9 @@
     $language14 = $dbh->prepare("SELECT distinct language from time where language_id=8;"); //8=>情報システム基礎知識(その他)
 
     for ($i = 1; $i <= 14; $i++) {
+        if ($i == 2) {
+            continue;
+        }
         ${"stmt" . $i}->execute();
         ${"data" . $i} = ${"stmt" . $i}->fetchAll();
     }
@@ -89,7 +90,11 @@
     //連想配列で数値と言語名も取れると最高
     $date_array = [];
     for ($j = 1; $j <= 31; $j++) {
-        ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month =" . $moveMonth . " AND year =". $moveYear . ";"); //日付の合計時間
+        if (isset($_GET['month']) && isset($_GET['year'])) {
+            ${"date_stmt" . $j} = $dbh->prepare("SELECT sum(hours) from time where date = $j and month = $moveMonth and year= $moveYear;"); //日付の合計時間
+        } else {
+            ${"date_stmt" . $j} = $dbh->prepare("SELECT sum(hours) from time where date = $j and month = $month and year= $year;"); //日付の合計時間
+        }
         // ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month = " . $month . " AND year = " . $year . ";"); //日付の合計時間
         ${"date_stmt" . $j}->execute();
         ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
@@ -120,7 +125,7 @@
                 <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
                 <div class="week">4th week</div>
                 あとは投稿機能
-                </div>
+            </div>
             <div class="button-container">
                 <button id="header-button" class="post-button">記録・投稿</button>
             </div>
@@ -130,7 +135,7 @@
             <div class="first-container">
                 <div class="today-month-total-container">
                     <div class="today-container">
-                        <div class="today"><?php echo $year;?>/<?php echo $month;?>/<?php echo $date;?></div>
+                        <div class="today"><?php echo $year; ?>/<?php echo $month; ?>/<?php echo $date; ?></div>
                         <div class="number">
                             <?php echo $data1[0]['sum(hours)']; ?>
                         </div>
@@ -191,11 +196,23 @@
             <button id="previous-month" class="calender-arrow">&lt;</button>
             <div id="year-month">
                 <span id="year">
-                    <?php echo $moveYear; ?>
+                    <?php
+                    if (isset($_GET['month']) && isset($_GET['year'])) {
+                        echo $moveYear;
+                    }else{
+                        echo $year;
+                    }
+                    ?>
                 </span>
                 年
                 <span id="month">
-                    <?php echo $moveMonth; ?>
+                    <?php
+                    if (isset($_GET['month']) && isset($_GET['year'])) {
+                        echo $moveMonth;
+                    }else{
+                        echo $month;
+                    }
+                    ?>
                 </span>
                 月
             </div>
