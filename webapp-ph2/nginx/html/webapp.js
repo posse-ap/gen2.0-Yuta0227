@@ -15,6 +15,9 @@ const year=document.getElementById('year');
 var now=new Date();
 var innerhtmlMonth=month.innerHTML;
 var innerhtmlYear=year.innerHTML;
+var submitData=[];
+var checkedContents=[];
+var checkedLanguage;
 //ラベルクリック時checked==trueならば青色をつける
 for (let i = 1; i <= 11; i++) {
     document.getElementById(`label${i}`).addEventListener('click', function () {
@@ -83,9 +86,20 @@ function stopLoading() {
     fullOverlay.setAttribute("hidden", "");
 }
 pcPost.addEventListener('click', function () {
-
+//データ送信
     setTimeout(startLoading, 1000);
     setTimeout(stopLoading, 3000);
+    // submitData={
+    //     date:date.value,
+    //     month:date.value,
+    //     year:date.value,
+    //     content:checkedContents,
+    //     language:checkedLanguage,
+    //     hours:time.value,
+    //     comment:comment.value,
+    //     share:document.getElementById('checkbox12').checked
+    // }
+    console.log(date.value);
 });
 //スマホで画面下部のボタン押すとオーバーレイ表示する
 smartphoneButton.addEventListener('click', function () {
@@ -96,6 +110,16 @@ smartphoneButton.addEventListener('click', function () {
     smartphonePostButton.addEventListener('click', function () {
         setTimeout(startLoading, 1000);
         setTimeout(stopLoading, 3000);
+        // submitData={
+        //     date:date.value,
+        //     month:date.value,
+        //     year:date.value,
+        //     content:checkedContents,
+        //     language:checkedLanguage,
+        //     hours:time.value,
+        //     comment:comment.value,
+        //     share:document.getElementById('checkbox12').checked
+        // }
         smartphonePostButton.id = "smartphoneButton";
     })
     //PCでやると一度ボタンクリックした後カーソル動かしただけでクリックした判定になってしまう。だけどスマホなら平気なのかも

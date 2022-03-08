@@ -13,6 +13,8 @@
         $moveMonth = $_GET['month'];
         $moveYear = $_GET['year'];
         $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month = $moveMonth AND year = $moveYear;"); //該当月
+    }else{
+        $stmt2= $dbh->prepare("SELECT sum(hours) from time where month =$month and year = $year;");
     };
     ?>
     <?php
@@ -44,9 +46,6 @@
     $language14 = $dbh->prepare("SELECT distinct language from time where language_id=8;"); //8=>情報システム基礎知識(その他)
 
     for ($i = 1; $i <= 14; $i++) {
-        if ($i == 2) {
-            continue;
-        }
         ${"stmt" . $i}->execute();
         ${"data" . $i} = ${"stmt" . $i}->fetchAll();
     }
@@ -229,7 +228,14 @@
                     <div class="form-left">
                         <div class="date-container">
                             <div>学習日</div>
-                            <input id="date" type="date" size="20" class="textbox" required>
+                            <input id="date" type="date" size="20" class="textbox" value="<?php
+                                if (isset($_GET['month']) && isset($_GET['year'])) {
+                                    $one_digit_date=$moveYear.'-'.$moveMonth.'-'.$date;
+                                    echo date('Y-m-d',strtotime($one_digit_date));
+                                } else{
+                                    echo date('Y-m-d');
+                                }
+                            ?>"required>
                         </div>
                         <div class="study-content-container">
                             <div>学習コンテンツ</div>
