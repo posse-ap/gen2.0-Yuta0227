@@ -2,29 +2,20 @@
     require "db-connect.php";
     // require "request.php";
     ?>
-    <script>
-        <?php
-        //最初は現在日程のテーブル表示
-        //下の方でクリック時$date$month$yearを増減しurlを再度読み込む
-        $time=new DateTime();
-        $date = (int)date('d');
-        $month = (int)date('n');
-        $year = (int)date('Y');
-        if(isset($_GET['month'])){
-            $month=$_GET['month'];
-        };
-        if(isset($_GET['year'])){
-            $year=$_GET['year'];
-        };
-        print_r($date);
-        print_r($month);
-        print_r($year);
-        
-        // $date = (int)$time->format('d');
-        // $month = (int)date('n');
-        // $year = (int)$time->format('Y');
-        ?>
-    </script>
+    <?php
+    //最初は現在日程のテーブル表示
+    //下の方でクリック時$date$month$yearを増減しurlを再度読み込む
+    $time = new DateTime();
+    $date = (int)date('d');
+    $month = (int)date('n');
+    $year = (int)date('Y');
+    if (isset($_GET['month'])) {
+        $month = $_GET['month'];
+    };
+    if (isset($_GET['year'])) {
+        $year = $_GET['year'];
+    };
+    ?>
     <?php
     // echo $date;
     // echo $date;
@@ -98,7 +89,7 @@
     //連想配列で数値と言語名も取れると最高
     $date_array = [];
     for ($j = 1; $j <= 31; $j++) {
-        ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month = 3 AND year = 2022;"); //日付の合計時間
+        ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month =" . $month . " AND year =". $year . ";"); //日付の合計時間
         // ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month = " . $month . " AND year = " . $year . ";"); //日付の合計時間
         ${"date_stmt" . $j}->execute();
         ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
