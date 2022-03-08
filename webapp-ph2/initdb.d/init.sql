@@ -35,7 +35,8 @@ insert into time (date, month, year, language, content, hours, content_id,langua
     (9,6,2022,"PHP","ドットインストール",2,2,3),
     (19,4,2022,"Javascript","N予備校",5,3,1),
     (19,4,2022,"CSS","N予備校",5,3,2),
-    (19,4,2022,"HTML","N予備校",5,3,4)
+    (19,4,2022,"HTML","N予備校",5,3,4),
+    (23,3,2022,"HTML","ドットインストール",8,2,4)
     ;
 -- update time set hours = concat
 -- insert into time (date,month,year,language,content,hours) values 

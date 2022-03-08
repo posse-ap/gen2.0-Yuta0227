@@ -62,54 +62,30 @@ for ($a = 1; $a <= 14; $a++) {
     }
 }
 // <?php echo $content_array[0]; ,
-$content_hour_array = [
-    (int)$data4[0]['sum(hours)'],
-    (int)$data5[0]['sum(hours)'],
-    (int)$data6[0]['sum(hours)'],
+$content_array = [
+    ['合計時間' => (int)$data4[0]['sum(hours)'], 'コンテンツ' => $content_data4[0]['content']],
+    ['合計時間' => (int)$data5[0]['sum(hours)'], 'コンテンツ' => $content_data5[0]['content']],
+    ['合計時間' => (int)$data6[0]['sum(hours)'], 'コンテンツ' => $content_data6[0]['content']],
 ];
-$language_hour_array = [
-    (int)$data7[0]['sum(hours)'],
-    (int)$data8[0]['sum(hours)'],
-    (int)$data9[0]['sum(hours)'],
-    (int)$data10[0]['sum(hours)'],
-    (int)$data11[0]['sum(hours)'],
-    (int)$data12[0]['sum(hours)'],
-    (int)$data13[0]['sum(hours)'],
-    (int)$data14[0]['sum(hours)'],
+foreach ($content_array as $key => $value) {
+    $multi_content_array[$key] = $value['合計時間'];
+};
+array_multisort($multi_content_array, SORT_DESC, SORT_NUMERIC, $content_array);
+$language_array = [
+    ['合計時間' => (int)$data7[0]['sum(hours)'], '言語' => $language_data7[0]['language']],
+    ['合計時間' => (int)$data8[0]['sum(hours)'], '言語' => $language_data8[0]['language']],
+    ['合計時間' => (int)$data9[0]['sum(hours)'], '言語' => $language_data9[0]['language']],
+    ['合計時間' => (int)$data10[0]['sum(hours)'], '言語' => $language_data10[0]['language']],
+    ['合計時間' => (int)$data11[0]['sum(hours)'], '言語' => $language_data11[0]['language']],
+    ['合計時間' => (int)$data12[0]['sum(hours)'], '言語' => $language_data12[0]['language']],
+    ['合計時間' => (int)$data13[0]['sum(hours)'], '言語' => $language_data13[0]['language']],
+    ['合計時間' => (int)$data14[0]['sum(hours)'], '言語' => $language_data14[0]['language']],
 ];
-rsort($content_hour_array);
-rsort($language_hour_array);
-$content_color_array = [];
-for ($u = 0; $u <= 2; $u++) {
-    for ($m = 4; $m <= 6; $m++) {
-        if ($content_hour_array[$u] == (int)${"data" . ($m)}[0]['sum(hours)']) {
-            if (count($content_color_array) == $u) {
-                array_push($content_color_array, ${"content_data" . ($u + 4)}[0]['content']);
-            }
-            // array_push($content_color_array, ${"content_data" . $c}[0]['content']);
-
-        }
-    }
-}
-// var_dump($content_color_array);
-$language_color_array = [
-    0,0,0,0,0,0,0,0
-];
-for ($k = 0; $k <= 7; $k++) {
-    for($z=7;$z<=14;$z++){
-        if ($language_hour_array[$k] == (int)${"data" . $z}[0]['sum(hours)']) {
-                if($language_color_array[$k]==0){
-                    $language_color_array[$k]=${"language_data" . $z}[0]['language'];
-                };
-                print_r($language_color_array[$k]);
-        }
-    }
-}
-// print_r($language_color_array);
-// var_dump($language_color_array);
-// var_dump($content_color_array);
-// var_dump($content_color_array);
-// var_dump($language_color_array);
+foreach ($language_array as $key => $value) {
+    $multi_language_array[$key] = $value['合計時間'];
+};
+array_multisort($multi_language_array, SORT_DESC, SORT_NUMERIC, $language_array);
+//連想配列で数値と言語名も取れると最高
 $date_array = [];
 for ($j = 1; $j <= 31; $j++) {
     ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month = " . $month . " AND year = " . $year . ";"); //日付の合計時間
@@ -119,11 +95,7 @@ for ($j = 1; $j <= 31; $j++) {
         ${"date_data" . $j}[0]['sum(hours)'] = 0;
     }
     array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
-    // array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
 };
-// var_dump($date_data1);
-// echo $date_array[1]["sum(hours)"];
-// var_dump($date_array);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -138,11 +110,12 @@ for ($j = 1; $j <= 31; $j++) {
     <title>Document</title>
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
-<!-- <pre>
-        <!-- <?php var_dump($language_color_array); ?> -->
-<!-- <?php var_dump($language_hour_array); ?> -->
-<!-- javascript,css,sqlが同列4位で3回ループしてる時間のランキングでは正常 -->
-<!-- </pre> -->
+<pre>
+    <?php
+    print_r($language_array);
+    ?>
+    <!-- javascript,css,sqlが同列4位で3回ループしてる時間のランキングでは正常 -->
+</pre>
 
 <body>
     <header>
@@ -193,14 +166,14 @@ for ($j = 1; $j <= 31; $j++) {
                 <canvas id="language-chart-doughnut" width="15" height="10"></canvas>
                 <div>
                     <ul class="language">
-                        <li><i class="fas fa-circle" style="color:#0345EC"></i><?php echo $language_color_array[0]; ?></li>
-                        <li><i class="fas fa-circle" style="color:#0F71BD"></i><?php echo $language_color_array[1]; ?></li>
-                        <li><i class="fas fa-circle" style="color:#20BDDE"></i><?php echo $language_color_array[2]; ?></li>
-                        <li><i class="fas fa-circle" style="color:#3CCEFE"></i><?php echo $language_color_array[3]; ?></li>
-                        <li><i class="fas fa-circle" style="color:#B29EF3"></i><?php echo $language_color_array[4]; ?></li>
-                        <li><i class="fas fa-circle" style="color:#6D46EC"></i><?php echo $language_color_array[5]; ?></li>
-                        <li><i class="fas fa-circle" style="color:#4A17EF"></i><?php echo $language_color_array[6]; ?></li>
-                        <li><i class="fas fa-circle" style="color:#3105C0"></i><?php echo $language_color_array[7]; ?></li>
+                        <li><i class="fas fa-circle" style="color:#0345EC"></i><?php echo $language_array[0]['言語']; ?></li>
+                        <li><i class="fas fa-circle" style="color:#0F71BD"></i><?php echo $language_array[1]['言語']; ?></li>
+                        <li><i class="fas fa-circle" style="color:#20BDDE"></i><?php echo $language_array[2]['言語']; ?></li>
+                        <li><i class="fas fa-circle" style="color:#3CCEFE"></i><?php echo $language_array[3]['言語']; ?></li>
+                        <li><i class="fas fa-circle" style="color:#B29EF3"></i><?php echo $language_array[4]['言語']; ?></li>
+                        <li><i class="fas fa-circle" style="color:#6D46EC"></i><?php echo $language_array[5]['言語']; ?></li>
+                        <li><i class="fas fa-circle" style="color:#4A17EF"></i><?php echo $language_array[6]['言語']; ?></li>
+                        <li><i class="fas fa-circle" style="color:#3105C0"></i><?php echo $language_array[7]['言語']; ?></li>
                     </ul>
                 </div>
             </div>
@@ -209,9 +182,9 @@ for ($j = 1; $j <= 31; $j++) {
                 <canvas id="material-chart-doughnut" width="15" height="10"></canvas>
                 <div>
                     <ul class="material">
-                        <li><i class="fas fa-circle" style="color:#0345EC"></i><?php echo $content_color_array[0]; ?></li>
-                        <li><i class="fas fa-circle" style="color:#0F71BD"></i><?php echo $content_color_array[1]; ?></li>
-                        <li><i class="fas fa-circle" style="color:#20BDDE"></i><?php echo $content_color_array[2]; ?></li>
+                        <li><i class="fas fa-circle" style="color:#0345EC"></i><?php echo $content_array[0]['コンテンツ']; ?></li>
+                        <li><i class="fas fa-circle" style="color:#0F71BD"></i><?php echo $content_array[1]['コンテンツ']; ?></li>
+                        <li><i class="fas fa-circle" style="color:#20BDDE"></i><?php echo $content_array[2]['コンテンツ']; ?></li>
                     </ul>
                 </div>
             </div>
@@ -468,25 +441,25 @@ for ($j = 1; $j <= 31; $j++) {
         type: 'doughnut',
         data: {
             labels: [
-                '<?php echo $language_color_array[0]; ?>',
-                '<?php echo $language_color_array[1]; ?>',
-                '<?php echo $language_color_array[2]; ?>',
-                '<?php echo $language_color_array[3]; ?>',
-                '<?php echo $language_color_array[4]; ?>',
-                '<?php echo $language_color_array[5]; ?>',
-                '<?php echo $language_color_array[6]; ?>',
-                '<?php echo $language_color_array[7]; ?>'
+                '<?php echo $language_array[0]['言語']; ?>',
+                '<?php echo $language_array[1]['言語']; ?>',
+                '<?php echo $language_array[2]['言語']; ?>',
+                '<?php echo $language_array[3]['言語']; ?>',
+                '<?php echo $language_array[4]['言語']; ?>',
+                '<?php echo $language_array[5]['言語']; ?>',
+                '<?php echo $language_array[6]['言語']; ?>',
+                '<?php echo $language_array[7]['言語']; ?>'
             ],
             datasets: [{
                 data: [
-                    <?php echo $language_hour_array[0]; ?>,
-                    <?php echo $language_hour_array[1]; ?>,
-                    <?php echo $language_hour_array[2]; ?>,
-                    <?php echo $language_hour_array[3]; ?>,
-                    <?php echo $language_hour_array[4]; ?>,
-                    <?php echo $language_hour_array[5]; ?>,
-                    <?php echo $language_hour_array[6]; ?>,
-                    <?php echo $language_hour_array[7]; ?>,
+                    <?php echo $language_array[0]['合計時間']; ?>,
+                    <?php echo $language_array[1]['合計時間']; ?>,
+                    <?php echo $language_array[2]['合計時間']; ?>,
+                    <?php echo $language_array[3]['合計時間']; ?>,
+                    <?php echo $language_array[4]['合計時間']; ?>,
+                    <?php echo $language_array[5]['合計時間']; ?>,
+                    <?php echo $language_array[6]['合計時間']; ?>,
+                    <?php echo $language_array[7]['合計時間']; ?>,
                 ],
                 backgroundColor: ['#0345EC', '#0F71BD', '#20BDDE', '#3CCEFE', '#B29EF3', '#6D46EC', '#4A17EF', '#3105C0'],
                 weight: 100,
@@ -513,12 +486,16 @@ for ($j = 1; $j <= 31; $j++) {
     var myMaterialChart = new Chart(material, {
         type: 'doughnut',
         data: {
-            labels: ["<?php echo $content_color_array[0]; ?>", "<?php echo $content_color_array[1]; ?>", "<?php echo $content_color_array[2]; ?>"],
+            labels: [
+                '<?php echo $content_array[0]['コンテンツ'];?>',
+                '<?php echo $content_array[1]['コンテンツ'];?>',
+                '<?php echo $content_array[2]['コンテンツ'];?>',
+            ],
             datasets: [{
                 data: [
-                    <?php echo $content_hour_array[0]; ?>,
-                    <?php echo $content_hour_array[1]; ?>,
-                    <?php echo $content_hour_array[2]; ?>
+                    <?php echo $content_array[0]['合計時間']; ?>,
+                    <?php echo $content_array[1]['合計時間']; ?>,
+                    <?php echo $content_array[2]['合計時間']; ?>
                 ],
                 backgroundColor: ['#0345EC', '#0F71BD', '#20BDDE'],
                 weight: 100,
