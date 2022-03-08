@@ -10,17 +10,17 @@
     $month = (int)date('n');
     $year = (int)date('Y');
     if (isset($_GET['month'])) {
-        $month = $_GET['month'];
+        $moveMonth = $_GET['month'];
     };
     if (isset($_GET['year'])) {
-        $year = $_GET['year'];
+        $moveYear = $_GET['year'];
     };
     ?>
     <?php
     // echo $date;
     // echo $date;
     $stmt1 = $dbh->prepare("SELECT sum(hours) from time where date = $date AND month = $month AND year = $year;"); //today専用
-    $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month = $month AND year = $year;"); //該当月
+    $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month = $moveMonth AND year = $moveYear;"); //該当月
     $stmt3 = $dbh->prepare("SELECT sum(hours) from time;"); //合計
     $stmt4 = $dbh->prepare("SELECT sum(hours) from time where content_id=1;");
     $stmt5 = $dbh->prepare("SELECT sum(hours) from time where content_id=2;");
@@ -89,7 +89,7 @@
     //連想配列で数値と言語名も取れると最高
     $date_array = [];
     for ($j = 1; $j <= 31; $j++) {
-        ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month =" . $month . " AND year =". $year . ";"); //日付の合計時間
+        ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month =" . $moveMonth . " AND year =". $moveYear . ";"); //日付の合計時間
         // ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month = " . $month . " AND year = " . $year . ";"); //日付の合計時間
         ${"date_stmt" . $j}->execute();
         ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
@@ -119,8 +119,8 @@
             <div class="logo-week">
                 <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
                 <div class="week">4th week</div>
-                クリックしたらwindowlocationでパラメータ取得最初は日時取得&パラメータ
-            </div>
+                あとは投稿機能
+                </div>
             <div class="button-container">
                 <button id="header-button" class="post-button">記録・投稿</button>
             </div>
@@ -130,7 +130,7 @@
             <div class="first-container">
                 <div class="today-month-total-container">
                     <div class="today-container">
-                        <div class="today">Today</div>
+                        <div class="today"><?php echo $year;?>/<?php echo $month;?>/<?php echo $date;?></div>
                         <div class="number">
                             <?php echo $data1[0]['sum(hours)']; ?>
                         </div>
@@ -191,11 +191,11 @@
             <button id="previous-month" class="calender-arrow">&lt;</button>
             <div id="year-month">
                 <span id="year">
-                    <?php echo $year; ?>
+                    <?php echo $moveYear; ?>
                 </span>
                 年
                 <span id="month">
-                    <?php echo $month; ?>
+                    <?php echo $moveMonth; ?>
                 </span>
                 月
             </div>
