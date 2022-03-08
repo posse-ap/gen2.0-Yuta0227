@@ -94,38 +94,50 @@ smartphoneButton.addEventListener('click', function () {
 const previousMonth = document.getElementById('previous-month');
 const nextMonth = document.getElementById('next-month');
 const yearMonth = document.getElementById('year-month');
-// var month;
-// var year;
+// const today= test;
+// var todayDate;
+// var todayMonth;
+// var todayYear;
 // var paramArray;
-// window.onload = function () {
-//     var today = new Date();
-//     month = today.getMonth() + 1;
-//     year = today.getFullYear();
-//     paramArray=[month,year]
-//     yearMonth.innerHTML = `${year}年${month}月`;
-//     fetch('webapp.php',{
-//         method:'POST',
-//         headers:{'Content-Type':'application/json'},
-//         body:JSON.stringify(paramArray)
-//     }).then(response=>response.json())
-    
+// const test = new Date();
+// const todayDate= test.getDate();
+// const todayMonth = test.getMonth()+1;
+// const todayYear = test.getFullYear();
+// const request={
+//     date:todayDate,
+//     month:todayMonth,
+//     year:todayYear
 // };
-window.onload=function(){
-    yearMonth.innerHTML= `${year}年${month}月`;
-}
+
+// window.onload=function(){
+//     yearMonth.innerHTML= `${todayYear}年${todayMonth}月`;
+//     fetch('request.php', { // 第1引数に送り先
+//         method: 'POST', // メソッド指定
+//         headers: { 'Content-Type': 'application/json' }, // jsonを指定
+//         body: JSON.stringify(request) // json形式に変換して添付
+//     })
+//     .then(response => response.json()) // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
+//     .then(res => {
+//         console.log(res); // 返ってきたデータ
+//     });
+// }
+const month=document.getElementById('month');
+const year=document.getElementById('year');
+todayMonth=month.innerHTML;
+todayYear=year.innerHTML;
 previousMonth.addEventListener('click', function () {
-    month--;
-    if (month == 0) {
-        month = month + 12;
-        year--;
-    }
-    yearMonth.innerHTML = `${year}年${month}月`;
+    todayMonth--;
+    if (todayMonth == 0) {
+        todayMonth = todayMonth + 12;
+        todayYear--;
+    };
+    window.location.href=`http://localhost:8080/webapp.php?month=${todayMonth-0}&year=${todayYear-0}`;
 });
 nextMonth.addEventListener('click', function () {
-    month++;
-    if (month == 13) {
-        month = month - 12;
-        year++;
-    }
-    yearMonth.innerHTML = `${year}年${month}月`;
+    todayMonth++;
+    if (todayMonth == 13) {
+        todayMonth = todayMonth - 12;
+        todayYear++;
+    };
+    window.location.href=`http://localhost:8080/webapp.php?month=${todayMonth-0}&year=${todayYear-0}`;
 });
