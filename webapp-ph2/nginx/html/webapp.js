@@ -7,6 +7,14 @@ const date = document.getElementById('date');
 const pcPost = document.getElementById('post-button');
 const animationFilter = document.getElementById('animation-filter');
 const animationText = document.getElementById('animation-text')
+const previousMonth = document.getElementById('previous-month');
+const nextMonth = document.getElementById('next-month');
+const yearMonth = document.getElementById('year-month');
+const month=document.getElementById('month');
+const year=document.getElementById('year');
+var now=new Date();
+var innerhtmlMonth=month.innerHTML;
+var innerhtmlYear=year.innerHTML;
 //ラベルクリック時checked==trueならば青色をつける
 for (let i = 1; i <= 11; i++) {
     document.getElementById(`label${i}`).addEventListener('click', function () {
@@ -42,6 +50,7 @@ exit.addEventListener('click', function () {
             document.getElementById(`checkbox${i}`).checked = false;
         }
     }
+    window.location.href=`http://localhost:8080/webapp.php?month=${innerhtmlMonth-0}&year=${innerhtmlYear-0}`;
 });
 //ツイートボタン押してるかつ投稿ボタン押してるとツイートするロード画面始まる
 //ロード完了と出てから消える入力内容も消える
@@ -91,53 +100,23 @@ smartphoneButton.addEventListener('click', function () {
     })
     //PCでやると一度ボタンクリックした後カーソル動かしただけでクリックした判定になってしまう。だけどスマホなら平気なのかも
 });
-const previousMonth = document.getElementById('previous-month');
-const nextMonth = document.getElementById('next-month');
-const yearMonth = document.getElementById('year-month');
-// const today= test;
-// var todayDate;
-// var todayMonth;
-// var todayYear;
-// var paramArray;
-// const test = new Date();
-// const todayDate= test.getDate();
-// const todayMonth = test.getMonth()+1;
-// const todayYear = test.getFullYear();
-// const request={
-//     date:todayDate,
-//     month:todayMonth,
-//     year:todayYear
-// };
-
-// window.onload=function(){
-//     yearMonth.innerHTML= `${todayYear}年${todayMonth}月`;
-//     fetch('request.php', { // 第1引数に送り先
-//         method: 'POST', // メソッド指定
-//         headers: { 'Content-Type': 'application/json' }, // jsonを指定
-//         body: JSON.stringify(request) // json形式に変換して添付
-//     })
-//     .then(response => response.json()) // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
-//     .then(res => {
-//         console.log(res); // 返ってきたデータ
-//     });
-// }
-const month=document.getElementById('month');
-const year=document.getElementById('year');
-todayMonth=month.innerHTML;
-todayYear=year.innerHTML;
 previousMonth.addEventListener('click', function () {
-    todayMonth--;
-    if (todayMonth == 0) {
-        todayMonth = todayMonth + 12;
-        todayYear--;
+    innerhtmlMonth--;
+    if (innerhtmlMonth == 0) {
+        innerhtmlMonth = innerhtmlMonth + 12;
+        innerhtmlYear--;
     };
-    window.location.href=`http://localhost:8080/webapp.php?month=${todayMonth-0}&year=${todayYear-0}`;
+    window.location.href=`http://localhost:8080/webapp.php?month=${innerhtmlMonth-0}&year=${innerhtmlYear-0}`;
 });
+if(innerhtmlMonth-0>=now.getMonth()+1){
+    nextMonth.style.display='none';
+    nextMonth.style.pointerEvents='none';
+}
 nextMonth.addEventListener('click', function () {
-    todayMonth++;
-    if (todayMonth == 13) {
-        todayMonth = todayMonth - 12;
-        todayYear++;
+    innerhtmlMonth++;
+    if (innerhtmlMonth == 13) {
+        innerhtmlMonth = innerhtmlMonth - 12;
+        innerhtmlYear++;
     };
-    window.location.href=`http://localhost:8080/webapp.php?month=${todayMonth-0}&year=${todayYear-0}`;
+    window.location.href=`http://localhost:8080/webapp.php?month=${innerhtmlMonth-0}&year=${innerhtmlYear-0}`;
 });
