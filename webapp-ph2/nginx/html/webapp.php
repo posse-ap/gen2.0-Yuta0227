@@ -9,9 +9,9 @@
     $date = (int)date('d');
     $month = (int)date('n');
     $year = (int)date('Y');
-    if (isset($_GET['month']) && isset($_GET['year'])) {
-        $moveMonth = $_GET['month'];
-        $moveYear = $_GET['year'];
+    $moveMonth = $_GET['month'];
+    $moveYear = $_GET['year'];
+    if (isset($_GET['month']) && isset($_GET['year'])&&$moveMonth<=12) {
         $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month = $moveMonth AND year = $moveYear;"); //該当月
     }else{
         $stmt2= $dbh->prepare("SELECT sum(hours) from time where month =$month and year = $year;");
@@ -88,18 +88,19 @@
     array_multisort($multi_language_array, SORT_DESC, SORT_NUMERIC, $language_array);
     //連想配列で数値と言語名も取れると最高
     $date_array = [];
-    for ($j = 1; $j <= 31; $j++) {
-        if (isset($_GET['month']) && isset($_GET['year'])) {
+    for ($j = 1; $j <= date('t'); $j++) {
+        if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth<=12) {
             ${"date_stmt" . $j} = $dbh->prepare("SELECT sum(hours) from time where date = $j and month = $moveMonth and year= $moveYear;"); //日付の合計時間
-        } else {
+        }else{
             ${"date_stmt" . $j} = $dbh->prepare("SELECT sum(hours) from time where date = $j and month = $month and year= $year;"); //日付の合計時間
         }
         // ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month = " . $month . " AND year = " . $year . ";"); //日付の合計時間
         ${"date_stmt" . $j}->execute();
         ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
+        ${"date_data".$j}[0]['sum(hours)']=${"date_data".$j}[0]['sum(hours)']-0;
         if (${"date_data" . $j}[0]['sum(hours)'] == NULL) {
             ${"date_data" . $j}[0]['sum(hours)'] = 0;
-        }
+        };
         array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
     };
     ?>
@@ -123,7 +124,7 @@
             <div class="logo-week">
                 <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
                 <div class="week">4th week</div>
-                あとは投稿機能
+                あとは投稿機能。月が12以上の場合どうするか棒グラフの対応ができてない。
             </div>
             <div class="button-container">
                 <button id="header-button" class="post-button">記録・投稿</button>
@@ -141,7 +142,13 @@
                         <div class="hour">hour</div>
                     </div>
                     <div class="month-container">
-                        <div class="month">Month</div>
+                        <div class="month"><?php echo $year;?>/<?php 
+                        if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth<=12) {
+                            echo $moveMonth;
+                        }else{
+                            echo $month;
+                        };?>
+                        </div>
                         <div class="number">
                             <?php echo $data2[0]['sum(hours)']; ?>
                         </div>
@@ -206,7 +213,7 @@
                 年
                 <span id="month">
                     <?php
-                    if (isset($_GET['month']) && isset($_GET['year'])) {
+                    if (isset($_GET['month']) && isset($_GET['year'])&&$moveMonth<=12) {
                         echo $moveMonth;
                     }else{
                         echo $month;
@@ -242,17 +249,23 @@
                             <label id="label1">
                                 <input id="checkbox1" type="checkbox">
                                 <i id="my-checkbox1" class="fas fa-check-circle"></i>
-                                N予備校
+                                <span id="content-span1">
+                                    N予備校
+                                </span>
                             </label>
                             <label id="label2">
                                 <input id="checkbox2" type="checkbox">
                                 <i id="my-checkbox2" class="fas fa-check-circle"></i>
-                                ドットインストール
+                                <span id="content-span2">
+                                    ドットインストール
+                                </span>
                             </label>
                             <label id="label3">
                                 <input id="checkbox3" type="checkbox">
                                 <i id="my-checkbox3" class="fas fa-check-circle"></i>
-                                POSSE課題
+                                <span id="content-span3">
+                                    POSSE課題
+                                </span>
                             </label>
                         </div>
                         <div class="language-container">
@@ -260,42 +273,58 @@
                             <label id="label4">
                                 <input id="checkbox4" type="checkbox">
                                 <i id="my-checkbox4" class="fas fa-check-circle"></i>
-                                HTML
+                                <span id="language-span4">
+                                    HTML
+                                </span>
                             </label>
                             <label id="label5">
                                 <input id="checkbox5" type="checkbox">
                                 <i id="my-checkbox5" class="fas fa-check-circle"></i>
-                                CSS
+                                <span id="language-span5">
+                                    CSS
+                                </span>
                             </label>
                             <label id="label6">
                                 <input id="checkbox6" type="checkbox">
                                 <i id="my-checkbox6" class="fas fa-check-circle"></i>
-                                Javascript
+                                <span id="language-span6">
+                                    Javascript
+                                </span>
                             </label>
                             <label id="label7">
                                 <input id="checkbox7" type="checkbox">
                                 <i id="my-checkbox7" class="fas fa-check-circle"></i>
-                                PHP
+                                <span id="language-span7">
+                                    PHP
+                                </span>
                             </label>
                             <label id="label8">
                                 <input id="checkbox8" type="checkbox">
                                 <i id="my-checkbox8" class="fas fa-check-circle"></i>
-                                Laravel
+                                <span id="language-span8">
+                                    Laravel
+                                </span>
                             </label>
                             <label id="label9">
                                 <input id="checkbox9" type="checkbox">
                                 <i id="my-checkbox9" class="fas fa-check-circle"></i>
-                                SQL
+                                <span id="language-span9">
+                                    SQL
+                                </span>
                             </label>
                             <label id="label10">
                                 <input id="checkbox10" type="checkbox">
                                 <i id="my-checkbox10" class="fas fa-check-circle"></i>
-                                SHELL
+                                <span id="language-span10">
+                                    SHELL
+                                </span>
                             </label>
                             <label id="label11">
                                 <input id="checkbox11" type="checkbox">
                                 <i id="my-checkbox11" class="fas fa-check-circle"></i>
-                                情報システム基礎知識(その他)
+                                <span id="language-span11">
+                                    情報システム基礎知識(その他)
+                                </span>
                             </label>
                         </div>
                     </div>
@@ -358,21 +387,37 @@
                 datasets: [{
                     label: "Data", // 系列名
                     data: [
+                        <?php echo $date_array[0]; ?>,
                         <?php echo $date_array[1]; ?>,
+                        <?php echo $date_array[2]; ?>,
                         <?php echo $date_array[3]; ?>,
+                        <?php echo $date_array[4]; ?>,
                         <?php echo $date_array[5]; ?>,
+                        <?php echo $date_array[6]; ?>,
                         <?php echo $date_array[7]; ?>,
+                        <?php echo $date_array[8]; ?>,
                         <?php echo $date_array[9]; ?>,
+                        <?php echo $date_array[10]; ?>,
                         <?php echo $date_array[11]; ?>,
+                        <?php echo $date_array[12]; ?>,
                         <?php echo $date_array[13]; ?>,
+                        <?php echo $date_array[14]; ?>,
                         <?php echo $date_array[15]; ?>,
+                        <?php echo $date_array[16]; ?>,
                         <?php echo $date_array[17]; ?>,
+                        <?php echo $date_array[18]; ?>,
                         <?php echo $date_array[19]; ?>,
+                        <?php echo $date_array[20]; ?>,
                         <?php echo $date_array[21]; ?>,
+                        <?php echo $date_array[22]; ?>,
                         <?php echo $date_array[23]; ?>,
+                        <?php echo $date_array[24]; ?>,
                         <?php echo $date_array[25]; ?>,
+                        <?php echo $date_array[26]; ?>,
                         <?php echo $date_array[27]; ?>,
+                        <?php echo $date_array[28]; ?>,
                         <?php echo $date_array[29]; ?>,
+                        <?php echo $date_array[30]; ?>,
                     ], // ★必須　系列Ａのデータ
                     backgroundColor: gradient, // 棒の塗りつぶし色
                     borderColor: gradient, // 棒の枠線の色

@@ -24,9 +24,9 @@ create table time (
 -- 7=>SHELL
 -- 8=>情報システム基礎知識(その他)
 insert into time (date, month, year, language, content, hours, content_id,language_id) values 
-    (5, 3, 2022, "PHP", "POSSE課題", 3,1,3),
-    (4, 3, 2022, "SQL", "POSSE課題", 5,1,6),
-    (23, 5, 2022, "PHP", "POSSE課題", 5,1,3),
+    (5,3,2022, "PHP", "POSSE課題", 3,1,3),
+    (4,3,2022, "SQL", "POSSE課題", 5,1,6),
+    (23,5,2022, "PHP", "POSSE課題", 5,1,3),
     (20,3,2022,"Laravel","POSSE課題",18,1,5),
     (21,8,2022,"PHP","ドットインストール",9,2,3),
     (1,1,2022,"HTML","N予備校",5,3,4),
