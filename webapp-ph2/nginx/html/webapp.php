@@ -1,6 +1,5 @@
     <?php
     require "db-connect.php";
-    // require "request.php";
     ?>
     <?php
     //最初は現在日程のテーブル表示
@@ -106,9 +105,9 @@
     ?>
     <!DOCTYPE html>
     <html lang="ja">
-
-
-    <head>
+        
+        
+        <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -117,14 +116,14 @@
         <title>Document</title>
         <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     </head>
-
+    
 
     <body>
         <header>
             <div class="logo-week">
                 <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
                 <div class="week">4th week</div>
-                あとは投稿機能。月が12以上の場合どうするか棒グラフの対応ができてない。
+                あとは投稿機能。
             </div>
             <div class="button-container">
                 <button id="header-button" class="post-button">記録・投稿</button>
@@ -596,3 +595,4 @@
 
     </html>
     <!-- 最初はurlから情報取得せず現在の日時などを表示月移動するときurlから数値取得して$monthから引いたり足したりする -->
+    <?php require "request.php";?>

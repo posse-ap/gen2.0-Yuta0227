@@ -29,9 +29,12 @@ var tmp;
 for (let i = 1; i <= 11; i++) {
     document.getElementById(`label${i}`).addEventListener('click', function () {
         if (i >= 4 && i <= 11 && document.getElementById(`checkbox${i}`).checked == false) {
-            document.getElementById(`checkbox${tmp}`).checked = false;
-            document.getElementById(`my-checkbox${tmp}`).style.color = "black";
-            document.getElementById(`label${tmp}`).style.backgroundColor = "rgb(215,215,215)";
+            for(let tmp=4;tmp<=11;tmp++){
+                //言語は一つしか選べないように
+                document.getElementById(`checkbox${tmp}`).checked = false;
+                document.getElementById(`my-checkbox${tmp}`).style.color = "black";
+                document.getElementById(`label${tmp}`).style.backgroundColor = "rgb(215,215,215)";
+            }
         }
         if (document.getElementById(`checkbox${i}`).checked == false) {
             document.getElementById(`my-checkbox${i}`).style.color = 'black';
@@ -40,7 +43,6 @@ for (let i = 1; i <= 11; i++) {
             document.getElementById(`my-checkbox${i}`).style.color = "blue";
             document.getElementById(`label${i}`).style.backgroundColor = "#e7f5ff";
         }
-        tmp = i;
     })
 }
 document.getElementById(`label12`).addEventListener('click', function () {
@@ -120,13 +122,13 @@ function sendData() {
             checkedLanguage = document.getElementById(`language-span${i}`).innerHTML.trim();
         }
     };
-    if (document.getElementById('checkbox12').checked) {
-        boolShare = 1;
-    } else {
-        boolShare = 0;
-    }
+    // if (document.getElementById('checkbox12').checked) {
+    //     boolShare = 1;
+    // } else {
+    //     boolShare = 0;
+    // }
     writtenHours = time.value - 0;
-    writtenComment = comment.value;
+    // writtenComment = comment.value;
     submitData = {
         date: chosenDate,
         month: chosenMonth,
@@ -134,10 +136,18 @@ function sendData() {
         content: checkedContents,
         language: checkedLanguage,
         hours: writtenHours,
-        comment: writtenComment,
-        share: boolShare
+        // comment: writtenComment,
+        // share: boolShare
     };
-    console.log(submitData);
+    fetch('request.php', { // 第1引数に送り先
+        method: 'POST', // メソッド指定
+        headers: { 'Content-Type': 'application/json' }, // jsonを指定
+        body: JSON.stringify(submitData) // json形式に変換して添付
+    })
+    .then(response => response.json()) // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
+    .then(res => {
+        console.log(res); // 返ってきたデータ
+    });
 }
 pcPost.addEventListener('click', function () {
     //データ送信
