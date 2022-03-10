@@ -2,56 +2,63 @@
     require "db-connect.php";
     $submit_date = '';
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $submit_date = explode('-',$_POST['date']);
-        $submit_date=[
-            'year'=>(int)$submit_date[0],
-            'month'=>(int)$submit_date[1],
-            'date'=>(int)$submit_date[2]
+        $submit_date = explode('-', $_POST['date']);
+        $submit_date = [
+            'year' => (int)$submit_date[0],
+            'month' => (int)$submit_date[1],
+            'date' => (int)$submit_date[2]
         ];
-        $submit_contents_id=$_POST['contents'];
-        $submit_contents_name=[
-            '1'=>'POSSE課題',
-            '2'=>'ドットインストール',
-            '3'=>'N予備校'
+        $submit_contents_id = $_POST['contents'];
+        $submit_contents_name = [
+            '1' => 'POSSE課題',
+            '2' => 'ドットインストール',
+            '3' => 'N予備校'
         ];
-        $submit_contents=[
-            '0'=>[
-                'content_id'=>(int)$submit_contents_id[0],
-                'content_name'=>$submit_contents_name[$submit_contents_id[0]],
+        $submit_contents = [
+            '0' => [
+                'content_id' => (int)$submit_contents_id[0],
+                'content_name' => $submit_contents_name[$submit_contents_id[0]],
             ],
-            '1'=>[
-                'content_id'=>(int)$submit_contents_id[1],
-                'content_name'=>$submit_contents_name[$submit_contents_id[1]],
+            '1' => [
+                'content_id' => (int)$submit_contents_id[1],
+                'content_name' => $submit_contents_name[$submit_contents_id[1]],
             ],
-            '2'=>[
-                'content_id'=>(int)$submit_contents_id[2],
-                'content_name'=>$submit_contents_name[$submit_contents_id[2]]
+            '2' => [
+                'content_id' => (int)$submit_contents_id[2],
+                'content_name' => $submit_contents_name[$submit_contents_id[2]]
             ]
         ];
-        $submit_language_id=$_POST['language'];
-        $submit_language_name=[
-            '1'=>'Javascript',
-            '2'=>'CSS',
-            '3'=>'PHP',
-            '4'=>'HTML',
-            '5'=>'Laravel',
-            '6'=>'SQL',
-            '7'=>'SHELL',
-            '8'=>'情報システム基礎知識(その他)'
+        $submit_language_id = $_POST['language'];
+        $submit_language_name = [
+            '1' => 'Javascript',
+            '2' => 'CSS',
+            '3' => 'PHP',
+            '4' => 'HTML',
+            '5' => 'Laravel',
+            '6' => 'SQL',
+            '7' => 'SHELL',
+            '8' => '情報システム基礎知識(その他)'
         ];
-        $submit_language=[
-            'language_id'=>(int)$submit_language_id,
-            'language_name'=>$submit_language_name[$submit_language_id]
+        $submit_language = [
+            'language_id' => (int)$submit_language_id,
+            'language_name' => $submit_language_name[$submit_language_id]
         ];
-        $submit_hours=(int)$_POST['hours'];
-
+        $submit_hours = (int)$_POST['hours'];
+        $div_submit_hours=$submit_hours / count($submit_contents_id);
         //NULLの場合intでキャストすると0になる
-        print_r('<pre>');
-        var_dump($submit_date);
-        var_dump($submit_contents);
-        var_dump($submit_language);
-        var_dump($submit_hours);
-        print_r('</pre>');
+        for ($i = 1; $i <= count($submit_contents_id); $i++) {
+            //コンテンツの個数分sql文発行
+            ${"submit" . $i} = $dbh->prepare("INSERT INTO time values (?,?,?,?,?,?,?,?);");
+            ${"submit" . $i}->bindValue(1, $submit_date['date'], PDO::PARAM_INT);
+            ${"submit" . $i}->bindValue(2, $submit_date['month'], PDO::PARAM_INT);
+            ${"submit" . $i}->bindValue(3, $submit_date['year'], PDO::PARAM_INT);
+            ${"submit" . $i}->bindValue(4, $submit_language['language_name']);
+            ${"submit" . $i}->bindValue(5, $submit_contents[$i-1]['content_name']);
+            ${"submit" . $i}->bindValue(6, $div_submit_hours, PDO::PARAM_INT);
+            ${"submit" . $i}->bindValue(7, $submit_contents[$i-1]['content_id'], PDO::PARAM_INT);
+            ${"submit" . $i}->bindValue(8, $submit_language_id, PDO::PARAM_INT);
+            ${"submit" . $i}->execute();
+        };
     };
     ?>
     <?php
@@ -176,8 +183,7 @@
             <div class="logo-week">
                 <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
                 <div class="week">4th week</div>
-                あとは投稿機能。内容取得はPOSTでnameで取得。idと紐づけるためにグループ分け。select name,sum(hours) from fauheihauf;学習時間入力しなくてもモーダル閉じてしまう
-
+                投稿消すボタン過去5件一覧表示して選んで削除。投稿時間スプレッドシートに反映
             </div>
             <div class="button-container">
                 <button id="header-button" class="post-button">記録・投稿</button>
@@ -196,9 +202,7 @@
                     </div>
                     <div class="month-container">
                         <div class="month">
-                            <?php echo $year; ?>
-                            /
-                            <?php
+                            <?php echo $year; ?>/<?php
                             if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
                                 echo $moveMonth;
                             } else {
@@ -263,20 +267,13 @@
                         echo $moveYear;
                     } else {
                         echo $year;
-                    }
-                    ?>
-                </span>
-                年
-                <span id="month">
-                    <?php
+                    };?></span>年<span id="month"><?php
                     if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
                         echo $moveMonth;
                     } else {
                         echo $month;
-                    }
-                    ?>
-                </span>
-                月
+                    };?>
+                </span>月
             </div>
             <button id="next-month" class="calender-arrow">&gt;</button>
         </div>
@@ -300,7 +297,7 @@
                                 // } else {
                                 //     echo date('Y-m-d');
                                 // };
-                                echo htmlspecialchars($submitDate,ENT_QUOTES,'UTF-8');
+                                echo htmlspecialchars($submitDate, ENT_QUOTES, 'UTF-8');
                                 ?>
                                                                                                             " required>
                             </div>

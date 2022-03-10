@@ -97,74 +97,11 @@ function reset() {
         }
     }
 };
-
-function sendData() {
-    // return new Promise(function(resolve,reject){
-    //     chosenYear = date.value.split('-')[0]-0;
-    //     chosenMonth = date.value.split('-')[1] - 0;
-    //     chosenDate = date.value.split('-')[2] - 0;
-    //     if (chosenMonth >= 13) {
-    //     chosenMonth = 0;
-    // } else {
-    //     chosenMonth = date.value.split('-')[1] - 0;
-    // }
-    // if (chosenDate >= 31) {
-    //     chosenDate = 0;
-    // } else {
-    //     chosenDate = date.value.split('-')[2] - 0;
-    // }
-    // for (let i = 1; i <= 3; i++) {
-    //     if (document.getElementById(`checkbox${i}`).checked) {
-    //         //チェックされてるコンテンツ配列に追加
-    //         checkedContents.push(`${document.getElementById(`content-span${i}`).innerHTML.trim()}`);
-    //     }
-    // };
-    // for (let i = 4; i <= 11; i++) {
-    //     if (document.getElementById(`checkbox${i}`).checked) {
-    //         checkedLanguage = document.getElementById(`language-span${i}`).innerHTML.trim();
-    //     }
-    // };
-    // // if (document.getElementById('checkbox12').checked) {
-    // //     boolShare = 1;
-    // // } else {
-    // //     boolShare = 0;
-    // // }
-    // writtenHours = time.value - 0;
-    // // writtenComment = comment.value;
-    // submitData = {
-    //     date: chosenDate,
-    //     month: chosenMonth,
-    //     year: chosenYear,
-    //     content: checkedContents,
-    //     language: checkedLanguage,
-    //     hours: writtenHours
-    //     // comment: writtenComment,
-    //     // share: boolShare
-    // };
-    // fetch('request.php', { // 第1引数に送り先
-    //     method: 'POST', // メソッド指定
-    //     headers: { 'Content-Type': 'application/json' }, // jsonを指定
-    //     body: JSON.stringify(submitData) // json形式に変換して添付
-    // })
-    // .then(response => response.json()) // 返ってきたレスポンスをjsonで受け取って次のthenへ渡す
-    // .then(res => {
-    //     console.log(res); // 返ってきたデータ
-    // });
-    // resolve();
-    // checkedContents=[];
-// });
-};
 pcPost.addEventListener('click', function () {
-    //データ送信
-    // sendData().then(startLoading()).then(stopLoading()).then(function(){
-        // window.location.reload(true);
-    // });
-console.log('ok')
-setTimeout(startLoading,1000);
-setTimeout(stopLoading,3000);
-    // setTimeout(startLoading, 1000);
-    // setTimeout(stopLoading, 3000);
-    // window.location.reload(true);
+if(time.innerHTML!=''){
+    setTimeout(startLoading,1000);
+    setTimeout(stopLoading,3000);
+}
 });
 //スマホで画面下部のボタン押すとオーバーレイ表示する
 smartphoneButton.addEventListener('click', function () {
@@ -175,10 +112,11 @@ smartphoneButton.addEventListener('click', function () {
     smartphonePostButton.addEventListener('click', function () {
         // sendData().then(startLoading()).then(stopLoading()).then(function(){
             // window.location.reload(true);
-            console.log('no');
-            setTimeout(startLoading,1000);
-            setTimeout(stopLoading,3000);
-            smartphonePostButton.id="smartphoneButton";
+            if(time.innerHTML!=''){
+                setTimeout(startLoading,1000);
+                setTimeout(stopLoading,3000);
+                smartphonePostButton.id="smartphoneButton";
+            }
         // });
     });
     //PCでやると一度ボタンクリックした後カーソル動かしただけでクリックした判定になってしまう。だけどスマホなら平気なのかも
