@@ -295,17 +295,14 @@ for ($j = 1; $j <= date('t'); $j++) {
                     <div class="form-left">
                         <div class="date-container">
                             <div>学習日</div>
-                            <input id="date" type="date" name="date" size="20" class="textbox" value="
-                                <?php
-                                // if (isset($_GET['month']) && isset($_GET['year'])) {
-                                //     $one_digit_date = $moveYear . '-' . $moveMonth . '-' . $date;
-                                //     echo date('Y-m-d', strtotime($one_digit_date));
-                                // } else {
-                                //     echo date('Y-m-d');
-                                // };
-                                echo htmlspecialchars($submitDate, ENT_QUOTES, 'UTF-8');
-                                ?>
-                                                                                                            " required>
+                            <input id="date" type="date" name="date" size="20" class="textbox" value="<?php
+                                    // echo htmlspecialchars($submitDate, ENT_QUOTES, 'UTF-8');
+                                if (isset($_GET['month']) && isset($_GET['year'])) {
+                                    $one_digit_date = $moveYear . '-' . $moveMonth . '-' . $date;
+                                    echo date('Y-m-d', strtotime($one_digit_date));
+                                } else {
+                                    echo date('Y-m-d');
+                                };?>" required>
                         </div>
                         <div class="study-content-container">
                             <div>学習コンテンツ</div>

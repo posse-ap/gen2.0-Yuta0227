@@ -59,10 +59,11 @@ header{
     width:calc(50% - 10px);
     margin-right:20px;
     height:100%;
+    padding-top:20px;
 }
 .today-month-total-container{
     display:flex;
-    height:50%;
+    height:30%;
 }
 .today-container, .month-container, .total-container{
     display:flex;
@@ -147,7 +148,7 @@ li{
 /* PC画面の時は非表示。画面下部に配置 */
 .smartphone-button-container{
     margin:0 auto;
-    opacity:0;
+    display:none;
     z-index:10000;
 }
 .smartphone-button{
