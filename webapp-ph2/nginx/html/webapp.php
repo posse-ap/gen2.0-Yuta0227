@@ -1,11 +1,15 @@
     <?php
     require "db-connect.php";
-    $submitDate='';
-if($_SERVER['REQUEST_METHOD']==='POST'){
-    $submitDate=$_POST['name'];
-    var_dump($submitDate);
-};
-echo 'yes';
+    $submit_date = '';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $submit_date = $_POST['date'];
+        $submit_date_array=explode('-',$submit_date);
+        for($i=0;$i<=2;$i++){
+            $submit_date_array[$i]=(int)$submit_date_array[$i];
+        }
+        var_dump($submit_date_array);
+    };
+    echo 'yes';
     ?>
     <?php
     //最初は現在日程のテーブル表示
@@ -244,14 +248,17 @@ echo 'yes';
                         <div class="form-left">
                             <div class="date-container">
                                 <div>学習日</div>
-                                <input id="date" type="date" name="date" size="20" class="textbox" value="<?php
-                                                                                                if (isset($_GET['month']) && isset($_GET['year'])) {
-                                                                                                    $one_digit_date = $moveYear . '-' . $moveMonth . '-' . $date;
-                                                                                                    echo date('Y-m-d', strtotime($one_digit_date));
-                                                                                                } else {
-                                                                                                    echo date('Y-m-d');
-                                                                                                }
-                                                                                                ?>" required>
+                                <input id="date" type="date" name="date" size="20" class="textbox" value="
+                                <?php
+                                // if (isset($_GET['month']) && isset($_GET['year'])) {
+                                //     $one_digit_date = $moveYear . '-' . $moveMonth . '-' . $date;
+                                //     echo date('Y-m-d', strtotime($one_digit_date));
+                                // } else {
+                                //     echo date('Y-m-d');
+                                // };
+                                echo htmlspecialchars($submitDate,ENT_QUOTES,'UTF-8');
+                                ?>
+                                                                                                            " required>
                             </div>
                             <div class="study-content-container">
                                 <div>学習コンテンツ</div>
@@ -357,9 +364,7 @@ echo 'yes';
                         </div>
                     </div>
                     <div class="overlay-button-container">
-                        <input type="submit" value="submit" id="post-button" class="post-button">
-                        記録・投稿
-                        </inp>
+                        <input type="submit" value="記録・投稿" id="post-button" class="post-button"></input>
                     </div>
                     <button id="exit" class="exit"><i class="fas fa-times"></i></button>
             </div>
