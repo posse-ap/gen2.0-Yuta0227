@@ -6,7 +6,7 @@ create table time (
     year int,
     language varchar(255),
     content varchar(255),
-    hours int,
+    hours float,
     content_id int,
     language_id int
 );

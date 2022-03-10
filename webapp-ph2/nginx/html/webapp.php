@@ -1,5 +1,11 @@
     <?php
     require "db-connect.php";
+    $submitDate='';
+if($_SERVER['REQUEST_METHOD']==='POST'){
+    $submitDate=$_POST['name'];
+    var_dump($submitDate);
+};
+echo 'yes';
     ?>
     <?php
     //最初は現在日程のテーブル表示
@@ -10,10 +16,10 @@
     $year = (int)date('Y');
     $moveMonth = $_GET['month'];
     $moveYear = $_GET['year'];
-    if (isset($_GET['month']) && isset($_GET['year'])&&$moveMonth<=12) {
+    if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
         $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month = $moveMonth AND year = $moveYear;"); //該当月
-    }else{
-        $stmt2= $dbh->prepare("SELECT sum(hours) from time where month =$month and year = $year;");
+    } else {
+        $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month =$month and year = $year;");
     };
     ?>
     <?php
@@ -88,15 +94,15 @@
     //連想配列で数値と言語名も取れると最高
     $date_array = [];
     for ($j = 1; $j <= date('t'); $j++) {
-        if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth<=12) {
+        if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
             ${"date_stmt" . $j} = $dbh->prepare("SELECT sum(hours) from time where date = $j and month = $moveMonth and year= $moveYear;"); //日付の合計時間
-        }else{
+        } else {
             ${"date_stmt" . $j} = $dbh->prepare("SELECT sum(hours) from time where date = $j and month = $month and year= $year;"); //日付の合計時間
         }
         // ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month = " . $month . " AND year = " . $year . ";"); //日付の合計時間
         ${"date_stmt" . $j}->execute();
         ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
-        ${"date_data".$j}[0]['sum(hours)']=${"date_data".$j}[0]['sum(hours)']-0;
+        ${"date_data" . $j}[0]['sum(hours)'] = ${"date_data" . $j}[0]['sum(hours)'] - 0;
         if (${"date_data" . $j}[0]['sum(hours)'] == NULL) {
             ${"date_data" . $j}[0]['sum(hours)'] = 0;
         };
@@ -105,9 +111,9 @@
     ?>
     <!DOCTYPE html>
     <html lang="ja">
-        
-        
-        <head>
+
+
+    <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,14 +122,14 @@
         <title>Document</title>
         <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     </head>
-    
+
 
     <body>
         <header>
             <div class="logo-week">
                 <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
                 <div class="week">4th week</div>
-                あとは投稿機能。
+                あとは投稿機能。内容取得はPOSTでnameで取得。idと紐づけるためにグループ分け。select name,sum(hours) from fauheihauf;
             </div>
             <div class="button-container">
                 <button id="header-button" class="post-button">記録・投稿</button>
@@ -136,27 +142,30 @@
                     <div class="today-container">
                         <div class="today"><?php echo $year; ?>/<?php echo $month; ?>/<?php echo $date; ?></div>
                         <div class="number">
-                            <?php echo $data1[0]['sum(hours)']; ?>
+                            <?php echo (int)$data1[0]['sum(hours)']; ?>
                         </div>
                         <div class="hour">hour</div>
                     </div>
                     <div class="month-container">
-                        <div class="month"><?php echo $year;?>/<?php 
-                        if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth<=12) {
-                            echo $moveMonth;
-                        }else{
-                            echo $month;
-                        };?>
+                        <div class="month">
+                            <?php echo $year; ?>
+                            /
+                            <?php
+                            if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
+                                echo $moveMonth;
+                            } else {
+                                echo $month;
+                            }; ?>
                         </div>
                         <div class="number">
-                            <?php echo $data2[0]['sum(hours)']; ?>
+                            <?php echo (int)$data2[0]['sum(hours)']; ?>
                         </div>
                         <div class="hour">hour</div>
                     </div>
                     <div class="total-container">
                         <div class="total">Total</div>
                         <div class="number">
-                            <?php echo $data3[0]['sum(hours)']; ?>
+                            <?php echo (int)$data3[0]['sum(hours)']; ?>
                         </div>
                         <div class="hour">hour</div>
                     </div>
@@ -204,7 +213,7 @@
                     <?php
                     if (isset($_GET['month']) && isset($_GET['year'])) {
                         echo $moveYear;
-                    }else{
+                    } else {
                         echo $year;
                     }
                     ?>
@@ -212,9 +221,9 @@
                 年
                 <span id="month">
                     <?php
-                    if (isset($_GET['month']) && isset($_GET['year'])&&$moveMonth<=12) {
+                    if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
                         echo $moveMonth;
-                    }else{
+                    } else {
                         echo $month;
                     }
                     ?>
@@ -230,129 +239,131 @@
         <!-- 記録投稿ボタンを押した時表示されるオーバーレイ -->
         <div id="fullOverlay" hidden>
             <div class="overlay">
-                <div class="form">
-                    <div class="form-left">
-                        <div class="date-container">
-                            <div>学習日</div>
-                            <input id="date" type="date" size="20" class="textbox" value="<?php
-                                if (isset($_GET['month']) && isset($_GET['year'])) {
-                                    $one_digit_date=$moveYear.'-'.$moveMonth.'-'.$date;
-                                    echo date('Y-m-d',strtotime($one_digit_date));
-                                } else{
-                                    echo date('Y-m-d');
-                                }
-                            ?>"required>
+                <form action="" method="POST">
+                    <div class="form">
+                        <div class="form-left">
+                            <div class="date-container">
+                                <div>学習日</div>
+                                <input id="date" type="date" name="date" size="20" class="textbox" value="<?php
+                                                                                                if (isset($_GET['month']) && isset($_GET['year'])) {
+                                                                                                    $one_digit_date = $moveYear . '-' . $moveMonth . '-' . $date;
+                                                                                                    echo date('Y-m-d', strtotime($one_digit_date));
+                                                                                                } else {
+                                                                                                    echo date('Y-m-d');
+                                                                                                }
+                                                                                                ?>" required>
+                            </div>
+                            <div class="study-content-container">
+                                <div>学習コンテンツ</div>
+                                <label id="label1">
+                                    <input id="checkbox1" type="checkbox">
+                                    <i id="my-checkbox1" class="fas fa-check-circle"></i>
+                                    <span id="content-span1">
+                                        N予備校
+                                    </span>
+                                </label>
+                                <label id="label2">
+                                    <input id="checkbox2" type="checkbox">
+                                    <i id="my-checkbox2" class="fas fa-check-circle"></i>
+                                    <span id="content-span2">
+                                        ドットインストール
+                                    </span>
+                                </label>
+                                <label id="label3">
+                                    <input id="checkbox3" type="checkbox">
+                                    <i id="my-checkbox3" class="fas fa-check-circle"></i>
+                                    <span id="content-span3">
+                                        POSSE課題
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="language-container">
+                                <div>学習言語</div>
+                                <label id="label4">
+                                    <input id="checkbox4" type="checkbox">
+                                    <i id="my-checkbox4" class="fas fa-check-circle"></i>
+                                    <span id="language-span4">
+                                        HTML
+                                    </span>
+                                </label>
+                                <label id="label5">
+                                    <input id="checkbox5" type="checkbox">
+                                    <i id="my-checkbox5" class="fas fa-check-circle"></i>
+                                    <span id="language-span5">
+                                        CSS
+                                    </span>
+                                </label>
+                                <label id="label6">
+                                    <input id="checkbox6" type="checkbox">
+                                    <i id="my-checkbox6" class="fas fa-check-circle"></i>
+                                    <span id="language-span6">
+                                        Javascript
+                                    </span>
+                                </label>
+                                <label id="label7">
+                                    <input id="checkbox7" type="checkbox">
+                                    <i id="my-checkbox7" class="fas fa-check-circle"></i>
+                                    <span id="language-span7">
+                                        PHP
+                                    </span>
+                                </label>
+                                <label id="label8">
+                                    <input id="checkbox8" type="checkbox">
+                                    <i id="my-checkbox8" class="fas fa-check-circle"></i>
+                                    <span id="language-span8">
+                                        Laravel
+                                    </span>
+                                </label>
+                                <label id="label9">
+                                    <input id="checkbox9" type="checkbox">
+                                    <i id="my-checkbox9" class="fas fa-check-circle"></i>
+                                    <span id="language-span9">
+                                        SQL
+                                    </span>
+                                </label>
+                                <label id="label10">
+                                    <input id="checkbox10" type="checkbox">
+                                    <i id="my-checkbox10" class="fas fa-check-circle"></i>
+                                    <span id="language-span10">
+                                        SHELL
+                                    </span>
+                                </label>
+                                <label id="label11">
+                                    <input id="checkbox11" type="checkbox">
+                                    <i id="my-checkbox11" class="fas fa-check-circle"></i>
+                                    <span id="language-span11">
+                                        情報システム基礎知識(その他)
+                                    </span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="study-content-container">
-                            <div>学習コンテンツ</div>
-                            <label id="label1">
-                                <input id="checkbox1" type="checkbox">
-                                <i id="my-checkbox1" class="fas fa-check-circle"></i>
-                                <span id="content-span1">
-                                    N予備校
-                                </span>
-                            </label>
-                            <label id="label2">
-                                <input id="checkbox2" type="checkbox">
-                                <i id="my-checkbox2" class="fas fa-check-circle"></i>
-                                <span id="content-span2">
-                                    ドットインストール
-                                </span>
-                            </label>
-                            <label id="label3">
-                                <input id="checkbox3" type="checkbox">
-                                <i id="my-checkbox3" class="fas fa-check-circle"></i>
-                                <span id="content-span3">
-                                    POSSE課題
-                                </span>
-                            </label>
-                        </div>
-                        <div class="language-container">
-                            <div>学習言語</div>
-                            <label id="label4">
-                                <input id="checkbox4" type="checkbox">
-                                <i id="my-checkbox4" class="fas fa-check-circle"></i>
-                                <span id="language-span4">
-                                    HTML
-                                </span>
-                            </label>
-                            <label id="label5">
-                                <input id="checkbox5" type="checkbox">
-                                <i id="my-checkbox5" class="fas fa-check-circle"></i>
-                                <span id="language-span5">
-                                    CSS
-                                </span>
-                            </label>
-                            <label id="label6">
-                                <input id="checkbox6" type="checkbox">
-                                <i id="my-checkbox6" class="fas fa-check-circle"></i>
-                                <span id="language-span6">
-                                    Javascript
-                                </span>
-                            </label>
-                            <label id="label7">
-                                <input id="checkbox7" type="checkbox">
-                                <i id="my-checkbox7" class="fas fa-check-circle"></i>
-                                <span id="language-span7">
-                                    PHP
-                                </span>
-                            </label>
-                            <label id="label8">
-                                <input id="checkbox8" type="checkbox">
-                                <i id="my-checkbox8" class="fas fa-check-circle"></i>
-                                <span id="language-span8">
-                                    Laravel
-                                </span>
-                            </label>
-                            <label id="label9">
-                                <input id="checkbox9" type="checkbox">
-                                <i id="my-checkbox9" class="fas fa-check-circle"></i>
-                                <span id="language-span9">
-                                    SQL
-                                </span>
-                            </label>
-                            <label id="label10">
-                                <input id="checkbox10" type="checkbox">
-                                <i id="my-checkbox10" class="fas fa-check-circle"></i>
-                                <span id="language-span10">
-                                    SHELL
-                                </span>
-                            </label>
-                            <label id="label11">
-                                <input id="checkbox11" type="checkbox">
-                                <i id="my-checkbox11" class="fas fa-check-circle"></i>
-                                <span id="language-span11">
-                                    情報システム基礎知識(その他)
-                                </span>
-                            </label>
+                        <div class="form-right">
+                            <div class="hour-container">
+                                <div>学習時間</div>
+                                <input id="time" placeholder="半角数字で入力してください" size="20" class="textbox" oninput="value = value.replace(/[^\d]+/i,'');" / required></textarea>
+                                <!-- 半角数字以外入力無効 -->
+                            </div>
+                            <div class="comment-container">
+                                <div>Twitter用コメント</div>
+                                <textarea id="comment" class="twitter-comment textbox" placeholder="ツイート内容を入力してください"></textarea>
+                            </div>
+                            <div class="share-container">
+                                <label id="label12">
+                                    <input id="checkbox12" type="checkbox">
+                                    <i id="my-checkbox12" class="fas fa-check-circle fa-2x"></i>
+                                    Twitterにシェアする
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-right">
-                        <div class="hour-container">
-                            <div>学習時間</div>
-                            <input id="time" placeholder="半角数字で入力してください" size="20" class="textbox" oninput="value = value.replace(/[^\d]+/i,'');" / required></textarea>
-                            <!-- 半角数字以外入力無効 -->
-                        </div>
-                        <div class="comment-container">
-                            <div>Twitter用コメント</div>
-                            <textarea id="comment" class="twitter-comment textbox" placeholder="ツイート内容を入力してください"></textarea>
-                        </div>
-                        <div class="share-container">
-                            <label id="label12">
-                                <input id="checkbox12" type="checkbox">
-                                <i id="my-checkbox12" class="fas fa-check-circle fa-2x"></i>
-                                Twitterにシェアする
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="overlay-button-container">
-                    <button id="post-button" class="post-button">
+                    <div class="overlay-button-container">
+                        <input type="submit" value="submit" id="post-button" class="post-button">
                         記録・投稿
-                    </button>
-                </div>
-                <button id="exit" class="exit"><i class="fas fa-times"></i></button>
+                        </inp>
+                    </div>
+                    <button id="exit" class="exit"><i class="fas fa-times"></i></button>
             </div>
+            </form>
         </div>
         <!-- ロード画面のアニメーション -->
         <div id="animation-filter" class="animation-filter" hidden>
@@ -474,8 +485,8 @@
                             },
                             ticks: { // 目盛り
                                 min: 0, // 最小値
-                                max: 12, // 最大値
-                                stepSize: 2, // 軸間隔
+                                max: 20, // 最大値
+                                stepSize: 4, // 軸間隔
                                 fontColor: "#97b9d1", // 目盛りの色
                                 fontSize: 14 // フォントサイズ
                             },
@@ -595,4 +606,3 @@
 
     </html>
     <!-- 最初はurlから情報取得せず現在の日時などを表示月移動するときurlから数値取得して$monthから引いたり足したりする -->
-    <?php require "request.php";?>
