@@ -99,8 +99,9 @@ function reset() {
 };
 pcPost.addEventListener('click', function () {
 if(time.innerHTML!=''){
-    setTimeout(startLoading,1000);
-    setTimeout(stopLoading,3000);
+    startLoading();
+    stopLoading();
+    //データすぐ送られるのにアニメーション待つ必要ない
 }
 });
 //スマホで画面下部のボタン押すとオーバーレイ表示する
@@ -113,8 +114,8 @@ smartphoneButton.addEventListener('click', function () {
         // sendData().then(startLoading()).then(stopLoading()).then(function(){
             // window.location.reload(true);
             if(time.innerHTML!=''){
-                setTimeout(startLoading,1000);
-                setTimeout(stopLoading,3000);
+                startLoading();
+                stopLoading();
                 smartphonePostButton.id="smartphoneButton";
             }
         // });
