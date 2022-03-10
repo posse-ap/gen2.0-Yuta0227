@@ -147,7 +147,7 @@ li{
 /* PC画面の時は非表示。画面下部に配置 */
 .smartphone-button-container{
     margin:0 auto;
-    display:none;
+    opacity:0;
     z-index:10000;
 }
 .smartphone-button{
@@ -224,7 +224,7 @@ li{
 }
 /* デフォルトのチェックマーク消してる */
 .form-left>div>label>input, .form-right>div>label>input{
-    display:none;
+    opacity:0;
 }
 .color-blue{
     color:blue;
@@ -368,7 +368,7 @@ li{
         position:fixed;
     }
     .button-container{
-        display:none;
+        opacity:0;
     }
     .content-container{
         display:flex;
@@ -468,7 +468,7 @@ li{
     }
     /* 位置調整めんどくさいため位置が不変のsmartphone-button-containerをずっと表示。ボタンの役割はjsでidを変えて対応 */
     .overlay-button-container{
-        display:none;
+        opacity:0;
     }
     .animation-filter{
         position:absolute;
