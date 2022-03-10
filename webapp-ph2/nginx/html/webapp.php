@@ -189,7 +189,7 @@ for ($j = 1; $j <= date('t'); $j++) {
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
-            投稿消すボタン過去5件一覧表示して選んで削除。投稿時間スプレッドシートに反映。アニメーションはajax使えば表示できるらしい。日付の事前入力できてない
+            投稿消すボタン過去5件一覧表示して選んで削除。投稿時間スプレッドシートに反映。アニメーションはajax使えば表示できるらしい。
         </div>
         <div class="button-container">
             <button id="header-button" class="post-button">記録・投稿</button>
@@ -296,7 +296,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                         <div class="date-container">
                             <div>学習日</div>
                             <input id="date" type="date" name="date" size="20" class="textbox" value="<?php
-                                    // echo htmlspecialchars($submitDate, ENT_QUOTES, 'UTF-8');
+                                    echo htmlspecialchars($submitDate, ENT_QUOTES, 'UTF-8');
                                 if (isset($_GET['month']) && isset($_GET['year'])) {
                                     $one_digit_date = $moveYear . '-' . $moveMonth . '-' . $date;
                                     echo date('Y-m-d', strtotime($one_digit_date));
