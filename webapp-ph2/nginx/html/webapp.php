@@ -2,14 +2,57 @@
     require "db-connect.php";
     $submit_date = '';
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $submit_date = $_POST['date'];
-        $submit_date_array=explode('-',$submit_date);
-        for($i=0;$i<=2;$i++){
-            $submit_date_array[$i]=(int)$submit_date_array[$i];
-        }
-        var_dump($submit_date_array);
+        $submit_date = explode('-',$_POST['date']);
+        $submit_date=[
+            'year'=>(int)$submit_date[0],
+            'month'=>(int)$submit_date[1],
+            'date'=>(int)$submit_date[2]
+        ];
+        $submit_contents_id=$_POST['contents'];
+        $submit_contents_name=[
+            '1'=>'POSSE課題',
+            '2'=>'ドットインストール',
+            '3'=>'N予備校'
+        ];
+        $submit_contents=[
+            '0'=>[
+                'content_id'=>(int)$submit_contents_id[0],
+                'content_name'=>$submit_contents_name[$submit_contents_id[0]],
+            ],
+            '1'=>[
+                'content_id'=>(int)$submit_contents_id[1],
+                'content_name'=>$submit_contents_name[$submit_contents_id[1]],
+            ],
+            '2'=>[
+                'content_id'=>(int)$submit_contents_id[2],
+                'content_name'=>$submit_contents_name[$submit_contents_id[2]]
+            ]
+        ];
+        $submit_language_id=$_POST['language'];
+        $submit_language_name=[
+            '1'=>'Javascript',
+            '2'=>'CSS',
+            '3'=>'PHP',
+            '4'=>'HTML',
+            '5'=>'Laravel',
+            '6'=>'SQL',
+            '7'=>'SHELL',
+            '8'=>'情報システム基礎知識(その他)'
+        ];
+        $submit_language=[
+            'language_id'=>(int)$submit_language_id,
+            'language_name'=>$submit_language_name[$submit_language_id]
+        ];
+        $submit_hours=(int)$_POST['hours'];
+
+        //NULLの場合intでキャストすると0になる
+        print_r('<pre>');
+        var_dump($submit_date);
+        var_dump($submit_contents);
+        var_dump($submit_language);
+        var_dump($submit_hours);
+        print_r('</pre>');
     };
-    echo 'yes';
     ?>
     <?php
     //最初は現在日程のテーブル表示
@@ -133,7 +176,8 @@
             <div class="logo-week">
                 <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
                 <div class="week">4th week</div>
-                あとは投稿機能。内容取得はPOSTでnameで取得。idと紐づけるためにグループ分け。select name,sum(hours) from fauheihauf;
+                あとは投稿機能。内容取得はPOSTでnameで取得。idと紐づけるためにグループ分け。select name,sum(hours) from fauheihauf;学習時間入力しなくてもモーダル閉じてしまう
+
             </div>
             <div class="button-container">
                 <button id="header-button" class="post-button">記録・投稿</button>
@@ -263,21 +307,21 @@
                             <div class="study-content-container">
                                 <div>学習コンテンツ</div>
                                 <label id="label1">
-                                    <input id="checkbox1" type="checkbox">
+                                    <input id="checkbox1" name="contents[]" type="checkbox" value="3">
                                     <i id="my-checkbox1" class="fas fa-check-circle"></i>
                                     <span id="content-span1">
                                         N予備校
                                     </span>
                                 </label>
                                 <label id="label2">
-                                    <input id="checkbox2" type="checkbox">
+                                    <input id="checkbox2" name="contents[]" type="checkbox" value="2">
                                     <i id="my-checkbox2" class="fas fa-check-circle"></i>
                                     <span id="content-span2">
                                         ドットインストール
                                     </span>
                                 </label>
                                 <label id="label3">
-                                    <input id="checkbox3" type="checkbox">
+                                    <input id="checkbox3" name="contents[]" type="checkbox" value="1">
                                     <i id="my-checkbox3" class="fas fa-check-circle"></i>
                                     <span id="content-span3">
                                         POSSE課題
@@ -287,56 +331,56 @@
                             <div class="language-container">
                                 <div>学習言語</div>
                                 <label id="label4">
-                                    <input id="checkbox4" type="checkbox">
+                                    <input id="checkbox4" type="checkbox" name="language" value="4">
                                     <i id="my-checkbox4" class="fas fa-check-circle"></i>
                                     <span id="language-span4">
                                         HTML
                                     </span>
                                 </label>
                                 <label id="label5">
-                                    <input id="checkbox5" type="checkbox">
+                                    <input id="checkbox5" type="checkbox" name="language" value="2">
                                     <i id="my-checkbox5" class="fas fa-check-circle"></i>
                                     <span id="language-span5">
                                         CSS
                                     </span>
                                 </label>
                                 <label id="label6">
-                                    <input id="checkbox6" type="checkbox">
+                                    <input id="checkbox6" type="checkbox" name="language" value="1">
                                     <i id="my-checkbox6" class="fas fa-check-circle"></i>
                                     <span id="language-span6">
                                         Javascript
                                     </span>
                                 </label>
                                 <label id="label7">
-                                    <input id="checkbox7" type="checkbox">
+                                    <input id="checkbox7" type="checkbox" name="language" value="3">
                                     <i id="my-checkbox7" class="fas fa-check-circle"></i>
                                     <span id="language-span7">
                                         PHP
                                     </span>
                                 </label>
                                 <label id="label8">
-                                    <input id="checkbox8" type="checkbox">
+                                    <input id="checkbox8" type="checkbox" name="language" value="5">
                                     <i id="my-checkbox8" class="fas fa-check-circle"></i>
                                     <span id="language-span8">
                                         Laravel
                                     </span>
                                 </label>
                                 <label id="label9">
-                                    <input id="checkbox9" type="checkbox">
+                                    <input id="checkbox9" type="checkbox" name="language" value="6">
                                     <i id="my-checkbox9" class="fas fa-check-circle"></i>
                                     <span id="language-span9">
                                         SQL
                                     </span>
                                 </label>
                                 <label id="label10">
-                                    <input id="checkbox10" type="checkbox">
+                                    <input id="checkbox10" type="checkbox" name="language" value="7">
                                     <i id="my-checkbox10" class="fas fa-check-circle"></i>
                                     <span id="language-span10">
                                         SHELL
                                     </span>
                                 </label>
                                 <label id="label11">
-                                    <input id="checkbox11" type="checkbox">
+                                    <input id="checkbox11" type="checkbox" name="language" value="8">
                                     <i id="my-checkbox11" class="fas fa-check-circle"></i>
                                     <span id="language-span11">
                                         情報システム基礎知識(その他)
@@ -347,7 +391,7 @@
                         <div class="form-right">
                             <div class="hour-container">
                                 <div>学習時間</div>
-                                <input id="time" placeholder="半角数字で入力してください" size="20" class="textbox" oninput="value = value.replace(/[^\d]+/i,'');" / required></textarea>
+                                <textarea type="text" name="hours" id="time" placeholder="半角数字で入力してください" size="20" class="textbox" oninput="value = value.replace(/[^\d]+/i,'');" / required></textarea>
                                 <!-- 半角数字以外入力無効 -->
                             </div>
                             <div class="comment-container">
