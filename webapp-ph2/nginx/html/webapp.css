@@ -20,7 +20,7 @@ header{
     height:100%;
 }
 .logo-week{
-    width:100%;
+    width:50%;
     height:100%;
     display:flex;
     align-items:center;
@@ -46,6 +46,9 @@ header{
     cursor: pointer;
     box-shadow: 0 7px 10px #aecffa;
     width:max-content;
+}
+#delete-button{
+    background:linear-gradient(90deg, red 40%, pink 100%);
 }
 /* メインコンテンツ */
 .content-container{
@@ -225,7 +228,7 @@ li{
 }
 /* デフォルトのチェックマーク消してる */
 .form-left>div>label>input, .form-right>div>label>input{
-    opacity:0;
+    display:none;
 }
 .color-blue{
     color:blue;

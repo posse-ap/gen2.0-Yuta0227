@@ -1,6 +1,7 @@
 use webapp;
 drop table if exists time;
 create table time (
+    id int AUTO_INCREMENT,
     date int,
     month int,
     year int,
@@ -8,7 +9,8 @@ create table time (
     content varchar(255),
     hours float,
     content_id int,
-    language_id int
+    language_id int,
+    primary key(id)
 );
 -- content_id=
 -- 1=>POSSE課題

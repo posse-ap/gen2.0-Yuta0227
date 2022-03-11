@@ -1,5 +1,7 @@
 <?php
 require "db-connect.php";
+$moveMonth = $_GET['month'];
+$moveYear = $_GET['year'];
 $submit_date = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $submit_date = explode('-', $_POST['date']);
@@ -48,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //NULLの場合intでキャストすると0になる
     for ($i = 1; $i <= count($submit_contents_id); $i++) {
         //コンテンツの個数分sql文発行
-        ${"submit" . $i} = $dbh->prepare("INSERT INTO time values (?,?,?,?,?,?,?,?);");
+        ${"submit" . $i} = $dbh->prepare("INSERT INTO time (date,month,year,language,content,hours,content_id,language_id) values (?,?,?,?,?,?,?,?);");
         ${"submit" . $i}->bindValue(1, $submit_date['date'], PDO::PARAM_INT);
         ${"submit" . $i}->bindValue(2, $submit_date['month'], PDO::PARAM_INT);
         ${"submit" . $i}->bindValue(3, $submit_date['year'], PDO::PARAM_INT);
@@ -63,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location:http://localhost:8080/webapp.php?month=$moveMonth&year=$moveYear");
     } else {
         header("Location:http://localhost:8080/webapp.php");
-    }
+    };
     exit;
 };
 ?>
@@ -74,8 +76,6 @@ $time = new DateTime();
 $date = (int)date('d');
 $month = (int)date('n');
 $year = (int)date('Y');
-$moveMonth = $_GET['month'];
-$moveYear = $_GET['year'];
 if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
     $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month = $moveMonth AND year = $moveYear;"); //該当月
 } else {
@@ -178,7 +178,7 @@ for ($j = 1; $j <= date('t'); $j++) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./reset.css">
-    <link rel="stylesheet" type="text/css" href="./webapp.css">
+    <link rel="stylesheet" type="text/css" href="./webapp.css?v=<?= date('s')?>">
     <title>Document</title>
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
@@ -189,9 +189,11 @@ for ($j = 1; $j <= date('t'); $j++) {
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
-            投稿消すボタン過去5件一覧表示して選んで削除。投稿時間スプレッドシートに反映。アニメーションはajax使えば表示できるらしい。
+            投稿消すボタン過去5件一覧表示して選んで削除。アニメーションはajax使えば表示できるらしい。konntenaotosuto 
+            de-ta kieru 。一般ユーザーと管理者を識別するログイン画面つけることで悪意のある投稿削除。本人以外のデータは削除できない。ハッシュ値。セッションのidをいれる
         </div>
         <div class="button-container">
+            <button id="delete-button" class="post-button">投稿削除</button>
             <button id="header-button" class="post-button">記録・投稿</button>
         </div>
     </header>
@@ -290,6 +292,11 @@ for ($j = 1; $j <= date('t'); $j++) {
     <!-- 記録投稿ボタンを押した時表示されるオーバーレイ -->
     <div id="fullOverlay" hidden>
         <div class="overlay">
+            <form action="" method="POST">
+                <div class="form">
+
+                </div>
+            </form>
             <form action="" method="POST">
                 <div class="form">
                     <div class="form-left">
@@ -426,7 +433,7 @@ for ($j = 1; $j <= date('t'); $j++) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 <!-- datalabelsプラグインを呼び出す -->
 <script src="./chartjs-plugin-labels.js"></script>
-<script src="./webapp.js"></script>
+<script src="./webapp.js?v=<?= date('s')?>"></script>
 <script>
     var hourBargraphCtx = document.getElementById("hour-bargraph").getContext('2d');
     var hourBargraph = document.getElementById('hour-bragraph');

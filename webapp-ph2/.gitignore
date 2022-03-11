@@ -1,2 +1,2 @@
-./php/Dockerfile
-./mysql/data/
+/php/Dockerfile
+/mysql/data/
