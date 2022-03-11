@@ -4,13 +4,6 @@ $moveMonth = $_GET['month'];
 $moveYear = $_GET['year'];
 $submit_date = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // var_dump($_POST['delete_id0']);
-    for($i=0;$i<=4;$i++){
-        if ($_POST['delete_id'.$i][0] != NULL) {
-            ${"delete_id".$i}=(int)$_POST['delete_id'.$i][0];
-            var_dump(${'delete_id'.$i});
-        };
-    }
 
     if ($_POST['date'] != NULL) {
         $submit_date = explode('-', $_POST['date']);
@@ -322,7 +315,7 @@ for ($j = 1; $j <= date('t'); $j++) {
     <!-- 記録投稿ボタンを押した時表示されるオーバーレイ -->
     <div id="fullOverlay" hidden>
         <div class="overlay">
-            <form id="delete-form" hidden action="" method="POST">
+            <form id="delete-form" hidden action="manager.php" method="POST" onsubmit="return false;">
                 <div class="delete-form">
                     削除依頼のためのフォーム（管理者へ送信）
                     <div style="width:100%;">
@@ -344,7 +337,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[0]['content']; ?></td>
                                 <td><?php echo $show_delete_data[0]['language']; ?></td>
                                 <td><?php echo $show_delete_data[0]['hours']; ?></td>
-                                <td><input name="delete_id0[]" type="checkbox" value="<?php echo $show_delete_data[0]['id']; ?>" id="delete-request-0"></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo $show_delete_data[0]['id']; ?>" id="delete-request-0"></input></td>
                             </tr>
                             <tr>
                                 <td><?php echo $show_delete_data[1]['id']; ?></td>
@@ -353,7 +346,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[1]['content']; ?></td>
                                 <td><?php echo $show_delete_data[1]['language']; ?></td>
                                 <td><?php echo $show_delete_data[1]['hours']; ?></td>
-                                <td><input name="delete_id1[]" type="checkbox" value="<?php echo $show_delete_data[1]['id']; ?>" id="delete-request-1"></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo $show_delete_data[1]['id']; ?>" id="delete-request-1"></input></td>
                             </tr>
                             <tr>
                                 <td><?php echo $show_delete_data[2]['id']; ?></td>
@@ -362,7 +355,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[2]['content']; ?></td>
                                 <td><?php echo $show_delete_data[2]['language']; ?></td>
                                 <td><?php echo $show_delete_data[2]['hours']; ?></td>
-                                <td><input name="delete_id2[]" type="checkbox" value="<?php echo $show_delete_data[2]['id']; ?>" id="delete-request-2"></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo $show_delete_data[2]['id']; ?>" id="delete-request-2"></input></td>
                             </tr>
                             <tr>
                                 <td><?php echo $show_delete_data[3]['id']; ?></td>
@@ -371,7 +364,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[3]['content']; ?></td>
                                 <td><?php echo $show_delete_data[3]['language']; ?></td>
                                 <td><?php echo $show_delete_data[3]['hours']; ?></td>
-                                <td><input name="delete_id3[]" type="checkbox" value="<?php echo $show_delete_data[3]['id']; ?>" id="delete-request-3"></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo $show_delete_data[3]['id']; ?>" id="delete-request-3"></input></td>
                             </tr>
                             <tr>
                                 <td><?php echo $show_delete_data[4]['id']; ?></td>
@@ -380,7 +373,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[4]['content']; ?></td>
                                 <td><?php echo $show_delete_data[4]['language']; ?></td>
                                 <td><?php echo $show_delete_data[4]['hours']; ?></td>
-                                <td><input name="delete_id4[]" type="checkbox" value="<?php echo $show_delete_data[4]['id']; ?>" id="delete-request-4"></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo $show_delete_data[4]['id']; ?>" id="delete-request-4"></input></td>
                             </tr>
                         </table>
                         <div id="delete-reason">
