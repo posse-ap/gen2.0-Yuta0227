@@ -2,6 +2,7 @@ use webapp;
 drop table if exists time;
 create table time (
     id int AUTO_INCREMENT,
+    updated_at datetime default current_timestamp,
     date int,
     month int,
     year int,
@@ -10,6 +11,14 @@ create table time (
     hours float,
     content_id int,
     language_id int,
+    primary key(id)
+);
+drop table if exists users;
+create table users(
+    id auto_increment,
+    user_type varchar(255),
+    user_name varchar(255),
+    user_password varchar(255),
     primary key(id)
 );
 -- content_id=

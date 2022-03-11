@@ -4,68 +4,97 @@ $moveMonth = $_GET['month'];
 $moveYear = $_GET['year'];
 $submit_date = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $submit_date = explode('-', $_POST['date']);
-    $submit_date = [
-        'year' => (int)$submit_date[0],
-        'month' => (int)$submit_date[1],
-        'date' => (int)$submit_date[2]
-    ];
-    $submit_contents_id = $_POST['contents'];
-    $submit_contents_name = [
-        '1' => 'POSSE課題',
-        '2' => 'ドットインストール',
-        '3' => 'N予備校'
-    ];
-    $submit_contents = [
-        '0' => [
-            'content_id' => (int)$submit_contents_id[0],
-            'content_name' => $submit_contents_name[$submit_contents_id[0]],
-        ],
-        '1' => [
-            'content_id' => (int)$submit_contents_id[1],
-            'content_name' => $submit_contents_name[$submit_contents_id[1]],
-        ],
-        '2' => [
-            'content_id' => (int)$submit_contents_id[2],
-            'content_name' => $submit_contents_name[$submit_contents_id[2]]
-        ]
-    ];
-    $submit_language_id = $_POST['language'];
-    $submit_language_name = [
-        '1' => 'Javascript',
-        '2' => 'CSS',
-        '3' => 'PHP',
-        '4' => 'HTML',
-        '5' => 'Laravel',
-        '6' => 'SQL',
-        '7' => 'SHELL',
-        '8' => '情報システム基礎知識(その他)'
-    ];
-    $submit_language = [
-        'language_id' => (int)$submit_language_id,
-        'language_name' => $submit_language_name[$submit_language_id]
-    ];
-    $submit_hours = (int)$_POST['hours'];
-    $div_submit_hours = $submit_hours / count($submit_contents_id);
-    //NULLの場合intでキャストすると0になる
-    for ($i = 1; $i <= count($submit_contents_id); $i++) {
-        //コンテンツの個数分sql文発行
-        ${"submit" . $i} = $dbh->prepare("INSERT INTO time (date,month,year,language,content,hours,content_id,language_id) values (?,?,?,?,?,?,?,?);");
-        ${"submit" . $i}->bindValue(1, $submit_date['date'], PDO::PARAM_INT);
-        ${"submit" . $i}->bindValue(2, $submit_date['month'], PDO::PARAM_INT);
-        ${"submit" . $i}->bindValue(3, $submit_date['year'], PDO::PARAM_INT);
-        ${"submit" . $i}->bindValue(4, $submit_language['language_name']);
-        ${"submit" . $i}->bindValue(5, $submit_contents[$i - 1]['content_name']);
-        ${"submit" . $i}->bindValue(6, $div_submit_hours, PDO::PARAM_INT);
-        ${"submit" . $i}->bindValue(7, $submit_contents[$i - 1]['content_id'], PDO::PARAM_INT);
-        ${"submit" . $i}->bindValue(8, $submit_language_id, PDO::PARAM_INT);
-        ${"submit" . $i}->execute();
-    };
-    if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
-        header("Location:http://localhost:8080/webapp.php?month=$moveMonth&year=$moveYear");
-    } else {
-        header("Location:http://localhost:8080/webapp.php");
-    };
+    // var_dump($_POST['delete_id0']);
+    for($i=0;$i<=4;$i++){
+        if ($_POST['delete_id'.$i][0] != NULL) {
+            ${"delete_id".$i}=(int)$_POST['delete_id'.$i][0];
+            var_dump(${'delete_id'.$i});
+        };
+    }
+
+    if ($_POST['date'] != NULL) {
+        $submit_date = explode('-', $_POST['date']);
+        $submit_date = [
+            'year' => (int)$submit_date[0],
+            'month' => (int)$submit_date[1],
+            'date' => (int)$submit_date[2]
+        ];
+    }
+    if ($_POST['contents'] != NULL) {
+
+        $submit_contents_id = $_POST['contents'];
+        $submit_contents_name = [
+            '1' => 'POSSE課題',
+            '2' => 'ドットインストール',
+            '3' => 'N予備校'
+        ];
+        $submit_contents = [
+            '0' => [
+                'content_id' => (int)$submit_contents_id[0],
+                'content_name' => $submit_contents_name[$submit_contents_id[0]],
+            ],
+            '1' => [
+                'content_id' => (int)$submit_contents_id[1],
+                'content_name' => $submit_contents_name[$submit_contents_id[1]],
+            ],
+            '2' => [
+                'content_id' => (int)$submit_contents_id[2],
+                'content_name' => $submit_contents_name[$submit_contents_id[2]]
+            ]
+        ];
+    }
+    if ($_POST['language'] != NULL) {
+
+        $submit_language_id = $_POST['language'];
+        $submit_language_name = [
+            '1' => 'Javascript',
+            '2' => 'CSS',
+            '3' => 'PHP',
+            '4' => 'HTML',
+            '5' => 'Laravel',
+            '6' => 'SQL',
+            '7' => 'SHELL',
+            '8' => '情報システム基礎知識(その他)'
+        ];
+        $submit_language = [
+            'language_id' => (int)$submit_language_id,
+            'language_name' => $submit_language_name[$submit_language_id]
+        ];
+    }
+    if ($_POST['hours'] != NULL) {
+        $submit_hours = (int)$_POST['hours'];
+        $div_submit_hours = $submit_hours / count($submit_contents_id);
+        //NULLの場合intでキャストすると0になる
+        for ($i = 1; $i <= count($submit_contents_id); $i++) {
+            if (
+                $submit_date['date'] != NULL &&
+                $submit_date['month'] != NULL &&
+                $submit_date['year'] != NULL &&
+                $submit_language['language_name'] != NULL &&
+                $submit_contents[$i - 1]['content_name'] != NULL &&
+                $div_submit_hours != NULL &&
+                $submit_contents[$i - 1]['content_id'] != NULL &&
+                $submit_language_id != NULL
+            ) {
+                //コンテンツの個数分sql文発行
+                ${"submit" . $i} = $dbh->prepare("INSERT INTO time (date,month,year,language,content,hours,content_id,language_id) values (?,?,?,?,?,?,?,?);");
+                ${"submit" . $i}->bindValue(1, $submit_date['date'], PDO::PARAM_INT);
+                ${"submit" . $i}->bindValue(2, $submit_date['month'], PDO::PARAM_INT);
+                ${"submit" . $i}->bindValue(3, $submit_date['year'], PDO::PARAM_INT);
+                ${"submit" . $i}->bindValue(4, $submit_language['language_name']);
+                ${"submit" . $i}->bindValue(5, $submit_contents[$i - 1]['content_name']);
+                ${"submit" . $i}->bindValue(6, $div_submit_hours, PDO::PARAM_INT);
+                ${"submit" . $i}->bindValue(7, $submit_contents[$i - 1]['content_id'], PDO::PARAM_INT);
+                ${"submit" . $i}->bindValue(8, $submit_language_id, PDO::PARAM_INT);
+                ${"submit" . $i}->execute();
+            }
+        };
+    }
+    // if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
+    //     header("Location:http://localhost:8080/webapp.php?month=$moveMonth&year=$moveYear");
+    // } else {
+    //     header("Location:http://localhost:8080/webapp.php");
+    // };
     exit;
 };
 ?>
@@ -109,7 +138,9 @@ $language11 = $dbh->prepare("SELECT distinct language from time where language_i
 $language12 = $dbh->prepare("SELECT distinct language from time where language_id=6;"); //6=>SQL
 $language13 = $dbh->prepare("SELECT distinct language from time where language_id=7;"); //7=>SHELL
 $language14 = $dbh->prepare("SELECT distinct language from time where language_id=8;"); //8=>情報システム基礎知識(その他)
-
+$show_delete_stmt = $dbh->prepare("SELECT * from time order by id desc limit 5;"); //過去５件表示
+$show_delete_stmt->execute();
+$show_delete_data = $show_delete_stmt->fetchAll();
 for ($i = 1; $i <= 14; $i++) {
     ${"stmt" . $i}->execute();
     ${"data" . $i} = ${"stmt" . $i}->fetchAll();
@@ -178,7 +209,7 @@ for ($j = 1; $j <= date('t'); $j++) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./reset.css">
-    <link rel="stylesheet" type="text/css" href="./webapp.css?v=<?= date('s')?>">
+    <link rel="stylesheet" type="text/css" href="./webapp.css?v=<?= date('s') ?>">
     <title>Document</title>
     <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 </head>
@@ -189,12 +220,11 @@ for ($j = 1; $j <= date('t'); $j++) {
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
-            投稿消すボタン過去5件一覧表示して選んで削除。アニメーションはajax使えば表示できるらしい。konntenaotosuto 
-            de-ta kieru 。一般ユーザーと管理者を識別するログイン画面つけることで悪意のある投稿削除。本人以外のデータは削除できない。ハッシュ値。セッションのidをいれる
+            投稿消すボタン過去5件一覧表示して選んで削除。アニメーションはajax使えば表示できるらしい。一般ユーザーと管理者を識別するログイン画面つけることで悪意のある投稿削除。本人以外のデータは削除できない。ハッシュ値。セッションのidをいれる。管理者画面はグラフとかなしで削除依頼とメール送信のみのページ。新しいphpつくる
         </div>
         <div class="button-container">
-            <button id="delete-button" class="post-button">投稿削除</button>
-            <button id="header-button" class="post-button">記録・投稿</button>
+            <button id="header-delete-button" class="post-button">削除依頼</button>
+            <button id="header-post-button" class="post-button">記録・投稿</button>
         </div>
     </header>
     <div class="content-container">
@@ -276,11 +306,11 @@ for ($j = 1; $j <= date('t'); $j++) {
                 } else {
                     echo $year;
                 }; ?></span>年<span id="month"><?php
-                                                    if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
-                                                        echo $moveMonth;
-                                                    } else {
-                                                        echo $month;
-                                                    }; ?>
+                                                if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
+                                                    echo $moveMonth;
+                                                } else {
+                                                    echo $month;
+                                                }; ?>
             </span>月
         </div>
         <button id="next-month" class="calender-arrow">&gt;</button>
@@ -292,24 +322,88 @@ for ($j = 1; $j <= date('t'); $j++) {
     <!-- 記録投稿ボタンを押した時表示されるオーバーレイ -->
     <div id="fullOverlay" hidden>
         <div class="overlay">
-            <form action="" method="POST">
-                <div class="form">
-
+            <form id="delete-form" hidden action="" method="POST">
+                <div class="delete-form">
+                    削除依頼のためのフォーム（管理者へ送信）
+                    <div style="width:100%;">
+                        <div>過去5件の投稿を表示</div>
+                        <table id="delete-table">
+                            <tr>
+                                <th>投稿ID</th>
+                                <th>投稿時間</th>
+                                <th>学習日</th>
+                                <th>学習コンテンツ</th>
+                                <th>学習言語</th>
+                                <th>学習時間</th>
+                                <th>削除依頼ボタン</th>
+                            </tr>
+                            <tr>
+                                <td><?php echo $show_delete_data[0]['id']; ?></td>
+                                <td><?php echo $show_delete_data[0]['updated_at']; ?></td>
+                                <td><?php echo $show_delete_data[0]['date']; ?></td>
+                                <td><?php echo $show_delete_data[0]['content']; ?></td>
+                                <td><?php echo $show_delete_data[0]['language']; ?></td>
+                                <td><?php echo $show_delete_data[0]['hours']; ?></td>
+                                <td><input name="delete_id0[]" type="checkbox" value="<?php echo $show_delete_data[0]['id']; ?>" id="delete-request-0"></input></td>
+                            </tr>
+                            <tr>
+                                <td><?php echo $show_delete_data[1]['id']; ?></td>
+                                <td><?php echo $show_delete_data[1]['updated_at']; ?></td>
+                                <td><?php echo $show_delete_data[1]['date']; ?></td>
+                                <td><?php echo $show_delete_data[1]['content']; ?></td>
+                                <td><?php echo $show_delete_data[1]['language']; ?></td>
+                                <td><?php echo $show_delete_data[1]['hours']; ?></td>
+                                <td><input name="delete_id1[]" type="checkbox" value="<?php echo $show_delete_data[1]['id']; ?>" id="delete-request-1"></input></td>
+                            </tr>
+                            <tr>
+                                <td><?php echo $show_delete_data[2]['id']; ?></td>
+                                <td><?php echo $show_delete_data[2]['updated_at']; ?></td>
+                                <td><?php echo $show_delete_data[2]['date']; ?></td>
+                                <td><?php echo $show_delete_data[2]['content']; ?></td>
+                                <td><?php echo $show_delete_data[2]['language']; ?></td>
+                                <td><?php echo $show_delete_data[2]['hours']; ?></td>
+                                <td><input name="delete_id2[]" type="checkbox" value="<?php echo $show_delete_data[2]['id']; ?>" id="delete-request-2"></input></td>
+                            </tr>
+                            <tr>
+                                <td><?php echo $show_delete_data[3]['id']; ?></td>
+                                <td><?php echo $show_delete_data[3]['updated_at']; ?></td>
+                                <td><?php echo $show_delete_data[3]['date']; ?></td>
+                                <td><?php echo $show_delete_data[3]['content']; ?></td>
+                                <td><?php echo $show_delete_data[3]['language']; ?></td>
+                                <td><?php echo $show_delete_data[3]['hours']; ?></td>
+                                <td><input name="delete_id3[]" type="checkbox" value="<?php echo $show_delete_data[3]['id']; ?>" id="delete-request-3"></input></td>
+                            </tr>
+                            <tr>
+                                <td><?php echo $show_delete_data[4]['id']; ?></td>
+                                <td><?php echo $show_delete_data[4]['updated_at']; ?></td>
+                                <td><?php echo $show_delete_data[4]['date']; ?></td>
+                                <td><?php echo $show_delete_data[4]['content']; ?></td>
+                                <td><?php echo $show_delete_data[4]['language']; ?></td>
+                                <td><?php echo $show_delete_data[4]['hours']; ?></td>
+                                <td><input name="delete_id4[]" type="checkbox" value="<?php echo $show_delete_data[4]['id']; ?>" id="delete-request-4"></input></td>
+                            </tr>
+                        </table>
+                        <div id="delete-reason">
+                            削除依頼理由記入欄:
+                            <textarea placeholder="理由記入して下さい" required></textarea>
+                        </div>
+                        <input type="submit" value="削除依頼送信" style="display:block;margin:auto;pointerEvents:none;"></input>
+                    </div>
                 </div>
             </form>
-            <form action="" method="POST">
+            <form id="post-form" hidden action="" method="POST">
                 <div class="form">
                     <div class="form-left">
                         <div class="date-container">
                             <div>学習日</div>
                             <input id="date" type="date" name="date" size="20" class="textbox" value="<?php
-                                    echo htmlspecialchars($submitDate, ENT_QUOTES, 'UTF-8');
-                                if (isset($_GET['month']) && isset($_GET['year'])) {
-                                    $one_digit_date = $moveYear . '-' . $moveMonth . '-' . $date;
-                                    echo date('Y-m-d', strtotime($one_digit_date));
-                                } else {
-                                    echo date('Y-m-d');
-                                };?>" required>
+                                                                                                        echo htmlspecialchars($submitDate, ENT_QUOTES, 'UTF-8');
+                                                                                                        if (isset($_GET['month']) && isset($_GET['year'])) {
+                                                                                                            $one_digit_date = $moveYear . '-' . $moveMonth . '-' . $date;
+                                                                                                            echo date('Y-m-d', strtotime($one_digit_date));
+                                                                                                        } else {
+                                                                                                            echo date('Y-m-d');
+                                                                                                        }; ?>" required>
                         </div>
                         <div class="study-content-container">
                             <div>学習コンテンツ</div>
@@ -417,9 +511,9 @@ for ($j = 1; $j <= date('t'); $j++) {
                 <div class="overlay-button-container">
                     <input type="submit" value="記録・投稿" id="post-button" class="post-button"></input>
                 </div>
-                <button id="exit" class="exit"><i class="fas fa-times"></i></button>
+            </form>
+            <button id="exit" class="exit"><i class="fas fa-times"></i></button>
         </div>
-        </form>
     </div>
     <!-- ロード画面のアニメーション -->
     <div id="animation-filter" class="animation-filter" hidden>
@@ -433,7 +527,7 @@ for ($j = 1; $j <= date('t'); $j++) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 <!-- datalabelsプラグインを呼び出す -->
 <script src="./chartjs-plugin-labels.js"></script>
-<script src="./webapp.js?v=<?= date('s')?>"></script>
+<script src="./webapp.js?v=<?= date('s') ?>"></script>
 <script>
     var hourBargraphCtx = document.getElementById("hour-bargraph").getContext('2d');
     var hourBargraph = document.getElementById('hour-bragraph');

@@ -1,4 +1,5 @@
-const headerButton = document.getElementById('header-button');
+const headerPostButton = document.getElementById('header-post-button');
+const headerDeleteButton = document.getElementById('header-delete-button');
 const smartphoneButton = document.getElementById('smartphone-button');
 const fullOverlay = document.getElementById('fullOverlay');
 const exit = document.getElementById('exit');
@@ -12,6 +13,8 @@ const nextMonth = document.getElementById('next-month');
 const yearMonth = document.getElementById('year-month');
 const month = document.getElementById('month');
 const year = document.getElementById('year');
+const postForm=document.getElementById('post-form');
+const deleteForm=document.getElementById('delete-form');
 var now = new Date();
 var innerhtmlMonth = month.innerHTML;
 var innerhtmlYear = year.innerHTML;
@@ -53,9 +56,15 @@ document.getElementById(`label12`).addEventListener('click', function () {
     }
 });
 //右上の記録・投稿ボタン押すとオーバーレイ表示する
-headerButton.addEventListener('click', function () {
+headerPostButton.addEventListener('click', function () {
     fullOverlay.removeAttribute('hidden');
+    postForm.removeAttribute('hidden');
 });
+//右上の投稿削除
+headerDeleteButton.addEventListener('click',function(){
+    fullOverlay.removeAttribute('hidden');
+    deleteForm.removeAttribute('hidden');
+})
 //×ボタン押すとオーバーレイが消えると同時に入力内容リセットされる
 exit.addEventListener('click', function () {
     fullOverlay.setAttribute('hidden', "");
@@ -106,7 +115,8 @@ if(time.innerHTML!=''){
 });
 //スマホで画面下部のボタン押すとオーバーレイ表示する
 smartphoneButton.addEventListener('click', function () {
-    fullOverlay.removeAttribute('hidden')
+    fullOverlay.removeAttribute('hidden');
+    postForm.removeAttribute('hidden');
     smartphoneButton.id = "smartphone-post-button";
     //IDが変わったボタンを押すとロード画面に入る
     const smartphonePostButton = document.getElementById('smartphone-post-button');

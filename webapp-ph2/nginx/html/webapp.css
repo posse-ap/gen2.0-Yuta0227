@@ -47,7 +47,7 @@ header{
     box-shadow: 0 7px 10px #aecffa;
     width:max-content;
 }
-#delete-button{
+#header-delete-button{
     background:linear-gradient(90deg, red 40%, pink 100%);
 }
 /* メインコンテンツ */
@@ -193,6 +193,22 @@ li{
     transform:translate(-50%,-50%);
     display:flex;
     margin-top:5vh;
+}
+.delete-form{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:85%;
+    height:85%;
+    transform:translate(-50%,-50%);
+    margin-top:5vh;
+}
+#delete-table{
+    border:1px solid black;
+}
+tr,th,td{
+    border:1px solid black;
+    text-align:center;
 }
 .form-left{
     box-sizing:border-box;
