@@ -15,10 +15,17 @@ create table time (
 );
 drop table if exists users;
 create table users(
-    id auto_increment,
+    id int AUTO_INCREMENT,
     user_type varchar(255),
     user_name varchar(255),
     user_password varchar(255),
+    primary key(id)
+);
+drop table if exists delete_request;
+create table delete_request(
+    id int AUTO_INCREMENT,
+    delete_id int,
+    delete_reason varchar(255),
     primary key(id)
 );
 -- content_id=

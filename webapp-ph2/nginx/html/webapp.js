@@ -65,6 +65,13 @@ headerDeleteButton.addEventListener('click',function(){
     fullOverlay.removeAttribute('hidden');
     deleteForm.removeAttribute('hidden');
 })
+// for(let i=0;i<=4;i++){
+//     document.getElementById(`delete-request-${i}`).addEventListener('click',function(){
+//         deleteForm.addEventListener('submit',function(){
+//             document.getElementById(`delete-status-${i}`).innerHTML='申請済み';
+//         });
+//     })
+// }
 //×ボタン押すとオーバーレイが消えると同時に入力内容リセットされる
 exit.addEventListener('click', function () {
     fullOverlay.setAttribute('hidden', "");

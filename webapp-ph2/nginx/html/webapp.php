@@ -4,7 +4,14 @@ $moveMonth = $_GET['month'];
 $moveYear = $_GET['year'];
 $submit_date = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+    if ($_POST['delete_id'] != NULL && $_POST['delete_reason'] != NULL) {
+        $delete_id = (int)$_POST['delete_id'];
+        $delete_reason = $_POST['delete_reason'];
+        $delete_request = $dbh->prepare("INSERT into delete_request (delete_id,delete_reason) values (?,?);");
+        $delete_request->bindValue(1, $delete_id, PDO::PARAM_INT);
+        $delete_request->bindValue(2, $delete_reason);
+        $delete_request->execute();
+    };
     if ($_POST['date'] != NULL) {
         $submit_date = explode('-', $_POST['date']);
         $submit_date = [
@@ -83,11 +90,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         };
     }
-    // if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
-    //     header("Location:http://localhost:8080/webapp.php?month=$moveMonth&year=$moveYear");
-    // } else {
-    //     header("Location:http://localhost:8080/webapp.php");
-    // };
+    if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
+        header("Location:http://localhost:8080/webapp.php?month=$moveMonth&year=$moveYear");
+    } else {
+        header("Location:http://localhost:8080/webapp.php");
+    };
     exit;
 };
 ?>
@@ -134,6 +141,9 @@ $language14 = $dbh->prepare("SELECT distinct language from time where language_i
 $show_delete_stmt = $dbh->prepare("SELECT * from time order by id desc limit 5;"); //過去５件表示
 $show_delete_stmt->execute();
 $show_delete_data = $show_delete_stmt->fetchAll();
+$delete_request_stmt=$dbh->query("SELECT delete_id from delete_request");
+$delete_request_data=$delete_request_stmt->fetchAll();
+
 for ($i = 1; $i <= 14; $i++) {
     ${"stmt" . $i}->execute();
     ${"data" . $i} = ${"stmt" . $i}->fetchAll();
@@ -151,7 +161,6 @@ for ($a = 1; $a <= 14; $a++) {
         ${"data" . $a}[0]['sum(hours)'] = 0;
     }
 }
-// <?php echo $content_array[0]; ,
 $content_array = [
     ['合計時間' => (int)$data4[0]['sum(hours)'], 'コンテンツ' => $content_data4[0]['content']],
     ['合計時間' => (int)$data5[0]['sum(hours)'], 'コンテンツ' => $content_data5[0]['content']],
@@ -213,7 +222,7 @@ for ($j = 1; $j <= date('t'); $j++) {
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
-            投稿消すボタン過去5件一覧表示して選んで削除。アニメーションはajax使えば表示できるらしい。一般ユーザーと管理者を識別するログイン画面つけることで悪意のある投稿削除。本人以外のデータは削除できない。ハッシュ値。セッションのidをいれる。管理者画面はグラフとかなしで削除依頼とメール送信のみのページ。新しいphpつくる
+            投稿消すボタン過去5件一覧表示して選んで削除したい情報をテーブルに追加してそれを管理者ページでアクセスして指定の情報を削除する。アニメーションはajax使えば表示できるらしい。一般ユーザーと管理者を識別するログイン画面つけることで悪意のある投稿削除。本人以外のデータは削除できない。ハッシュ値。セッションのidをいれる。管理者画面はグラフとかなしで削除依頼とメール送信のみのページ。新しいphpつくる
         </div>
         <div class="button-container">
             <button id="header-delete-button" class="post-button">削除依頼</button>
@@ -315,7 +324,7 @@ for ($j = 1; $j <= date('t'); $j++) {
     <!-- 記録投稿ボタンを押した時表示されるオーバーレイ -->
     <div id="fullOverlay" hidden>
         <div class="overlay">
-            <form id="delete-form" hidden action="manager.php" method="POST" onsubmit="return false;">
+            <form id="delete-form" hidden action="" method="POST">
                 <div class="delete-form">
                     削除依頼のためのフォーム（管理者へ送信）
                     <div style="width:100%;">
@@ -337,7 +346,10 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[0]['content']; ?></td>
                                 <td><?php echo $show_delete_data[0]['language']; ?></td>
                                 <td><?php echo $show_delete_data[0]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo $show_delete_data[0]['id']; ?>" id="delete-request-0"></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[0]['id'];?>" id="delete-request-0" <?php $count0=0;foreach($delete_request_data as $data){if($show_delete_data[0]['id']==$data['delete_id']){
+                                    $count0++;
+                                }}if($count0!=0){print_r('disabled');}?>></input>
+                                </td>
                             </tr>
                             <tr>
                                 <td><?php echo $show_delete_data[1]['id']; ?></td>
@@ -346,7 +358,9 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[1]['content']; ?></td>
                                 <td><?php echo $show_delete_data[1]['language']; ?></td>
                                 <td><?php echo $show_delete_data[1]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo $show_delete_data[1]['id']; ?>" id="delete-request-1"></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[1]['id']; ?>" id="delete-request-1" <?php $count1=0;foreach($delete_request_data as $data){if($show_delete_data[1]['id']==$data['delete_id']){
+                                    $count1++;
+                                }}if($count1!=0){print_r('disabled');}?>></input></td>
                             </tr>
                             <tr>
                                 <td><?php echo $show_delete_data[2]['id']; ?></td>
@@ -355,7 +369,9 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[2]['content']; ?></td>
                                 <td><?php echo $show_delete_data[2]['language']; ?></td>
                                 <td><?php echo $show_delete_data[2]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo $show_delete_data[2]['id']; ?>" id="delete-request-2"></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[2]['id']; ?>" id="delete-request-2" <?php $count2=0;foreach($delete_request_data as $data){if($show_delete_data[2]['id']==$data['delete_id']){
+                                    $count2++;
+                                }}if($count2!=0){print_r('disabled');}?>></input></td>
                             </tr>
                             <tr>
                                 <td><?php echo $show_delete_data[3]['id']; ?></td>
@@ -364,7 +380,9 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[3]['content']; ?></td>
                                 <td><?php echo $show_delete_data[3]['language']; ?></td>
                                 <td><?php echo $show_delete_data[3]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo $show_delete_data[3]['id']; ?>" id="delete-request-3"></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[3]['id']; ?>" id="delete-request-3" <?php $count3=0;foreach($delete_request_data as $data){if($show_delete_data[3]['id']==$data['delete_id']){
+                                    $count3++;
+                                }}if($count3!=0){print_r('disabled');}?>></input></td>
                             </tr>
                             <tr>
                                 <td><?php echo $show_delete_data[4]['id']; ?></td>
@@ -373,12 +391,14 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[4]['content']; ?></td>
                                 <td><?php echo $show_delete_data[4]['language']; ?></td>
                                 <td><?php echo $show_delete_data[4]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo $show_delete_data[4]['id']; ?>" id="delete-request-4"></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[4]['id']; ?>" id="delete-request-4" <?php $count4=0;foreach($delete_request_data as $data){if($show_delete_data[4]['id']==$data['delete_id']){
+                                    $count4++;
+                                }}if($count4!=0){print_r('disabled');}?>></input></td>
                             </tr>
                         </table>
                         <div id="delete-reason">
                             削除依頼理由記入欄:
-                            <textarea placeholder="理由記入して下さい" required></textarea>
+                            <textarea type="text" name="delete_reason" placeholder="理由記入して下さい" required></textarea>
                         </div>
                         <input type="submit" value="削除依頼送信" style="display:block;margin:auto;pointerEvents:none;"></input>
                     </div>
