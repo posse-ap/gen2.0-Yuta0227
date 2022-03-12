@@ -141,8 +141,8 @@ $language14 = $dbh->prepare("SELECT distinct language from time where language_i
 $show_delete_stmt = $dbh->prepare("SELECT * from time order by id desc limit 5;"); //過去５件表示
 $show_delete_stmt->execute();
 $show_delete_data = $show_delete_stmt->fetchAll();
-$delete_request_stmt=$dbh->query("SELECT delete_id from delete_request");
-$delete_request_data=$delete_request_stmt->fetchAll();
+$delete_request_id_stmt=$dbh->query("SELECT delete_id from delete_request");
+$delete_request_id_data=$delete_request_id_stmt->fetchAll();
 
 for ($i = 1; $i <= 14; $i++) {
     ${"stmt" . $i}->execute();
@@ -346,7 +346,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[0]['content']; ?></td>
                                 <td><?php echo $show_delete_data[0]['language']; ?></td>
                                 <td><?php echo $show_delete_data[0]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[0]['id'];?>" id="delete-request-0" <?php $count0=0;foreach($delete_request_data as $data){if($show_delete_data[0]['id']==$data['delete_id']){
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[0]['id'];?>" id="delete-request-0" <?php $count0=0;foreach($delete_request_id_data as $data){if($show_delete_data[0]['id']==$data['delete_id']){
                                     $count0++;
                                 }}if($count0!=0){print_r('disabled');}?>></input>
                                 </td>
@@ -358,7 +358,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[1]['content']; ?></td>
                                 <td><?php echo $show_delete_data[1]['language']; ?></td>
                                 <td><?php echo $show_delete_data[1]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[1]['id']; ?>" id="delete-request-1" <?php $count1=0;foreach($delete_request_data as $data){if($show_delete_data[1]['id']==$data['delete_id']){
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[1]['id']; ?>" id="delete-request-1" <?php $count1=0;foreach($delete_request_id_data as $data){if($show_delete_data[1]['id']==$data['delete_id']){
                                     $count1++;
                                 }}if($count1!=0){print_r('disabled');}?>></input></td>
                             </tr>
@@ -369,7 +369,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[2]['content']; ?></td>
                                 <td><?php echo $show_delete_data[2]['language']; ?></td>
                                 <td><?php echo $show_delete_data[2]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[2]['id']; ?>" id="delete-request-2" <?php $count2=0;foreach($delete_request_data as $data){if($show_delete_data[2]['id']==$data['delete_id']){
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[2]['id']; ?>" id="delete-request-2" <?php $count2=0;foreach($delete_request_id_data as $data){if($show_delete_data[2]['id']==$data['delete_id']){
                                     $count2++;
                                 }}if($count2!=0){print_r('disabled');}?>></input></td>
                             </tr>
@@ -380,7 +380,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[3]['content']; ?></td>
                                 <td><?php echo $show_delete_data[3]['language']; ?></td>
                                 <td><?php echo $show_delete_data[3]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[3]['id']; ?>" id="delete-request-3" <?php $count3=0;foreach($delete_request_data as $data){if($show_delete_data[3]['id']==$data['delete_id']){
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[3]['id']; ?>" id="delete-request-3" <?php $count3=0;foreach($delete_request_id_data as $data){if($show_delete_data[3]['id']==$data['delete_id']){
                                     $count3++;
                                 }}if($count3!=0){print_r('disabled');}?>></input></td>
                             </tr>
@@ -391,7 +391,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[4]['content']; ?></td>
                                 <td><?php echo $show_delete_data[4]['language']; ?></td>
                                 <td><?php echo $show_delete_data[4]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[4]['id']; ?>" id="delete-request-4" <?php $count4=0;foreach($delete_request_data as $data){if($show_delete_data[4]['id']==$data['delete_id']){
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[4]['id']; ?>" id="delete-request-4" <?php $count4=0;foreach($delete_request_id_data as $data){if($show_delete_data[4]['id']==$data['delete_id']){
                                     $count4++;
                                 }}if($count4!=0){print_r('disabled');}?>></input></td>
                             </tr>
