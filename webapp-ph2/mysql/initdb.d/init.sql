@@ -21,6 +21,7 @@ create table users(
     user_password varchar(255),
     primary key(id)
 );
+insert into users (user_type,user_name,user_password) values ("管理者","root","secret");
 drop table if exists delete_request;
 create table delete_request(
     id int AUTO_INCREMENT,
