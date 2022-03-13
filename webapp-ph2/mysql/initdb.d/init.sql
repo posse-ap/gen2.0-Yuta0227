@@ -11,15 +11,17 @@ create table time (
     hours float,
     content_id int,
     language_id int,
+    user_id int,
     primary key(id)
 );
 drop table if exists users;
 create table users(
-    id int AUTO_INCREMENT,
+    user_id int AUTO_INCREMENT,
     user_type varchar(255),
     user_name varchar(255),
     user_password varchar(255),
-    primary key(id)
+    user_email varchar(255),
+    primary key(user_id)
 );
 insert into users (user_type,user_name,user_password) values ("管理者","root","secret");
 drop table if exists delete_request;
@@ -27,6 +29,7 @@ create table delete_request(
     id int AUTO_INCREMENT,
     delete_id int,
     delete_reason varchar(255),
+    user_id int,
     primary key(id)
 );
 -- content_id=

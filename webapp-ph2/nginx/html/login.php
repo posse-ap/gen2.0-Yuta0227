@@ -1,25 +1,47 @@
 <?php 
+session_start();
 require "db-connect.php";
-$manager_stmt=$dbh->query("SELECT * from users where id=1");
-$manager_stmt->execute();
+$manager_stmt=$dbh->query("SELECT * from users where user_id=1");
 $manager_data=$manager_stmt->fetchAll();
+$users_stmt=$dbh->query("SELECT * from users where user_id!=1");
+$users_data=$users_stmt->fetchAll();
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username=$_POST['username'];
     $password=$_POST['password'];
     $new_username=$_POST['new_username'];
     $new_password=$_POST['new_password'];
-    if($manager_data[0]['user_name']==$username&&$manager_data[0]['user_password']==$password){
-        header("Location:http://localhost:8080/manager.php");
-    }else{
+    $new_email=$_POST['new_email'];
+    if($new_username==null&&$new_password==null){
+        if($manager_data[0]['user_name']==$username&&$manager_data[0]['user_password']==$password){
+            header("Location:http://localhost:8080/manager.php");
+        }else{
+            $users_stmt1=$dbh->prepare("SELECT * from users where user_name=?");
+            $users_stmt1->bindValue(1,$username);
+            $users_stmt1->execute();
+            $users_data1=$users_stmt1->fetchAll();
+            $_SESSION['user']=$users_data1;
+            header("Location:http://localhost:8080/webapp.php");
+        }
+    }
+    $user_exist_count=0;
+    foreach($users_data as $user_data){
+        if($user_data['user_name']==$new_username||$user_data['user_password']==$new_password||$user_data['user_email']==$new_email){
+            $user_exist_count++;
+        };
+    };
+    if($username==null&&$password==null&&$user_exist_count==0){
+        $add_user_stmt=$dbh->prepare("INSERT into users (user_type,user_name,user_password,user_email) values ('一般ユーザー',?,?,?);");
+        $add_user_stmt->bindValue(1,$new_username);
+        $add_user_stmt->bindValue(2,$new_password);
+        $add_user_stmt->bindValue(3,$new_email);
+        $add_user_stmt->execute();
+        $users_stmt1=$dbh->prepare("SELECT * from users where user_name=?");
+        $users_stmt1->bindValue(1,$new_username);
+        $users_stmt1->execute();
+        $users_data1=$users_stmt1->fetchAll();
+        $_SESSION['user']=$users_data1;
         header("Location:http://localhost:8080/webapp.php");
     }
-    print_r('<pre>');
-    print_r($manager_data);
-    print_r($id);
-    print_r($password);
-    print_r($new_id);
-    print_r($new_password);
-    print_r('</pre>');
 }
 ?>
 <!DOCTYPE html>
@@ -33,14 +55,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <form action="" method="POST">
         既存ユーザー:
-        <textarea type="text" name="username" placeholder="ユーザーネームを入力してください"></textarea>        
-        <textarea type="text" name="password" placeholder="ユーザーパスワードを入力してください"></textarea>
+        <textarea type="text" oninput="value = value.replace(/[^0-9A-Za-z_]+/,'');" name="username" placeholder="ユーザーネームを入力してください"></textarea>        
+        <textarea type="text" oninput="value = value.replace(/[^0-9A-Za-z_]+/,'');" name="password" placeholder="ユーザーパスワードを入力してください"></textarea>
         <input type="submit" value="ログイン"></input>  
     </form>
     <form action="" method="POST">
         新規ユーザー:
-        <textarea type="text" name="new_username" placeholder="ユーザーネームを登録"></textarea>
-        <textarea type="text" name="new_password" placeholder="ユーザーパスワードを登録"></textarea>
+        <textarea type="text" oninput="value = value.replace(/[^0-9A-Za-z_]+/,'');" name="new_username" placeholder="ユーザーネームを登録"></textarea>
+        <textarea type="text" oninput="value = value.replace(/[^0-9A-Za-z_]+/,'');" name="new_password" placeholder="ユーザーパスワードを登録"></textarea>
+        <input name="new_email" type="email"></input>
         <input type="submit" value="登録"></input>
     </form>
 </body>

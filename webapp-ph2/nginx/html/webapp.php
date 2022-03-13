@@ -1,5 +1,8 @@
 <?php
+session_start();
 require "db-connect.php";
+echo phpinfo();
+$user=$_SESSION['user'];
 $moveMonth = $_GET['month'];
 $moveYear = $_GET['year'];
 $submit_date = '';
@@ -7,9 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($_POST['delete_id'] != NULL && $_POST['delete_reason'] != NULL) {
         $delete_id = (int)$_POST['delete_id'];
         $delete_reason = $_POST['delete_reason'];
-        $delete_request = $dbh->prepare("INSERT into delete_request (delete_id,delete_reason) values (?,?);");
+        $delete_request = $dbh->prepare("INSERT into delete_request (delete_id,delete_reason,user_id) values (?,?,?);");
         $delete_request->bindValue(1, $delete_id, PDO::PARAM_INT);
         $delete_request->bindValue(2, $delete_reason);
+        $delete_request->bindValue(3, $user[0]['user_id']);
         $delete_request->execute();
     };
     if ($_POST['date'] != NULL) {
@@ -19,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'month' => (int)$submit_date[1],
             'date' => (int)$submit_date[2]
         ];
-    }
+    };
     if ($_POST['contents'] != NULL) {
 
         $submit_contents_id = $_POST['contents'];
@@ -42,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'content_name' => $submit_contents_name[$submit_contents_id[2]]
             ]
         ];
-    }
+    };
     if ($_POST['language'] != NULL) {
 
         $submit_language_id = $_POST['language'];
@@ -60,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'language_id' => (int)$submit_language_id,
             'language_name' => $submit_language_name[$submit_language_id]
         ];
-    }
+    };
     if ($_POST['hours'] != NULL) {
         $submit_hours = (int)$_POST['hours'];
         $div_submit_hours = $submit_hours / count($submit_contents_id);
@@ -77,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $submit_language_id != NULL
             ) {
                 //コンテンツの個数分sql文発行
-                ${"submit" . $i} = $dbh->prepare("INSERT INTO time (date,month,year,language,content,hours,content_id,language_id) values (?,?,?,?,?,?,?,?);");
+                ${"submit" . $i} = $dbh->prepare("INSERT INTO time (date,month,year,language,content,hours,content_id,language_id,user_id) values (?,?,?,?,?,?,?,?,?);");
                 ${"submit" . $i}->bindValue(1, $submit_date['date'], PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(2, $submit_date['month'], PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(3, $submit_date['year'], PDO::PARAM_INT);
@@ -86,13 +90,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ${"submit" . $i}->bindValue(6, $div_submit_hours, PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(7, $submit_contents[$i - 1]['content_id'], PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(8, $submit_language_id, PDO::PARAM_INT);
+                ${"submit" . $i}->bindValue(9, $user[0]['user_id']);
                 ${"submit" . $i}->execute();
             }
         };
-    }
+    };
     if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
         header("Location:http://localhost:8080/webapp.php?month=$moveMonth&year=$moveYear");
-    } else {
+    }else{
         header("Location:http://localhost:8080/webapp.php");
     };
     exit;
@@ -106,53 +111,58 @@ $date = (int)date('d');
 $month = (int)date('n');
 $year = (int)date('Y');
 if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
-    $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month = $moveMonth AND year = $moveYear;"); //該当月
+    $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month = $moveMonth AND year = $moveYear and user_id =?;"); //該当月
 } else {
-    $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month =$month and year = $year;");
+    $stmt2 = $dbh->prepare("SELECT sum(hours) from time where month =$month and year = $year and user_id= ?;");
 };
 ?>
 <?php
 // echo $date;
 // echo $date;
-$stmt1 = $dbh->prepare("SELECT sum(hours) from time where date = $date AND month = $month AND year = $year;"); //today専用
-$stmt3 = $dbh->prepare("SELECT sum(hours) from time;"); //合計
-$stmt4 = $dbh->prepare("SELECT sum(hours) from time where content_id=1;");
-$stmt5 = $dbh->prepare("SELECT sum(hours) from time where content_id=2;");
-$stmt6 = $dbh->prepare("SELECT sum(hours) from time where content_id=3;");
-$stmt7 = $dbh->prepare("SELECT sum(hours) from time where language_id=1;");
-$stmt8 = $dbh->prepare("SELECT sum(hours) from time where language_id=2;");
-$stmt9 = $dbh->prepare("SELECT sum(hours) from time where language_id=3;");
-$stmt10 = $dbh->prepare("SELECT sum(hours) from time where language_id=4;");
-$stmt11 = $dbh->prepare("SELECT sum(hours) from time where language_id=5;");
-$stmt12 = $dbh->prepare("SELECT sum(hours) from time where language_id=6;");
-$stmt13 = $dbh->prepare("SELECT sum(hours) from time where language_id=7;");
-$stmt14 = $dbh->prepare("SELECT sum(hours) from time where language_id=8;");
-$content4 = $dbh->prepare("SELECT distinct content from time where content_id=1;"); //1=>POSSE課題
-$content5 = $dbh->prepare("SELECT distinct content from time where content_id=2;"); //2=>ドットインストール
-$content6 = $dbh->prepare("SELECT distinct content from time where content_id=3;"); //3=>N予備校
-$language7 = $dbh->prepare("SELECT distinct language from time where language_id=1;"); //1=>Javascript
-$language8 = $dbh->prepare("SELECT distinct language from time where language_id=2;"); //2=>CSS
-$language9 = $dbh->prepare("SELECT distinct language from time where language_id=3;"); //3=>PHP
-$language10 = $dbh->prepare("SELECT distinct language from time where language_id=4;"); //4=>HTML
-$language11 = $dbh->prepare("SELECT distinct language from time where language_id=5;"); //5=>Laravel
-$language12 = $dbh->prepare("SELECT distinct language from time where language_id=6;"); //6=>SQL
-$language13 = $dbh->prepare("SELECT distinct language from time where language_id=7;"); //7=>SHELL
-$language14 = $dbh->prepare("SELECT distinct language from time where language_id=8;"); //8=>情報システム基礎知識(その他)
-$show_delete_stmt = $dbh->prepare("SELECT * from time order by id desc limit 5;"); //過去５件表示
+$stmt1 = $dbh->prepare("SELECT sum(hours) from time where date = $date AND month = $month AND year = $year AND user_id = ?;"); //today専用
+$stmt3 = $dbh->prepare("SELECT sum(hours) from time where user_id=?;"); //合計
+$stmt4 = $dbh->prepare("SELECT sum(hours) from time where content_id=1 and user_id=?;");
+$stmt5 = $dbh->prepare("SELECT sum(hours) from time where content_id=2 and user_id=?;");
+$stmt6 = $dbh->prepare("SELECT sum(hours) from time where content_id=3 and user_id=?;");
+$stmt7 = $dbh->prepare("SELECT sum(hours) from time where language_id=1 and user_id=?;");
+$stmt8 = $dbh->prepare("SELECT sum(hours) from time where language_id=2 and user_id=?;");
+$stmt9 = $dbh->prepare("SELECT sum(hours) from time where language_id=3 and user_id=?;");
+$stmt10 = $dbh->prepare("SELECT sum(hours) from time where language_id=4 and user_id=?;");
+$stmt11 = $dbh->prepare("SELECT sum(hours) from time where language_id=5 and user_id=?;");
+$stmt12 = $dbh->prepare("SELECT sum(hours) from time where language_id=6 and user_id=?;");
+$stmt13 = $dbh->prepare("SELECT sum(hours) from time where language_id=7 and user_id=?;");
+$stmt14 = $dbh->prepare("SELECT sum(hours) from time where language_id=8 and user_id=?;");
+$content4 = $dbh->prepare("SELECT distinct content from time where content_id=1 and user_id=?;"); //1=>POSSE課題
+$content5 = $dbh->prepare("SELECT distinct content from time where content_id=2 and user_id=?;"); //2=>ドットインストール
+$content6 = $dbh->prepare("SELECT distinct content from time where content_id=3 and user_id=?;"); //3=>N予備校
+$language7 = $dbh->prepare("SELECT distinct language from time where language_id=1 and user_id= ?;"); //1=>Javascript
+$language8 = $dbh->prepare("SELECT distinct language from time where language_id=2 and user_id= ?;"); //2=>CSS
+$language9 = $dbh->prepare("SELECT distinct language from time where language_id=3 and user_id= ?;"); //3=>PHP
+$language10 = $dbh->prepare("SELECT distinct language from time where language_id=4 and user_id= ?;"); //4=>HTML
+$language11 = $dbh->prepare("SELECT distinct language from time where language_id=5 and user_id= ?;"); //5=>Laravel
+$language12 = $dbh->prepare("SELECT distinct language from time where language_id=6 and user_id= ?;"); //6=>SQL
+$language13 = $dbh->prepare("SELECT distinct language from time where language_id=7 and user_id= ?;"); //7=>SHELL
+$language14 = $dbh->prepare("SELECT distinct language from time where language_id=8 and user_id= ?;"); //8=>情報システム基礎知識(その他)
+$show_delete_stmt = $dbh->prepare("SELECT * from time where user_id= ? order by id desc limit 5;"); //過去５件表示
+$show_delete_stmt->bindValue(1,$user[0]['user_id']);
 $show_delete_stmt->execute();
 $show_delete_data = $show_delete_stmt->fetchAll();
-$delete_request_id_stmt=$dbh->query("SELECT delete_id from delete_request");
+$delete_request_id_stmt=$dbh->prepare("SELECT delete_id from delete_request where user_id= ?;");
+$delete_request_id_stmt->bindValue(1,$user[0]['user_id']);
 $delete_request_id_data=$delete_request_id_stmt->fetchAll();
 
 for ($i = 1; $i <= 14; $i++) {
+    ${"stmt".$i}->bindValue(1,$user[0]['user_id']);
     ${"stmt" . $i}->execute();
     ${"data" . $i} = ${"stmt" . $i}->fetchAll();
 }
 for ($g = 4; $g <= 6; $g++) {
+    ${"content".$g}->bindValue(1,$user[0]['user_id']);
     ${"content" . $g}->execute();
     ${"content_data" . $g} = ${"content" . $g}->fetchAll();
 }
 for ($h = 7; $h <= 14; $h++) {
+    ${"language".$h}->bindValue(1,$user[0]['user_id']);
     ${"language" . $h}->execute();
     ${"language_data" . $h} = ${"language" . $h}->fetchAll();
 }
@@ -188,11 +198,11 @@ array_multisort($multi_language_array, SORT_DESC, SORT_NUMERIC, $language_array)
 $date_array = [];
 for ($j = 1; $j <= date('t'); $j++) {
     if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
-        ${"date_stmt" . $j} = $dbh->prepare("SELECT sum(hours) from time where date = $j and month = $moveMonth and year= $moveYear;"); //日付の合計時間
+        ${"date_stmt" . $j} = $dbh->prepare("SELECT sum(hours) from time where date = $j and month = $moveMonth and year= $moveYear and user_id=?;"); //日付の合計時間
     } else {
-        ${"date_stmt" . $j} = $dbh->prepare("SELECT sum(hours) from time where date = $j and month = $month and year= $year;"); //日付の合計時間
+        ${"date_stmt" . $j} = $dbh->prepare("SELECT sum(hours) from time where date = $j and month = $month and year= $year and user_id=?;"); //日付の合計時間
     }
-    // ${"date_stmt" . $j} = $dbh->prepare("SELECT date,sum(hours) from time where date =" . $j . " AND month = " . $month . " AND year = " . $year . ";"); //日付の合計時間
+    ${"date_stmt".$j}->bindValue(1,$user[0]['user_id']);
     ${"date_stmt" . $j}->execute();
     ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
     ${"date_data" . $j}[0]['sum(hours)'] = ${"date_data" . $j}[0]['sum(hours)'] - 0;
@@ -222,7 +232,8 @@ for ($j = 1; $j <= date('t'); $j++) {
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
-            アニメーションはajax使えば表示できるらしい。一般ユーザーと管理者を識別するログイン画面つけることで悪意のある投稿削除。本人以外のデータは削除できない。ハッシュ値。セッションのidをいれる。管理者画面はグラフとかなしで削除依頼とメール送信のみのページ。新しいphpつくる
+            <?php echo $user[0]['user_name'].'さんの勉強時間';?>
+            アニメーションはajax使えば表示できるらしい。ハッシュ値。管理者画面はメール送信のみのページ。
         </div>
         <div class="button-container">
             <button id="header-delete-button" class="post-button">削除依頼</button>
