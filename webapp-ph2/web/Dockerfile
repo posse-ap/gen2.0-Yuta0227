@@ -1,9 +1,12 @@
 # web/Dockerfile
-FROM php:7.4-apache
+# FROM php:7.4-apache
+FROM nginx:latest
 
 # wgetをインストールするよう修正
 RUN apt-get update && apt-get install -y wget
 
+RUN apt-get install -y vim
+RUN docker-php-ext-install pdo_mysql
 # ホスト環境で作ったmailhog.iniをコンテナにコピー
 COPY mailhog.ini /usr/local/etc/php/conf.d/mailhog.ini
 

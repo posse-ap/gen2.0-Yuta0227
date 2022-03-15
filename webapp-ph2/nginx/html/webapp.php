@@ -1,7 +1,6 @@
 <?php
 session_start();
 require "db-connect.php";
-echo phpinfo();
 $user=$_SESSION['user'];
 $moveMonth = $_GET['month'];
 $moveYear = $_GET['year'];
@@ -232,8 +231,8 @@ for ($j = 1; $j <= date('t'); $j++) {
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
+            アニメーションはajax使えば表示できるらしい。できたら二段階認証。パスワードをハッシュ化して見えなくするテーブルでもログインも。slackとのAPI連携。ワークスペースにenvファイルでトークン発行する。
             <?php echo $user[0]['user_name'].'さんの勉強時間';?>
-            アニメーションはajax使えば表示できるらしい。ハッシュ値。管理者画面はメール送信のみのページ。
         </div>
         <div class="button-container">
             <button id="header-delete-button" class="post-button">削除依頼</button>

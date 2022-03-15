@@ -20,16 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $to = $_POST['to'];
     $title = $_POST['title'];
     $content = $_POST['content'];
-    $headers = "From: yutahonjo@keio.jp";
+    $headers = "From: yutahonjo@keio.jp \r\n";
     var_dump($to);
     var_dump($title);
     var_dump($content);
     var_dump($headers);
-    if (mb_send_mail($to, $title, $content, $headers)) {
-        echo "メール送信成功です";
-    } else {
-        echo "メール送信失敗です";
-    }
+    $mail=mb_send_mail($to,$title,$content,$headers);
+    var_dump($mail);
 }
 ?>
 <!DOCTYPE html>
