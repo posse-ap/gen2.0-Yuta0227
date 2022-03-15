@@ -19,11 +19,11 @@ create table users(
     user_id int AUTO_INCREMENT,
     user_type varchar(255),
     user_name varchar(255),
-    user_password varchar(255),
+    user_password varbinary(200),
     user_email varchar(255),
     primary key(user_id)
 );
-insert into users (user_type,user_name,user_password) values ("管理者","root","secret");
+insert into users (user_type,user_name,user_password) values ("管理者","root",AES_ENCRYPT("secret",'ENCRYPT-KEY'));
 drop table if exists delete_request;
 create table delete_request(
     id int AUTO_INCREMENT,

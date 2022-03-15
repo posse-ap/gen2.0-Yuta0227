@@ -1,7 +1,7 @@
 <?php 
 session_start();
 require "db-connect.php";
-$manager_stmt=$dbh->query("SELECT * from users where user_id=1");
+$manager_stmt=$dbh->query("SELECT user_name,AES_DECRYPT(`user_password`,'ENCRYPT-KEY') from users where user_id=1");
 $manager_data=$manager_stmt->fetchAll();
 $users_stmt=$dbh->query("SELECT * from users where user_id!=1");
 $users_data=$users_stmt->fetchAll();
@@ -13,21 +13,18 @@ $new_email=NULL;
 //確認用
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username=$_POST['username'];
-    $hash_password=$dbh->prepare("select user_password from users where user_name=?;");
-    $hash_password->bindValue(1,$username);
-    $hash_password->execute();
-    $hash_password=$hash_password->fetchAll();
+    $decode_password=$dbh->prepare("select AES_DECRYPT(`user_password`,'ENCRYPT-KEY') from users where user_name=?;");
+    $decode_password->bindValue(1,$username);
+    $decode_password->execute();
+    $decode_password=$decode_password->fetchAll();
     $password=$_POST['password'];
     $new_username=$_POST['new_username'];
-    if($new_password!=NULL){
-        $new_password=password_hash($_POST['new_password'],PASSWORD_DEFAULT);
-    }
+    $new_password=$_POST['new_password'];
     $new_email=$_POST['new_email'];
-    print_r($new_password);
     if($new_username==null&&$new_password==null){
-        if($manager_data[0]['user_name']==$username&&$manager_data[0]['user_password']==$password){
+        if($manager_data[0]['user_name']==$username&&$manager_data[0]["AES_DECRYPT(`user_password`,'ENCRYPT-KEY')"]==$password){
             header("Location:http://localhost:8080/manager.php");
-        }elseif(password_verify($password,$hash_password[0]['user_password'])){
+        }elseif($decode_password[0]["AES_DECRYPT(`user_password`,'ENCRYPT-KEY')"]==$password){
             $users_stmt1=$dbh->prepare("SELECT * from users where user_name=?");
             $users_stmt1->bindValue(1,$username);
             $users_stmt1->execute();
@@ -42,11 +39,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user_exist_count++;
         };
     };
-    // print_r($user_exist_count);
-    // print_r($username);
-    // var_dump($password);
     if($username==null&&$password==null&&$user_exist_count==0){
-        $add_user_stmt=$dbh->prepare("INSERT into users (user_type,user_name,user_password,user_email) values ('一般ユーザー',?,?,?);");
+        $add_user_stmt=$dbh->prepare("INSERT into users (user_type,user_name,user_password,user_email) values ('一般ユーザー',?,AES_ENCRYPT(?,'ENCRYPT-KEY'),?);");
         $add_user_stmt->bindValue(1,$new_username);
         $add_user_stmt->bindValue(2,$new_password);
         $add_user_stmt->bindValue(3,$new_email);

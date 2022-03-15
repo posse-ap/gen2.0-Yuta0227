@@ -231,7 +231,7 @@ for ($j = 1; $j <= date('t'); $j++) {
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
-            アニメーションはajax使えば表示できるらしい。できたら二段階認証。パスワードをハッシュ化して見えなくするテーブルでもログインも。slackとのAPI連携。ワークスペースにenvファイルでトークン発行する。
+            アニメーションはajax使えば表示できるらしい。できたら二段階認証。slackとのAPI連携。ワークスペースにenvファイルでトークン発行する。
             <?php echo $user[0]['user_name'].'さんの勉強時間';?>
         </div>
         <div class="button-container">
