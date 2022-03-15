@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
     };
     if ($_POST['contents'] != NULL) {
-
+        
         $submit_contents_id = $_POST['contents'];
         $submit_contents_name = [
             '1' => 'POSSE課題',
@@ -54,28 +54,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             '2' => [
                 'content_id' => (int)$submit_contents_id[2],
                 'content_name' => $submit_contents_name[$submit_contents_id[2]]
-            ]
-        ];
-    };
-    if ($_POST['language'] != NULL) {
-
-        $submit_language_id = $_POST['language'];
-        $submit_language_name = [
-            '1' => 'Javascript',
-            '2' => 'CSS',
-            '3' => 'PHP',
-            '4' => 'HTML',
-            '5' => 'Laravel',
-            '6' => 'SQL',
-            '7' => 'SHELL',
-            '8' => '情報システム基礎知識(その他)'
-        ];
-        $submit_language = [
-            'language_id' => (int)$submit_language_id,
-            'language_name' => $submit_language_name[$submit_language_id]
+                ]
+            ];
+        };
+        if ($_POST['language'] != NULL) {
+            
+            $submit_language_id = $_POST['language'];
+            $submit_language_name = [
+                '1' => 'Javascript',
+                '2' => 'CSS',
+                '3' => 'PHP',
+                '4' => 'HTML',
+                '5' => 'Laravel',
+                '6' => 'SQL',
+                '7' => 'SHELL',
+                '8' => '情報システム基礎知識(その他)'
+            ];
+            $submit_language = [
+                'language_id' => (int)$submit_language_id,
+                'language_name' => $submit_language_name[$submit_language_id]
         ];
     };
     if ($_POST['hours'] != NULL) {
+        $_SESSION['hours']=$_POST['hours'];
         $submit_hours = (int)$_POST['hours'];
         $div_submit_hours = $submit_hours / count($submit_contents_id);
         //NULLの場合intでキャストすると0になる
@@ -89,10 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $div_submit_hours != NULL &&
                 $submit_contents[$i - 1]['content_id'] != NULL &&
                 $submit_language_id != NULL
-            ) {
-                //コンテンツの個数分sql文発行
-                ${"submit" . $i} = $dbh->prepare("INSERT INTO time (date,month,year,language,content,hours,content_id,language_id,user_id) values (?,?,?,?,?,?,?,?,?);");
-                ${"submit" . $i}->bindValue(1, $submit_date['date'], PDO::PARAM_INT);
+                ) {
+                    //コンテンツの個数分sql文発行
+                    ${"submit" . $i} = $dbh->prepare("INSERT INTO time (date,month,year,language,content,hours,content_id,language_id,user_id) values (?,?,?,?,?,?,?,?,?);");
+                    ${"submit" . $i}->bindValue(1, $submit_date['date'], PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(2, $submit_date['month'], PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(3, $submit_date['year'], PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(4, $submit_language['language_name']);
@@ -104,9 +105,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ${"submit" . $i}->execute();
                 $content_name=$submit_contents[$i-1]['content_name'];
                 $language_name=$submit_language['language_name'];
-                if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
-                    $_SESSION['month']=$_GET['month'];
-                    $_SESSION['year']=$_GET['year'];
+                if (isset($_GET['month']) && isset($_GET['year'])) {
+                    $_SESSION['month']=$moveMonth;
+                    $_SESSION['year']=$moveYear;
                 }else{
                     $_SESSION['month']=NULL;
                     $_SESSION['year']=NULL;
@@ -116,12 +117,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         };
     };
-    if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
-        header("Location:http://localhost:8080/webapp.php?month=$moveMonth&year=$moveYear");
-    }else{
-        header("Location:http://localhost:8080/webapp.php");
-    };
-    exit;
+    // if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
+    //     header("Location:http://localhost:8080/webapp.php?month=$moveMonth&year=$moveYear");
+    // }else{
+    //     header("Location:http://localhost:8080/webapp.php");
+    // };
+    // exit;
 };
 ?>
 <?php

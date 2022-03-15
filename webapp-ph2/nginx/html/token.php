@@ -1,4 +1,5 @@
 <?php
+session_start();
 $headers = [
     'Authorization: Bearer xoxp-3233965073126-3240610434786-3239428217109-515ec188de3c6e10e59f1c87b340b2b9', //（1)
     'Content-Type: application/json;charset=utf-8'
@@ -69,19 +70,41 @@ curl_setopt_array($ch, $options);
 $result = curl_exec($ch); 
 curl_close($ch);
 if(isset($_GET['delete_id'])&&isset($_GET['reject_reason'])){
-    //管理者
+    //管理者却下時
+    header("Location:http://localhost:8080/manager.php");
+    exit();
+}elseif(isset($_GET['delete_id'])&&!isset($_GET['reject_reason'])&&!isset($_GET['delete_reason'])){
+    //管理者承認時
     header("Location:http://localhost:8080/manager.php");
     exit();
 };
-if($_SESSION['month']==NULL&&$_SESSION['year']==NULL){
-    //月移動なしのwebapp
-    header("Location:http://localhost:8080/webapp.php");
-    exit();
+if(isset($_GET['delete_id'])&&isset($_GET['delete_reason'])){
+    //削除依頼送信時
+    if($_SESSION['month']==NULL&&$_SESSION['year']==NULL){
+        //月移動なしのwebapp
+        header("Location:http://localhost:8080/webapp.php");
+        exit();
+    };
+    if($_SESSION['month']!=NULL&&$_SESSION['year']!=NULL){
+        //月移動ありのwebapp
+        $month=$_SESSION['month'];
+        $year=$_SESSION['year'];
+        header("Location:http://localhost:8080/webapp.php?month=$month&year=$year");
+        exit();
+    }
 };
-if($_SESSION['month']!=NULL&&$_SESSION['year']!=NULL){
-    //月移動ありのwebapp
-    $month=$_SESSION['month'];
-    $year=$_SESSION['year'];
-    header("Location:http://localhost:8080/webapp.php?month=$month&year=$year");
-    exit();
+if($_SESSION['hours']!=NULL){
+    //投稿時
+    if($_SESSION['month']==NULL&&$_SESSION['year']==NULL){
+        //月移動なしのwebapp
+        header("Location:http://localhost:8080/webapp.php");
+        exit();
+    };
+    if($_SESSION['month']!=NULL&&$_SESSION['year']!=NULL){
+        //月移動ありのwebapp
+        $month=$_SESSION['month'];
+        $year=$_SESSION['year'];
+        header("Location:http://localhost:8080/webapp.php?month=$month&year=$year");
+        exit();
+    }
 }
