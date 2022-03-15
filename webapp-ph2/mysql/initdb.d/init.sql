@@ -1,3 +1,5 @@
+create user 'yuta'@'%' identified by 'secret';
+grant all privileges on * . * to 'yuta'@'%';
 use webapp;
 drop table if exists time;
 create table time (

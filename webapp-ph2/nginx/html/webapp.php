@@ -6,6 +6,8 @@ $moveMonth = $_GET['month'];
 $moveYear = $_GET['year'];
 $submit_date = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $_SESSION['month']=NULL;
+    $_SESSION['year']=NULL;
     if ($_POST['delete_id'] != NULL && $_POST['delete_reason'] != NULL) {
         $delete_id = (int)$_POST['delete_id'];
         $delete_reason = $_POST['delete_reason'];
@@ -14,6 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $delete_request->bindValue(2, $delete_reason);
         $delete_request->bindValue(3, $user[0]['user_id']);
         $delete_request->execute();
+        if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
+            $_SESSION['month']=$_GET['month'];
+            $_SESSION['year']=$_GET['year'];
+        }else{
+            $_SESSION['month']=NULL;
+            $_SESSION['year']=NULL;
+        };
+        header("Location:http://localhost:8080/token.php?delete_id=$delete_id&delete_reason=$delete_reason");
+        exit();
     };
     if ($_POST['date'] != NULL) {
         $submit_date = explode('-', $_POST['date']);
@@ -91,6 +102,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ${"submit" . $i}->bindValue(8, $submit_language_id, PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(9, $user[0]['user_id']);
                 ${"submit" . $i}->execute();
+                $content_name=$submit_contents[$i-1]['content_name'];
+                $language_name=$submit_language['language_name'];
+                if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
+                    $_SESSION['month']=$_GET['month'];
+                    $_SESSION['year']=$_GET['year'];
+                }else{
+                    $_SESSION['month']=NULL;
+                    $_SESSION['year']=NULL;
+                };
+                header("Location:http://localhost:8080/token.php?contents=$content_name&language=$language_name&hours=$div_submit_hours");
+                exit();
             }
         };
     };
@@ -231,7 +253,7 @@ for ($j = 1; $j <= date('t'); $j++) {
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
-            アニメーションはajax使えば表示できるらしい。できたら二段階認証。slackとのAPI連携。ワークスペースにenvファイルでトークン発行する。
+        できたら二段階認証。ワークスペースにenvファイルでトークン発行する。
             <?php echo $user[0]['user_name'].'さんの勉強時間';?>
         </div>
         <div class="button-container">

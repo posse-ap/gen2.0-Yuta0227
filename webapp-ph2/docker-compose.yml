@@ -19,7 +19,7 @@ services:
     stdin_open: true
     networks:
       - br0
-
+#my.cnf ignored出たらchmod 644 /etc/mysql/conf.d/my.cnf
   php:
     build: ./php
     volumes:
