@@ -271,7 +271,7 @@ for ($j = 1; $j <= date('t'); $j++) {
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
-            できたら二段階認証。削除ボタンスマホ対応
+            できたら二段階認証。
             <?php echo $user[0]['user_name'] . 'さんの勉強時間'; ?>
         </div>
         <select name="buttons" class="button-container">
