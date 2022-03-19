@@ -34,10 +34,10 @@ header{
 .button-container{
     margin:auto 10px auto 0;
     z-index:1;
+    display:flex;
 }
 .post-button{
     text-align: center;
-    background: linear-gradient(90deg, #137DC4 40%, #38C7F9 100%);
     border-radius: 30px;
     height: 50%;
     color: #fff;
@@ -47,8 +47,14 @@ header{
     box-shadow: 0 7px 10px #aecffa;
     width:max-content;
 }
+#header-post-button{
+    background:linear-gradient(90deg,#137DC4 40%, #38C7F9 100%);
+}
 #header-delete-button{
     background:linear-gradient(90deg, red 40%, pink 100%);
+}
+#header-logout-button{
+    background:linear-gradient(90deg,orange 40%,yellow 100%);
 }
 /* メインコンテンツ */
 .content-container{

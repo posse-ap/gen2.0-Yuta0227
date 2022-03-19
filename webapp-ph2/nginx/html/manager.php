@@ -3,7 +3,7 @@ require 'db-connect.php';
 $delete_request_stmt = $dbh->query("SELECT delete_id,delete_reason,user_id from delete_request;");
 $delete_request_data = $delete_request_stmt->fetchAll();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($_POST['delete'] != NULL&&$_POST['reject_reason']==NULL) {
+    if ($_POST['delete'] != NULL && $_POST['reject_reason'] == NULL) {
         foreach ($_POST['delete'] as $delete) {
             $delete = (int)$delete;
             $delete_delete_request_stmt = $dbh->prepare("DELETE from delete_request where delete_id = ?;");
@@ -12,20 +12,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $delete_time_stmt = $dbh->prepare("DELETE from time where id = ?;");
             $delete_time_stmt->bindValue(1, $delete);
             $delete_time_stmt->execute();
-            header("Location:http://localhost:8080/token.php?delete_id=$delete");  
-            exit();          
+            header("Location:http://localhost:8080/token.php?delete_id=$delete");
+            exit();
         }
-    }elseif($_POST['delete'] != NULL&&$_POST['reject_reason']!=NULL){
+    } elseif ($_POST['delete'] != NULL && $_POST['reject_reason'] != NULL) {
         //削除依頼却下
-        foreach($_POST['delete'] as $delete){
-            $delete=(int)$delete;
+        foreach ($_POST['delete'] as $delete) {
+            $delete = (int)$delete;
             $delete_delete_request_stmt = $dbh->prepare("DELETE from delete_request where delete_id = ?;");
             $delete_delete_request_stmt->bindValue(1, $delete);
             $delete_delete_request_stmt->execute();
-            $reject_reason=$_POST['reject_reason'];
+            $reject_reason = $_POST['reject_reason'];
             header("Location:http://localhost:8080/token.php?delete_id=$delete&reject_reason=$reject_reason");
             exit();
         }
+    }
+    if($_POST['logout']!=NULL){
+        header("Location:http://localhost:8080/login.php");
     }
     mb_language("Japanese");
     mb_internal_encoding("UTF-8");
@@ -33,12 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
     $content = $_POST['content'];
     $headers = "From: yutahonjo@keio.jp \r\n";
-    var_dump($to);
-    var_dump($title);
-    var_dump($content);
-    var_dump($headers);
-    $mail=mb_send_mail($to,$title,$content,$headers);
-    var_dump($mail);
+    $mail = mb_send_mail($to, $title, $content, $headers);
 }
 ?>
 <!DOCTYPE html>
@@ -49,38 +47,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="./reset.css">
 </head>
 
 <body>
-    <h1>
+    <h1 style="font-size:25px;background-color:white;text-align:center;padding:10% 0;">
         管理者画面
     </h1>
     <form method="POST" action="">
-        承認する申請は選んで確定を押してください<br>
-        却下する申請は選んで理由を書いて確定を押してください
-        <?php foreach ($delete_request_data as $data) { ?>
-            <div style="display:flex;background-color:lightblue;padding:10px;">
-                <div>ユーザーID:<?php echo $data['user_id'] ?></div>
-                <div>ID:<?php echo $data['delete_id']; ?></div>
-                <div style="margin-left:20px;">理由:<?php echo $data['delete_reason']; ?></div>
-                <label>
-                    <input name="delete[]" style="margin-left:20px;" type="checkbox" value="<?php echo $data['delete_id']; ?>">
-                    <?php echo '削除申請' . $data['delete_id'] . 'を選択'; ?>
-                    </input>
-                </label>
+        <?php if (count($delete_request_data) == 0) { ?>
+        <?php } else { ?>
+            <div>
+                承認する申請は選んで確定を押してください<br>
+                却下する申請は選んで理由を書いて確定を押してください
             </div>
-        <?php }; ?>
-        <textarea type="text" name="reject_reason" placeholder="却下する理由を書いてください"></textarea>
-        <input style="margin-left:20px;" type="submit" value="確定" <?php if (count($delete_request_data) == 0) {
-                                                                        echo 'disabled';
-                                                                    }; ?>></input>
+            <?php for ($i = 0; $i <= count($delete_request_data); $i++) { ?>
+                <div style="display:flex;background-color:lightblue;padding:10px;">
+                    <div>ユーザーID:<?php echo $delete_request_data[$i]['user_id'] ?></div>
+                    <div>ID:<?php echo $delete_request_data['delete_id']; ?></div>
+                    <div style="margin-left:20px;">理由:<?php echo $delete_request_data[$i]['delete_reason']; ?></div>
+                    <label>
+                        <input name="delete[]" style="margin-left:20px;" type="checkbox" value="<?php echo $delete_request_data[$i]['delete_id']; ?>">
+                        <?php echo '削除申請' . $data['delete_id'] . 'を選択'; ?>
+                        </input>
+                    </label>
+                </div>
+                <?php } ?>
+            <textarea type="text" name="reject_reason" placeholder="却下する理由を書いてください"></textarea>
+            <input style="margin-left:20px;" type="submit" value="確定" <?php if (count($delete_request_data) == 0) {
+                                                                            echo 'disabled';
+                                                                        }; ?>></input>
+        <?php } ?>
     </form>
-    <form action="manager.php" method="POST">
-        <p>送り先</p><input type="text" name="to"></input>
-        <p>件名</p><input type="text" name="title"></input>
-        <p>メッセージ</p><textarea name="content" cols="60" rows="10"></textarea>
-        <p><input type="submit" name="send" value="送信"></input></p>
-    </form>
+    <section style="padding:0 10% 10% 10%;background-color:gray;">
+        <h2 style="text-align:center;font-size:25px;padding:20px;">メール作成</h2>
+        <form action="manager.php" method="POST">
+            <div>
+                <textarea style="width:100%;margin:0 auto;" placeholder="送り先を記入してください" type="text" name="to"></textarea>
+            </div>
+            <div>
+                <textarea style="width:100%;margin:0 auto;"placeholder="件名を記入してください" type="text" name="title"></textarea>
+            </div>
+            <div>
+                <textarea style="width:100%;margin:0 auto;" placeholder="メッセージを記入してください" name="content" cols="60" rows="10"></textarea>
+            </div>
+            <div>
+                <input style="width:100%;margin:0 auto;" type="submit" name="send" value="送信"></input>
+            </div>
+        </form>
+    </section>
+    <section>
+        <form action="" method="POST">
+            <div style="justify-content:center;display:flex;margin:200px 0;">
+                <input name="logout" style="background-color:yellow;" type="submit" value="ログアウトする"></input>
+            </div>
+        </form>
+    </section>
 </body>
 
 </html>

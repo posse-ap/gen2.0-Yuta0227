@@ -1,56 +1,53 @@
 <?php
 session_start();
 $headers = [
-    'Authorization: Bearer xoxp-3233965073126-3240610434786-3239428217109-515ec188de3c6e10e59f1c87b340b2b9', //（1)
+    "Authorization: Bearer ".$_ENV['SLACK_ACCESS_TOKEN'], //（1)
     'Content-Type: application/json;charset=utf-8'
 ];
-//Bot user oauth token
-//xoxb-3233965073126-3241197018803-JFY74HT3hxNYZ4J4y8BemFrn
-//user oauth token
-//xoxp-3233965073126-3240610434786-3239428217109-515ec188de3c6e10e59f1c87b340b2b9
 //チャンネル増やすたびにtoken変更必要
 $url = "https://slack.com/api/chat.postMessage"; //(2)
 // $url = "https://hooks.slack.com/services/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"; //(2)
 
 //(3)
-if(isset($_GET['delete_id'])&&isset($_GET['reject_reason'])){
+if(isset($_SESSION['start'])&&(time()-$_SESSION['start']>5)){
+    //時間切れの場合
+    header("Location:http:/localhost:8080/login.php");
+}elseif(isset($_GET['delete_id'])&&isset($_GET['reject_reason'])){
     // echo 1;
     //却下
     $delete_id=$_GET['delete_id'];
     $reject_reason=$_GET['reject_reason'];
     $post_fields = [
         "channel" => "#削除依頼",
-        "text" => "削除依頼".$delete_id."を".$reject_reason."の理由で却下しました",
+        "text" => "管理者が削除依頼".$delete_id."を".$reject_reason."の理由で却下しました",
         "as_user" => true
     ];
-}elseif(isset($_GET['delete_id'])&&!isset($_GET['reject_reason'])){
+}elseif(isset($_GET['delete_id'])&&!isset($_GET['reject_reason'])&&!isset($_GET['delete_reason'])){
     //承認するとき
     $delete_id=$_GET['delete_id'];
     $post_fields = [
         "channel" => "#削除依頼",
-        "text" => "削除依頼".$delete_id."を承認しました",
+        "text" => "管理者が削除依頼".$delete_id."を承認しました",
         "as_user" => true
     ];
 
-};
-if(isset($_GET['delete_id'])&&isset($_GET['delete_reason'])){
+}elseif(isset($_GET['delete_id'])&&isset($_GET['delete_reason'])){
     // echo 2;
     $delete_id=$_GET['delete_id'];
     $delete_reason=$_GET['delete_reason'];
     $post_fields = [
         "channel" => "#削除依頼",
-        "text" => "投稿".$delete_id."を".$delete_reason."の理由で削除依頼しました。確認お願いします。",
+        "text" => $_SESSION['user']['user_name']."投稿".$delete_id."を".$delete_reason."の理由で削除依頼しました。確認お願いします。",
         "as_user" => true
     ];
-};
-if(isset($_GET['contents'])&&isset($_GET['language'])&&isset($_GET['hours'])){
+}elseif(isset($_GET['contents'])&&isset($_GET['language'])&&isset($_GET['hours'])){
     // echo 3;
     $contents=$_GET['contents'];
     $language=$_GET['language'];
     $hours=$_GET['hours'];
     $post_fields = [
         "channel" => "#勉強報告",
-        "text" => $language."を".$contents."で".$hours."時間勉強しました。褒めろ。",
+        "text" => $_SESSION['user']['user_name'].$language."を".$contents."で".$hours."時間勉強しました。褒めろ。",
         "as_user" => true
     ];
 };

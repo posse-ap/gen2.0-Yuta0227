@@ -1,5 +1,6 @@
-const headerPostButton = document.getElementById('header-post-button');
+const headerLogoutButton = document.getElementById('header-logout-button');
 const headerDeleteButton = document.getElementById('header-delete-button');
+const headerPostButton = document.getElementById('header-post-button');
 const smartphoneButton = document.getElementById('smartphone-button');
 const fullOverlay = document.getElementById('fullOverlay');
 const exit = document.getElementById('exit');
@@ -13,8 +14,9 @@ const nextMonth = document.getElementById('next-month');
 const yearMonth = document.getElementById('year-month');
 const month = document.getElementById('month');
 const year = document.getElementById('year');
-const postForm=document.getElementById('post-form');
+const logoutForm=document.getElementById('logout-form');
 const deleteForm=document.getElementById('delete-form');
+const postForm=document.getElementById('post-form');
 var now = new Date();
 var innerhtmlMonth = month.innerHTML;
 var innerhtmlYear = year.innerHTML;
@@ -64,14 +66,12 @@ headerPostButton.addEventListener('click', function () {
 headerDeleteButton.addEventListener('click',function(){
     fullOverlay.removeAttribute('hidden');
     deleteForm.removeAttribute('hidden');
-})
-// for(let i=0;i<=4;i++){
-//     document.getElementById(`delete-request-${i}`).addEventListener('click',function(){
-//         deleteForm.addEventListener('submit',function(){
-//             document.getElementById(`delete-status-${i}`).innerHTML='申請済み';
-//         });
-//     })
-// }
+});
+//右上のログアウトボタン
+headerLogoutButton.addEventListener('click',function(){
+    fullOverlay.removeAttribute('hidden');
+    logoutForm.removeAttribute('hidden');
+});
 //×ボタン押すとオーバーレイが消えると同時に入力内容リセットされる
 exit.addEventListener('click', function () {
     fullOverlay.setAttribute('hidden', "");

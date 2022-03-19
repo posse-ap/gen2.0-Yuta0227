@@ -1,13 +1,27 @@
 <?php
 session_start();
+
+
+if (!isset($_SESSION['user'])) {
+    header("Location:http://localhost:8080/login.php");
+}
+if(isset($_SESSION['start'])&&(time()-$_SESSION['start']>5)){
+    unset($_SESSION['user']);
+    // header("Location:http://localhost:8080/login.php");
+}
+$_SESSION['start']=time();
 require "db-connect.php";
-$user=$_SESSION['user'];
+$user = $_SESSION['user'];
 $moveMonth = $_GET['month'];
 $moveYear = $_GET['year'];
 $submit_date = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $_SESSION['month']=NULL;
-    $_SESSION['year']=NULL;
+    if ($_POST['login_page'] != NULL) {
+        session_destroy();
+        header("Location:http://localhost:8080/login.php");
+    }
+    $_SESSION['month'] = NULL;
+    $_SESSION['year'] = NULL;
     if ($_POST['delete_id'] != NULL && $_POST['delete_reason'] != NULL) {
         $delete_id = (int)$_POST['delete_id'];
         $delete_reason = $_POST['delete_reason'];
@@ -17,11 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $delete_request->bindValue(3, $user[0]['user_id']);
         $delete_request->execute();
         if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
-            $_SESSION['month']=$_GET['month'];
-            $_SESSION['year']=$_GET['year'];
-        }else{
-            $_SESSION['month']=NULL;
-            $_SESSION['year']=NULL;
+            $_SESSION['month'] = $_GET['month'];
+            $_SESSION['year'] = $_GET['year'];
+        } else {
+            $_SESSION['month'] = NULL;
+            $_SESSION['year'] = NULL;
         };
         header("Location:http://localhost:8080/token.php?delete_id=$delete_id&delete_reason=$delete_reason");
         exit();
@@ -35,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
     };
     if ($_POST['contents'] != NULL) {
-        
+
         $submit_contents_id = $_POST['contents'];
         $submit_contents_name = [
             '1' => 'POSSE課題',
@@ -54,29 +68,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             '2' => [
                 'content_id' => (int)$submit_contents_id[2],
                 'content_name' => $submit_contents_name[$submit_contents_id[2]]
-                ]
-            ];
-        };
-        if ($_POST['language'] != NULL) {
-            
-            $submit_language_id = $_POST['language'];
-            $submit_language_name = [
-                '1' => 'Javascript',
-                '2' => 'CSS',
-                '3' => 'PHP',
-                '4' => 'HTML',
-                '5' => 'Laravel',
-                '6' => 'SQL',
-                '7' => 'SHELL',
-                '8' => '情報システム基礎知識(その他)'
-            ];
-            $submit_language = [
-                'language_id' => (int)$submit_language_id,
-                'language_name' => $submit_language_name[$submit_language_id]
+            ]
+        ];
+    };
+    if ($_POST['language'] != NULL) {
+
+        $submit_language_id = $_POST['language'];
+        $submit_language_name = [
+            '1' => 'Javascript',
+            '2' => 'CSS',
+            '3' => 'PHP',
+            '4' => 'HTML',
+            '5' => 'Laravel',
+            '6' => 'SQL',
+            '7' => 'SHELL',
+            '8' => '情報システム基礎知識(その他)'
+        ];
+        $submit_language = [
+            'language_id' => (int)$submit_language_id,
+            'language_name' => $submit_language_name[$submit_language_id]
         ];
     };
     if ($_POST['hours'] != NULL) {
-        $_SESSION['hours']=$_POST['hours'];
+        $_SESSION['hours'] = $_POST['hours'];
         $submit_hours = (int)$_POST['hours'];
         $div_submit_hours = $submit_hours / count($submit_contents_id);
         //NULLの場合intでキャストすると0になる
@@ -90,10 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $div_submit_hours != NULL &&
                 $submit_contents[$i - 1]['content_id'] != NULL &&
                 $submit_language_id != NULL
-                ) {
-                    //コンテンツの個数分sql文発行
-                    ${"submit" . $i} = $dbh->prepare("INSERT INTO time (date,month,year,language,content,hours,content_id,language_id,user_id) values (?,?,?,?,?,?,?,?,?);");
-                    ${"submit" . $i}->bindValue(1, $submit_date['date'], PDO::PARAM_INT);
+            ) {
+                //コンテンツの個数分sql文発行
+                ${"submit" . $i} = $dbh->prepare("INSERT INTO time (date,month,year,language,content,hours,content_id,language_id,user_id) values (?,?,?,?,?,?,?,?,?);");
+                ${"submit" . $i}->bindValue(1, $submit_date['date'], PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(2, $submit_date['month'], PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(3, $submit_date['year'], PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(4, $submit_language['language_name']);
@@ -103,14 +117,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ${"submit" . $i}->bindValue(8, $submit_language_id, PDO::PARAM_INT);
                 ${"submit" . $i}->bindValue(9, $user[0]['user_id']);
                 ${"submit" . $i}->execute();
-                $content_name=$submit_contents[$i-1]['content_name'];
-                $language_name=$submit_language['language_name'];
+                $content_name = $submit_contents[$i - 1]['content_name'];
+                $language_name = $submit_language['language_name'];
                 if (isset($_GET['month']) && isset($_GET['year'])) {
-                    $_SESSION['month']=$moveMonth;
-                    $_SESSION['year']=$moveYear;
-                }else{
-                    $_SESSION['month']=NULL;
-                    $_SESSION['year']=NULL;
+                    $_SESSION['month'] = $moveMonth;
+                    $_SESSION['year'] = $moveYear;
+                } else {
+                    $_SESSION['month'] = NULL;
+                    $_SESSION['year'] = NULL;
                 };
                 header("Location:http://localhost:8080/token.php?contents=$content_name&language=$language_name&hours=$div_submit_hours");
                 exit();
@@ -166,25 +180,25 @@ $language12 = $dbh->prepare("SELECT distinct language from time where language_i
 $language13 = $dbh->prepare("SELECT distinct language from time where language_id=7 and user_id= ?;"); //7=>SHELL
 $language14 = $dbh->prepare("SELECT distinct language from time where language_id=8 and user_id= ?;"); //8=>情報システム基礎知識(その他)
 $show_delete_stmt = $dbh->prepare("SELECT * from time where user_id= ? order by id desc limit 5;"); //過去５件表示
-$show_delete_stmt->bindValue(1,$user[0]['user_id']);
+$show_delete_stmt->bindValue(1, $user[0]['user_id']);
 $show_delete_stmt->execute();
 $show_delete_data = $show_delete_stmt->fetchAll();
-$delete_request_id_stmt=$dbh->prepare("SELECT delete_id from delete_request where user_id= ?;");
-$delete_request_id_stmt->bindValue(1,$user[0]['user_id']);
-$delete_request_id_data=$delete_request_id_stmt->fetchAll();
+$delete_request_id_stmt = $dbh->prepare("SELECT delete_id from delete_request where user_id= ?;");
+$delete_request_id_stmt->bindValue(1, $user[0]['user_id']);
+$delete_request_id_data = $delete_request_id_stmt->fetchAll();
 
 for ($i = 1; $i <= 14; $i++) {
-    ${"stmt".$i}->bindValue(1,$user[0]['user_id']);
+    ${"stmt" . $i}->bindValue(1, $user[0]['user_id']);
     ${"stmt" . $i}->execute();
     ${"data" . $i} = ${"stmt" . $i}->fetchAll();
 }
 for ($g = 4; $g <= 6; $g++) {
-    ${"content".$g}->bindValue(1,$user[0]['user_id']);
+    ${"content" . $g}->bindValue(1, $user[0]['user_id']);
     ${"content" . $g}->execute();
     ${"content_data" . $g} = ${"content" . $g}->fetchAll();
 }
 for ($h = 7; $h <= 14; $h++) {
-    ${"language".$h}->bindValue(1,$user[0]['user_id']);
+    ${"language" . $h}->bindValue(1, $user[0]['user_id']);
     ${"language" . $h}->execute();
     ${"language_data" . $h} = ${"language" . $h}->fetchAll();
 }
@@ -224,7 +238,7 @@ for ($j = 1; $j <= date('t'); $j++) {
     } else {
         ${"date_stmt" . $j} = $dbh->prepare("SELECT sum(hours) from time where date = $j and month = $month and year= $year and user_id=?;"); //日付の合計時間
     }
-    ${"date_stmt".$j}->bindValue(1,$user[0]['user_id']);
+    ${"date_stmt" . $j}->bindValue(1, $user[0]['user_id']);
     ${"date_stmt" . $j}->execute();
     ${"date_data" . $j} = ${"date_stmt" . $j}->fetchAll();
     ${"date_data" . $j}[0]['sum(hours)'] = ${"date_data" . $j}[0]['sum(hours)'] - 0;
@@ -254,12 +268,13 @@ for ($j = 1; $j <= date('t'); $j++) {
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
-        できたら二段階認証。ワークスペースにenvファイルでトークン発行する。
-            <?php echo $user[0]['user_name'].'さんの勉強時間';?>
+            できたら二段階認証。ログアウト押したらsession_destroy。最後にページにアクセスから一定時間たったらsession_destroyは一旦あとで。削除ボタンスマホ対応
+            <?php echo $user[0]['user_name'] . 'さんの勉強時間'; ?>
         </div>
         <div class="button-container">
-            <button id="header-delete-button" class="post-button">削除依頼</button>
-            <button id="header-post-button" class="post-button">記録・投稿</button>
+            <div id="header-logout-button" class="post-button">ログアウト</div>
+            <div id="header-delete-button" class="post-button">削除依頼</div>
+            <div id="header-post-button" class="post-button">記録・投稿</div>
         </div>
     </header>
     <div class="content-container">
@@ -357,6 +372,13 @@ for ($j = 1; $j <= date('t'); $j++) {
     <!-- 記録投稿ボタンを押した時表示されるオーバーレイ -->
     <div id="fullOverlay" hidden>
         <div class="overlay">
+            <form id="logout-form" hidden action="" method="POST">
+                <div>
+                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+                        <input type="submit" value="ログアウトする" name="login_page"></input>
+                    </div>
+                </div>
+            </form>
             <form id="delete-form" hidden action="" method="POST">
                 <div class="delete-form">
                     削除依頼のためのフォーム（管理者へ送信）
@@ -379,9 +401,15 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[0]['content']; ?></td>
                                 <td><?php echo $show_delete_data[0]['language']; ?></td>
                                 <td><?php echo $show_delete_data[0]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[0]['id'];?>" id="delete-request-0" <?php $count0=0;foreach($delete_request_id_data as $data){if($show_delete_data[0]['id']==$data['delete_id']){
-                                    $count0++;
-                                }}if($count0!=0){print_r('disabled');}?>></input>
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[0]['id']; ?>" id="delete-request-0" <?php $count0 = 0;
+                                                                                                                                                        foreach ($delete_request_id_data as $data) {
+                                                                                                                                                            if ($show_delete_data[0]['id'] == $data['delete_id']) {
+                                                                                                                                                                $count0++;
+                                                                                                                                                            }
+                                                                                                                                                        }
+                                                                                                                                                        if ($count0 != 0) {
+                                                                                                                                                            print_r('disabled');
+                                                                                                                                                        } ?>></input>
                                 </td>
                             </tr>
                             <tr>
@@ -391,9 +419,15 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[1]['content']; ?></td>
                                 <td><?php echo $show_delete_data[1]['language']; ?></td>
                                 <td><?php echo $show_delete_data[1]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[1]['id']; ?>" id="delete-request-1" <?php $count1=0;foreach($delete_request_id_data as $data){if($show_delete_data[1]['id']==$data['delete_id']){
-                                    $count1++;
-                                }}if($count1!=0){print_r('disabled');}?>></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[1]['id']; ?>" id="delete-request-1" <?php $count1 = 0;
+                                                                                                                                                        foreach ($delete_request_id_data as $data) {
+                                                                                                                                                            if ($show_delete_data[1]['id'] == $data['delete_id']) {
+                                                                                                                                                                $count1++;
+                                                                                                                                                            }
+                                                                                                                                                        }
+                                                                                                                                                        if ($count1 != 0) {
+                                                                                                                                                            print_r('disabled');
+                                                                                                                                                        } ?>></input></td>
                             </tr>
                             <tr>
                                 <td><?php echo $show_delete_data[2]['id']; ?></td>
@@ -402,9 +436,15 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[2]['content']; ?></td>
                                 <td><?php echo $show_delete_data[2]['language']; ?></td>
                                 <td><?php echo $show_delete_data[2]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[2]['id']; ?>" id="delete-request-2" <?php $count2=0;foreach($delete_request_id_data as $data){if($show_delete_data[2]['id']==$data['delete_id']){
-                                    $count2++;
-                                }}if($count2!=0){print_r('disabled');}?>></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[2]['id']; ?>" id="delete-request-2" <?php $count2 = 0;
+                                                                                                                                                        foreach ($delete_request_id_data as $data) {
+                                                                                                                                                            if ($show_delete_data[2]['id'] == $data['delete_id']) {
+                                                                                                                                                                $count2++;
+                                                                                                                                                            }
+                                                                                                                                                        }
+                                                                                                                                                        if ($count2 != 0) {
+                                                                                                                                                            print_r('disabled');
+                                                                                                                                                        } ?>></input></td>
                             </tr>
                             <tr>
                                 <td><?php echo $show_delete_data[3]['id']; ?></td>
@@ -413,9 +453,15 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[3]['content']; ?></td>
                                 <td><?php echo $show_delete_data[3]['language']; ?></td>
                                 <td><?php echo $show_delete_data[3]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[3]['id']; ?>" id="delete-request-3" <?php $count3=0;foreach($delete_request_id_data as $data){if($show_delete_data[3]['id']==$data['delete_id']){
-                                    $count3++;
-                                }}if($count3!=0){print_r('disabled');}?>></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[3]['id']; ?>" id="delete-request-3" <?php $count3 = 0;
+                                                                                                                                                        foreach ($delete_request_id_data as $data) {
+                                                                                                                                                            if ($show_delete_data[3]['id'] == $data['delete_id']) {
+                                                                                                                                                                $count3++;
+                                                                                                                                                            }
+                                                                                                                                                        }
+                                                                                                                                                        if ($count3 != 0) {
+                                                                                                                                                            print_r('disabled');
+                                                                                                                                                        } ?>></input></td>
                             </tr>
                             <tr>
                                 <td><?php echo $show_delete_data[4]['id']; ?></td>
@@ -424,9 +470,15 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <td><?php echo $show_delete_data[4]['content']; ?></td>
                                 <td><?php echo $show_delete_data[4]['language']; ?></td>
                                 <td><?php echo $show_delete_data[4]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[4]['id']; ?>" id="delete-request-4" <?php $count4=0;foreach($delete_request_id_data as $data){if($show_delete_data[4]['id']==$data['delete_id']){
-                                    $count4++;
-                                }}if($count4!=0){print_r('disabled');}?>></input></td>
+                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[4]['id']; ?>" id="delete-request-4" <?php $count4 = 0;
+                                                                                                                                                        foreach ($delete_request_id_data as $data) {
+                                                                                                                                                            if ($show_delete_data[4]['id'] == $data['delete_id']) {
+                                                                                                                                                                $count4++;
+                                                                                                                                                            }
+                                                                                                                                                        }
+                                                                                                                                                        if ($count4 != 0) {
+                                                                                                                                                            print_r('disabled');
+                                                                                                                                                        } ?>></input></td>
                             </tr>
                         </table>
                         <div id="delete-reason">
@@ -801,4 +853,5 @@ for ($j = 1; $j <= date('t'); $j++) {
 </script>
 
 </html>
+
 <!-- 最初はurlから情報取得せず現在の日時などを表示月移動するときurlから数値取得して$monthから引いたり足したりする -->

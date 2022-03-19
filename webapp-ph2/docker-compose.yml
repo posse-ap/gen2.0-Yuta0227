@@ -26,6 +26,7 @@ services:
       - ./nginx/html:/usr/share/nginx/html
       - ./php/php.ini:/usr/local/etc/php/conf.d/php.ini
     depends_on: ["db"]
+    env_file: .env
 
   nginx:
     # image: nginx:latest
@@ -39,6 +40,7 @@ services:
     depends_on: ["php"]
     networks:
       - br0
+    env_file: .env
 
   
   mailhog:
