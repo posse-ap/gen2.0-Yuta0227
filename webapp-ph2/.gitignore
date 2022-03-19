@@ -1,3 +1,4 @@
 /php/Dockerfile
 /mysql/data/
 ./.env
+./nginx/html/vender/

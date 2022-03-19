@@ -270,8 +270,20 @@ for ($j = 1; $j <= date('t'); $j++) {
     <header>
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
-            <div class="week">4th week</div>
-            できたら二段階認証。
+            <div class="week"><?php switch(floor($date / 7)){
+                case 1;
+                echo '1st';
+                break;
+                case 2;
+                echo '2nd';
+                break;
+                case 3;
+                echo '3rd';
+                break;
+                case 4;
+                echo '4th';
+                break;
+            } ;?> week</div>
             <?php echo $user[0]['user_name'] . 'さんの勉強時間'; ?>
         </div>
         <select name="buttons" class="button-container">
