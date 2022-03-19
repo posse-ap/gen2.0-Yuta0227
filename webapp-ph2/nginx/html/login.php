@@ -31,6 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $users_stmt1->execute();
             $users_data1 = $users_stmt1->fetchAll();
             $_SESSION['user'] = $users_data1;
+            // print_r('<pre>');
+            // var_dump($_SESSION['user']);
+            // print_r('</pre>');
             header("Location:http://localhost:8080/webapp.php");
         }
     }

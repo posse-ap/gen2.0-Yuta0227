@@ -1,16 +1,17 @@
 <?php
 session_start();
 
+// var_dump($_SESSION['user']);//NULLになってる
 
 if (!isset($_SESSION['user'])) {
     header("Location:http://localhost:8080/login.php");
+}else{
+    $_SESSION['start']=time();
 }
 if(isset($_SESSION['start'])&&(time()-$_SESSION['start']>5)){
     unset($_SESSION['user']);
     unset($_SESSION['start']);
-    // header("Location:http://localhost:8080/login.php");
 }
-$_SESSION['start']=time();
 require "db-connect.php";
 $user = $_SESSION['user'];
 $moveMonth = $_GET['month'];
@@ -269,7 +270,7 @@ for ($j = 1; $j <= date('t'); $j++) {
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
             <div class="week">4th week</div>
-            できたら二段階認証。ログアウト押したらsession_destroy。最後にページにアクセスから一定時間たったらsession_destroyは一旦あとで。削除ボタンスマホ対応
+            できたら二段階認証。削除ボタンスマホ対応
             <?php echo $user[0]['user_name'] . 'さんの勉強時間'; ?>
         </div>
         <div class="button-container">
