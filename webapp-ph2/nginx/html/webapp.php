@@ -7,6 +7,7 @@ if (!isset($_SESSION['user'])) {
 }
 if(isset($_SESSION['start'])&&(time()-$_SESSION['start']>5)){
     unset($_SESSION['user']);
+    unset($_SESSION['start']);
     // header("Location:http://localhost:8080/login.php");
 }
 $_SESSION['start']=time();

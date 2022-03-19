@@ -9,7 +9,7 @@ $url = "https://slack.com/api/chat.postMessage"; //(2)
 // $url = "https://hooks.slack.com/services/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"; //(2)
 
 //(3)
-if(isset($_SESSION['start'])&&(time()-$_SESSION['start']>5)){
+if(!isset($_SESSION['start'])){
     //時間切れの場合
     header("Location:http:/localhost:8080/login.php");
 }elseif(isset($_GET['delete_id'])&&isset($_GET['reject_reason'])){
