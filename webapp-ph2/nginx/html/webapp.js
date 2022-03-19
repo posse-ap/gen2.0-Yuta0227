@@ -1,7 +1,8 @@
 const headerLogoutButton = document.getElementById('header-logout-button');
 const headerDeleteButton = document.getElementById('header-delete-button');
 const headerPostButton = document.getElementById('header-post-button');
-const smartphoneButton = document.getElementById('smartphone-button');
+const decideButton=document.getElementById('decide-button');
+const smartphonePostButton = document.getElementById('smartphone-post-button');
 const fullOverlay = document.getElementById('fullOverlay');
 const exit = document.getElementById('exit');
 const time = document.getElementById('time');
@@ -58,19 +59,17 @@ document.getElementById(`label12`).addEventListener('click', function () {
     }
 });
 //右上の記録・投稿ボタン押すとオーバーレイ表示する
-headerPostButton.addEventListener('click', function () {
+decideButton.addEventListener('click',function(){
     fullOverlay.removeAttribute('hidden');
-    postForm.removeAttribute('hidden');
-});
-//右上の投稿削除
-headerDeleteButton.addEventListener('click',function(){
-    fullOverlay.removeAttribute('hidden');
-    deleteForm.removeAttribute('hidden');
-});
-//右上のログアウトボタン
-headerLogoutButton.addEventListener('click',function(){
-    fullOverlay.removeAttribute('hidden');
-    logoutForm.removeAttribute('hidden');
+    if(headerLogoutButton.selected==true){
+        logoutForm.removeAttribute('hidden');
+    }
+    if(headerDeleteButton.selected==true){
+        deleteForm.removeAttribute('hidden');
+    }
+    if(headerPostButton.selected==true){
+        postForm.removeAttribute('hidden');
+    }
 });
 //×ボタン押すとオーバーレイが消えると同時に入力内容リセットされる
 exit.addEventListener('click', function () {
@@ -120,25 +119,7 @@ if(time.innerHTML!=''){
     //データすぐ送られるのにアニメーション待つ必要ない
 }
 });
-//スマホで画面下部のボタン押すとオーバーレイ表示する
-smartphoneButton.addEventListener('click', function () {
-    fullOverlay.removeAttribute('hidden');
-    postForm.removeAttribute('hidden');
-    smartphoneButton.id = "smartphone-post-button";
-    //IDが変わったボタンを押すとロード画面に入る
-    const smartphonePostButton = document.getElementById('smartphone-post-button');
-    smartphonePostButton.addEventListener('click', function () {
-        // sendData().then(startLoading()).then(stopLoading()).then(function(){
-            // window.location.reload(true);
-            if(time.innerHTML!=''){
-                startLoading();
-                stopLoading();
-                smartphonePostButton.id="smartphoneButton";
-            }
-        // });
-    });
-    //PCでやると一度ボタンクリックした後カーソル動かしただけでクリックした判定になってしまう。だけどスマホなら平気なのかも
-});
+
 previousMonth.addEventListener('click', function () {
     innerhtmlMonth--;
     if (innerhtmlMonth == 0) {

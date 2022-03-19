@@ -191,14 +191,16 @@ li{
     border-radius:20px;
 }
 .form{
-    position:absolute;
-    left:50%;
     top:50%;
+    left:50%;
+    position:absolute;
     width:85%;
     height:85%;
     transform:translate(-50%,-50%);
-    display:flex;
     margin-top:5vh;
+}
+.form-direction{
+    display:flex;
 }
 .delete-form{
     position:absolute;
@@ -209,6 +211,10 @@ li{
     transform:translate(-50%,-50%);
     margin-top:5vh;
 }
+#post-button{
+    background:linear-gradient(90deg,#137DC4 40%, #38C7F9 100%);
+}
+
 #delete-table{
     border:1px solid black;
 }
@@ -262,6 +268,7 @@ tr,th,td{
     box-sizing:border-box;
     resize:none;
     border: 1px gray solid;
+    line-height:1;
 }
 .twitter-comment{
     height:30vh;
@@ -281,12 +288,6 @@ tr,th,td{
 .overlay-button-container{
     display:flex;
     justify-content:center;
-    align-items:center;
-    height:10vh;
-    width:70vw;
-    position:absolute;
-    top:60vh;
-    left:0vw;
 } 
 .animation-filter{
     width:70vw;
@@ -394,7 +395,7 @@ tr,th,td{
         position:fixed;
     }
     .button-container{
-        opacity:0;
+        /* opacity:0; */
     }
     .content-container{
         display:flex;
@@ -458,15 +459,19 @@ tr,th,td{
     .form{
         left:0;
         top:0;
-        display:flex;
         flex-direction:column;
         box-sizing:border-box;
         width:100vw;
         transform:translate(0,0);
+        margin-top:0;
+    }
+    .form-direction{
+        display:block;
     }
     .form-left, .form-right{
         margin:0 auto;
         width:calc(100% - 40px);
+        height:max-content;
     }
     .form-left>div, .form-right>div{
         width:calc(100vw - 40px);
@@ -475,7 +480,7 @@ tr,th,td{
         margin-top:0;
     }
     .hour-container{
-        margin:24px 0 10px 0;
+        margin:0 0 10px 0;
     }
     .form-left>div>div{
         margin:24px 0 10px 0;
@@ -489,12 +494,12 @@ tr,th,td{
         margin-top:24px;
     }
     .twitter-comment{
-        height:10vh;
         margin-top:10px;
+        height:max-content;
     }
     /* 位置調整めんどくさいため位置が不変のsmartphone-button-containerをずっと表示。ボタンの役割はjsでidを変えて対応 */
     .overlay-button-container{
-        opacity:0;
+        /* opacity:0; */
     }
     .animation-filter{
         position:absolute;
