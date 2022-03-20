@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once "url.php";
 $headers = [
     "Authorization: Bearer ".$_ENV['SLACK_ACCESS_TOKEN'], //（1)
     'Content-Type: application/json;charset=utf-8'
@@ -11,7 +12,7 @@ $url = "https://slack.com/api/chat.postMessage"; //(2)
 //(3)
 if(!isset($_SESSION['start'])){
     //時間切れの場合
-    header("Location:http:/localhost:8080/login.php");
+    header("Location:".$login_url);
 }elseif(isset($_GET['delete_id'])&&isset($_GET['reject_reason'])){
     // echo 1;
     //却下
@@ -68,25 +69,25 @@ $result = curl_exec($ch);
 curl_close($ch);
 if(isset($_GET['delete_id'])&&isset($_GET['reject_reason'])){
     //管理者却下時
-    header("Location:http://localhost:8080/manager.php");
+    header("Location:".$manager_url);
     exit();
 }elseif(isset($_GET['delete_id'])&&!isset($_GET['reject_reason'])&&!isset($_GET['delete_reason'])){
     //管理者承認時
-    header("Location:http://localhost:8080/manager.php");
+    header("Location:".$manager_url);
     exit();
 };
 if(isset($_GET['delete_id'])&&isset($_GET['delete_reason'])){
     //削除依頼送信時
     if($_SESSION['month']==NULL&&$_SESSION['year']==NULL){
         //月移動なしのwebapp
-        header("Location:http://localhost:8080/webapp.php");
+        header("Location:".$webapp_url);
         exit();
     };
     if($_SESSION['month']!=NULL&&$_SESSION['year']!=NULL){
         //月移動ありのwebapp
         $month=$_SESSION['month'];
         $year=$_SESSION['year'];
-        header("Location:http://localhost:8080/webapp.php?month=$month&year=$year");
+        header("Location:".$webapp_url."?month=$month&year=$year");
         exit();
     }
 };
@@ -94,14 +95,14 @@ if($_SESSION['hours']!=NULL){
     //投稿時
     if($_SESSION['month']==NULL&&$_SESSION['year']==NULL){
         //月移動なしのwebapp
-        header("Location:http://localhost:8080/webapp.php");
+        header("Location:".$webapp_url);
         exit();
     };
     if($_SESSION['month']!=NULL&&$_SESSION['year']!=NULL){
         //月移動ありのwebapp
         $month=$_SESSION['month'];
         $year=$_SESSION['year'];
-        header("Location:http://localhost:8080/webapp.php?month=$month&year=$year");
+        header("Location:".$webapp_url."?month=$month&year=$year");
         exit();
     }
 }

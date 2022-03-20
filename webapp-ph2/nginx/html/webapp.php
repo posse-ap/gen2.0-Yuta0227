@@ -1,10 +1,10 @@
 <?php
 session_start();
-
+require_once "url.php";
 // var_dump($_SESSION['user']);//NULLになってる
 
 if (!isset($_SESSION['user'])) {
-    header("Location:http://localhost:8080/login.php");
+    header("Location:".$login_url);
 } else {
     //ログインしてから時間測る
     $_SESSION['start'] = time();
@@ -21,7 +21,7 @@ $submit_date = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($_POST['login_page'] != NULL) {
         session_destroy();
-        header("Location:http://localhost:8080/login.php");
+        header("Location:".$login_url);
     }
     $_SESSION['month'] = NULL;
     $_SESSION['year'] = NULL;
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['month'] = NULL;
             $_SESSION['year'] = NULL;
         };
-        header("Location:http://localhost:8080/token.php?delete_id=$delete_id&delete_reason=$delete_reason");
+        header("Location:".$token_url."?delete_id=$delete_id&delete_reason=$delete_reason");
         exit();
     };
     if ($_POST['date'] != NULL) {
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['month'] = NULL;
                     $_SESSION['year'] = NULL;
                 };
-                header("Location:http://localhost:8080/token.php?contents=$content_name&language=$language_name&hours=$div_submit_hours");
+                header("Location:".$token_url."?contents=$content_name&language=$language_name&hours=$div_submit_hours");
                 exit();
             }
         };

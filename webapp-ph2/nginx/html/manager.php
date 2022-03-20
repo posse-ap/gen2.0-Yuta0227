@@ -1,5 +1,6 @@
 <?php
-require 'db-connect.php';
+require_once 'db-connect.php';
+require_once "url.php";
 $delete_request_stmt = $dbh->query("SELECT delete_id,delete_reason,user_id from delete_request;");
 $delete_request_data = $delete_request_stmt->fetchAll();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $delete_time_stmt = $dbh->prepare("DELETE from time where id = ?;");
             $delete_time_stmt->bindValue(1, $delete);
             $delete_time_stmt->execute();
-            header("Location:http://localhost:8080/token.php?delete_id=$delete");
+            header("Location:".$token_url."?delete_id=$delete");
             exit();
         }
     } elseif ($_POST['delete'] != NULL && $_POST['reject_reason'] != NULL) {
@@ -23,12 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $delete_delete_request_stmt->bindValue(1, $delete);
             $delete_delete_request_stmt->execute();
             $reject_reason = $_POST['reject_reason'];
-            header("Location:http://localhost:8080/token.php?delete_id=$delete&reject_reason=$reject_reason");
+            header("Location:".$token_url."?delete_id=$delete&reject_reason=$reject_reason");
             exit();
         }
     }
     if($_POST['logout']!=NULL){
-        header("Location:http://localhost:8080/login.php");
+        header("Location:".$login_url);
     }
     mb_language("Japanese");
     mb_internal_encoding("UTF-8");
@@ -81,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
     <section style="padding:0 10% 10% 10%;background-color:gray;">
         <h2 style="text-align:center;font-size:25px;padding:20px;">メール作成</h2>
-        <form action="manager.php" method="POST">
+        <form action="" method="POST">
             <div>
                 <textarea style="width:100%;margin:0 auto;" placeholder="送り先を記入してください" type="text" name="to"></textarea>
             </div>

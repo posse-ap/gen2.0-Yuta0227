@@ -1,13 +1,13 @@
 <?php
-require "./vendor/autoload.php";
-require "db-connect.php";
+require_once "./vendor/autoload.php";
+require_once "db-connect.php";
+require_once "url.php";
 session_start();
 
 //Google認証システムで表示される名前
 $auth_title = "webapp";
 $secret = "";
 $ga = new PHPGangsta_GoogleAuthenticator();
-
 //$secret呼び出し
 if (isset($_SESSION['secret'])) {
     $secret = $_SESSION['secret'];
@@ -52,9 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_password = $_POST['new_password'];
     $new_email = $_POST['new_email'];
     if ($new_username == null && $new_password == null) {
-        if ($manager_data[0]['user_name'] == $username && $manager_data[0]["AES_DECRYPT(`user_password`,'ENCRYPT-KEY')"] == $password&&$checkResult==true) {
-            header("Location:http://localhost:8080/manager.php");
-        } elseif ($decode_password[0]["AES_DECRYPT(`user_password`,'ENCRYPT-KEY')"] == $password&&$checkResult==true) {
+        if ($manager_data[0]['user_name'] == $username && $manager_data[0]["AES_DECRYPT(`user_password`,'ENCRYPT-KEY')"] == $password && $checkResult == true) {
+            header("Location:".$manager_url);
+        } elseif ($decode_password[0]["AES_DECRYPT(`user_password`,'ENCRYPT-KEY')"] == $password && $checkResult == true) {
             $users_stmt1 = $dbh->prepare("SELECT * from users where user_name=?");
             $users_stmt1->bindValue(1, $username);
             $users_stmt1->execute();
@@ -63,9 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // print_r('<pre>');
             // var_dump($_SESSION['user']);
             // print_r('</pre>');
-            header("Location:http://localhost:8080/webapp.php");
-        }else{
-            echo 'no';
+            header("Location:".$webapp_url);
+        } else {
+            echo 'ログイン失敗';
         }
     }
     $user_exist_count = 0;
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $users_stmt1->execute();
         $users_data1 = $users_stmt1->fetchAll();
         $_SESSION['user'] = $users_data1;
-        header("Location:http://localhost:8080/webapp.php");
+        header("Location:" . $webapp_url);
     }
 }
 ?>
@@ -125,11 +125,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </label>
             <input id="one_code" type="text" oninput="value = value.replace(/[^0-9A-Za-z_]+/,'');" name="one_code" maxlength="6"></input>
         </div>
-        <?php if(!$is_valid){?>
-            <div style="text-align:center;">
-                <img src="<?php echo $qrCodeUrl;?>" alt="">
-            </div>
-        <?php };?>
+        <div style="text-align:center;">
+            <img src="<?php echo $qrCodeUrl; ?>" alt="">
+        </div>
         <div style="display:flex;justify-content:center;margin-top:10px;">
             <input type="submit" value="ログイン"></input>
         </div>
