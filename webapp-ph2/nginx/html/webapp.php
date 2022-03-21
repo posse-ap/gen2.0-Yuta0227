@@ -262,28 +262,31 @@ for ($j = 1; $j <= date('t'); $j++) {
     <header>
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
-            <div class="week"><?php switch(floor($date / 7)){
+            <span class="week"><?php switch(floor($date / 7)){
                 case 1;
-                echo '1st';
+                echo '1';
                 break;
                 case 2;
-                echo '2nd';
+                echo '2';
                 break;
                 case 3;
-                echo '3rd';
+                echo '3';
                 break;
                 case 4;
-                echo '4th';
+                echo '4';
                 break;
-            } ;?> week</div>
-            <?php echo $user[0]['user_name'] . 'さんの勉強時間'; ?>
+            } ; 
+            echo ' 週目の'.$user[0]['user_name'] . 'さんの勉強時間'; ?>
+            </span>
         </div>
         <select name="buttons" class="button-container">
             <option id="header-logout-button" class="post-button">ログアウト</option>
             <option id="header-delete-button" class="post-button">削除依頼</option>
             <option id="header-post-button" class="post-button">記録・投稿</option>
         </select>
-        <input type="button" value="確定" id="decide-button"></input>
+        <div style="align-items:center;display:flex;justify-content:center;padding-right:20px;">
+            <input type="button" value="確定" id="decide-button"></input>
+        </div>
     </header>
     <div class="content-container">
         <!-- 一段目 -->
@@ -294,7 +297,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                     <div class="number">
                         <?php echo (int)$data1[0]['sum(hours)']; ?>
                     </div>
-                    <div class="hour">hour</div>
+                    <div class="hour">時間</div>
                 </div>
                 <div class="month-container">
                     <div class="month">
@@ -308,18 +311,18 @@ for ($j = 1; $j <= date('t'); $j++) {
                     <div class="number">
                         <?php echo (int)$data2[0]['sum(hours)']; ?>
                     </div>
-                    <div class="hour">hour</div>
+                    <div class="hour">時間</div>
                 </div>
                 <div class="total-container">
-                    <div class="total">Total</div>
+                    <div class="total">合計</div>
                     <div class="number">
                         <?php echo (int)$data3[0]['sum(hours)']; ?>
                     </div>
-                    <div class="hour">hour</div>
+                    <div class="hour">時間</div>
                 </div>
             </div>
-            <div id="bargraph-container">
-                <canvas id="hour-bargraph" class="bargraph-container" width="20" height="10"></canvas>
+            <div class="bargraph-container">
+                <canvas id="hour-bargraph"></canvas>
             </div>
         </div>
         <!-- 二段目 -->
