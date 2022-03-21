@@ -3,11 +3,12 @@ require_once "./vendor/autoload.php";
 require_once "db-connect.php";
 require_once "url.php";
 session_start();
-
 //Google認証システムで表示される名前
 $auth_title = "webapp";
 $secret = "";
-$ga = new PHPGangsta_GoogleAuthenticator();
+if($ga==NULL){
+    $ga = new PHPGangsta_GoogleAuthenticator();
+}
 //$secret呼び出し
 if (isset($_SESSION['secret'])) {
     $secret = $_SESSION['secret'];

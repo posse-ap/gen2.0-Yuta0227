@@ -1,18 +1,10 @@
 <?php
 session_start();
 require_once "url.php";
+require_once "function.php";
 // var_dump($_SESSION['user']);//NULLになってる
 
-if (!isset($_SESSION['user'])) {
-    header("Location:".$login_url);
-} else {
-    //ログインしてから時間測る
-    $_SESSION['start'] = time();
-}
-if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > 30)) {
-    unset($_SESSION['user']);
-    unset($_SESSION['start']);
-}
+start_timer();
 require "db-connect.php";
 $user = $_SESSION['user'];
 $moveMonth = $_GET['month'];

@@ -1,6 +1,8 @@
 <?php
 require_once 'db-connect.php';
 require_once "url.php";
+require_once "function.php";
+start_timer();
 $delete_request_stmt = $dbh->query("SELECT delete_id,delete_reason,user_id from delete_request;");
 $delete_request_data = $delete_request_stmt->fetchAll();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -62,10 +64,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 承認する申請は選んで確定を押してください<br>
                 却下する申請は選んで理由を書いて確定を押してください
             </div>
-            <?php for ($i = 0; $i <= count($delete_request_data); $i++) { ?>
+            <?php for ($i = 0; $i < count($delete_request_data); $i++) { ?>
                 <div style="display:flex;background-color:lightblue;padding:10px;">
-                    <div>ユーザーID:<?php echo $delete_request_data[$i]['user_id'] ?></div>
-                    <div>ID:<?php echo $delete_request_data['delete_id']; ?></div>
+                    <div>ユーザーID:<?php echo $delete_request_data[$i]['user_id']; ?></div>
+                    <div>ID:<?php echo $delete_request_data[$i]['delete_id']; ?></div>
                     <div style="margin-left:20px;">理由:<?php echo $delete_request_data[$i]['delete_reason']; ?></div>
                     <label>
                         <input name="delete[]" style="margin-left:20px;" type="checkbox" value="<?php echo $delete_request_data[$i]['delete_id']; ?>">
