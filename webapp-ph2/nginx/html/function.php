@@ -1,12 +1,14 @@
 <?php
 class check{
-    function check_expire($login_url){
+    public function check_expire(){
+        global $login_url;
         if ($_POST['login_page'] != NULL) {
             session_destroy();
             header("Location:" . $login_url);
         }
     }
-    function check_login($login_url){
+    public function check_login(){
+        global $login_url;
         if ($_SESSION['user'] == NULL) {
             session_destroy();
             header("Location:" . $login_url);
@@ -15,6 +17,7 @@ class check{
 }
 $check=new check;
 function start_timer(){
+    global $login_url;
     if (!isset($_SESSION['user'])) {
         header("Location:".$login_url);
     } else {

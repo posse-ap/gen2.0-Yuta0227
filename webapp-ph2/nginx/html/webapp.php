@@ -10,10 +10,10 @@ $user = $_SESSION['user'];
 $moveMonth = $_GET['month'];
 $moveYear = $_GET['year'];
 $submit_date = '';
-$check->check_login($login_url);
+$check->check_login();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $check->check_expire($login_url);
+    $check->check_expire();
     $_SESSION['month'] = NULL;
     $_SESSION['year'] = NULL;
     if ($_POST['delete_id'] != NULL && $_POST['delete_reason'] != NULL) {
