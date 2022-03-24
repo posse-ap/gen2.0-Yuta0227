@@ -14,123 +14,13 @@ $check->check_login();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $check->check_expire();
-    $_SESSION['month'] = NULL;
-    $_SESSION['year'] = NULL;
-    if ($_POST['delete_id'] != NULL && $_POST['delete_reason'] != NULL) {
-        $delete_id = (int)$_POST['delete_id'];
-        $delete_reason = $_POST['delete_reason'];
-        $delete_request = $dbh->prepare("INSERT into delete_request (delete_id,delete_reason,user_id) values (?,?,?);");
-        $delete_request->bindValue(1, $delete_id, PDO::PARAM_INT);
-        $delete_request->bindValue(2, $delete_reason);
-        $delete_request->bindValue(3, $user[0]['user_id']);
-        $delete_request->execute();
-        if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
-            $_SESSION['month'] = $_GET['month'];
-            $_SESSION['year'] = $_GET['year'];
-        } else {
-            $_SESSION['month'] = NULL;
-            $_SESSION['year'] = NULL;
-        };
-        header("Location:" . $token_url . "?delete_id=$delete_id&delete_reason=$delete_reason");
-        exit();
-    };
-    if ($_POST['date'] != NULL) {
-        $submit_date = explode('-', $_POST['date']);
-        $submit_date = [
-            'year' => (int)$submit_date[0],
-            'month' => (int)$submit_date[1],
-            'date' => (int)$submit_date[2]
-        ];
-    };
-    if ($_POST['contents'] != NULL) {
-
-        $submit_contents_id = $_POST['contents'];
-        $submit_contents_name = [
-            '1' => 'POSSE課題',
-            '2' => 'ドットインストール',
-            '3' => 'N予備校'
-        ];
-        $submit_contents = [
-            '0' => [
-                'content_id' => (int)$submit_contents_id[0],
-                'content_name' => $submit_contents_name[$submit_contents_id[0]],
-            ],
-            '1' => [
-                'content_id' => (int)$submit_contents_id[1],
-                'content_name' => $submit_contents_name[$submit_contents_id[1]],
-            ],
-            '2' => [
-                'content_id' => (int)$submit_contents_id[2],
-                'content_name' => $submit_contents_name[$submit_contents_id[2]]
-            ]
-        ];
-    };
-    if ($_POST['language'] != NULL) {
-
-        $submit_language_id = $_POST['language'];
-        $submit_language_name = [
-            '1' => 'Javascript',
-            '2' => 'CSS',
-            '3' => 'PHP',
-            '4' => 'HTML',
-            '5' => 'Laravel',
-            '6' => 'SQL',
-            '7' => 'SHELL',
-            '8' => 'その他'
-        ];
-        $submit_language = [
-            'language_id' => (int)$submit_language_id,
-            'language_name' => $submit_language_name[$submit_language_id]
-        ];
-    };
-    if ($_POST['hours'] != NULL) {
-        $_SESSION['hours'] = $_POST['hours'];
-        $submit_hours = (int)$_POST['hours'];
-        $div_submit_hours = $submit_hours / count($submit_contents_id);
-        //NULLの場合intでキャストすると0になる
-        for ($i = 1; $i <= count($submit_contents_id); $i++) {
-            if (
-                $submit_date['date'] != NULL &&
-                $submit_date['month'] != NULL &&
-                $submit_date['year'] != NULL &&
-                $submit_language['language_name'] != NULL &&
-                $submit_contents[$i - 1]['content_name'] != NULL &&
-                $div_submit_hours != NULL &&
-                $submit_contents[$i - 1]['content_id'] != NULL &&
-                $submit_language_id != NULL
-            ) {
-                //コンテンツの個数分sql文発行
-                ${"submit" . $i} = $dbh->prepare("INSERT INTO time (date,month,year,language,content,hours,content_id,language_id,user_id) values (?,?,?,?,?,?,?,?,?);");
-                ${"submit" . $i}->bindValue(1, $submit_date['date'], PDO::PARAM_INT);
-                ${"submit" . $i}->bindValue(2, $submit_date['month'], PDO::PARAM_INT);
-                ${"submit" . $i}->bindValue(3, $submit_date['year'], PDO::PARAM_INT);
-                ${"submit" . $i}->bindValue(4, $submit_language['language_name']);
-                ${"submit" . $i}->bindValue(5, $submit_contents[$i - 1]['content_name']);
-                ${"submit" . $i}->bindValue(6, $div_submit_hours, PDO::PARAM_INT);
-                ${"submit" . $i}->bindValue(7, $submit_contents[$i - 1]['content_id'], PDO::PARAM_INT);
-                ${"submit" . $i}->bindValue(8, $submit_language_id, PDO::PARAM_INT);
-                ${"submit" . $i}->bindValue(9, $user[0]['user_id']);
-                ${"submit" . $i}->execute();
-                $content_name = $submit_contents[$i - 1]['content_name'];
-                $language_name = $submit_language['language_name'];
-                if (isset($_GET['month']) && isset($_GET['year'])) {
-                    $_SESSION['month'] = $moveMonth;
-                    $_SESSION['year'] = $moveYear;
-                } else {
-                    $_SESSION['month'] = NULL;
-                    $_SESSION['year'] = NULL;
-                };
-                header("Location:" . $token_url . "?contents=$content_name&language=$language_name&hours=$div_submit_hours");
-                exit();
-            }
-        };
-    };
-    // if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
-    //     header("Location:http://localhost:8080/webapp.php?month=$moveMonth&year=$moveYear");
-    // }else{
-    //     header("Location:http://localhost:8080/webapp.php");
-    // };
-    // exit;
+    $post->reset_time();
+    $post->delete_sql();
+    $post->set_date_array();
+    $post->set_contents_array();
+    $post->set_language();
+    $post->set_hours();
+    $post->insert_data();
 };
 ?>
 <?php
@@ -261,21 +151,7 @@ for ($j = 1; $j <= date('t'); $j++) {
     <header>
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
-            <span class="week"><?php switch (floor($date / 7)) {
-                                    case 1;
-                                        echo '1';
-                                        break;
-                                    case 2;
-                                        echo '2';
-                                        break;
-                                    case 3;
-                                        echo '3';
-                                        break;
-                                    case 4;
-                                        echo '4';
-                                        break;
-                                };
-                                echo ' 週目の' . $user[0]['user_name'] . 'さんの勉強時間'; ?>
+            <span class="week"><?php echo return_week().'週目の'.$user[0]['user_name'].'さんの勉強時間'; ?>
             </span>
         </div>
         <select name="buttons" class="button-container">
@@ -402,33 +278,33 @@ for ($j = 1; $j <= date('t'); $j++) {
                             </tr>
                             <tr>
                                 <?php
-                                $delete_data->delete_data_table($show_delete_data,0);
-                                $delete_data->check_existence($delete_request_id_data, $show_delete_data, 0);
+                                $delete_data->delete_data_table(0);
+                                $delete_data->check_existence(0);
                                 ?>
 
                             </tr>
                             <tr>
                                 <?php
-                                $delete_data->delete_data_table($show_delete_data,1);
-                                $delete_data->check_existence($delete_request_id_data, $show_delete_data, 1);
+                                $delete_data->delete_data_table(1);
+                                $delete_data->check_existence(1);
                                 ?>
                             </tr>
                             <tr>
                                 <?php
-                                $delete_data->delete_data_table($show_delete_data,2);
-                                $delete_data->check_existence($delete_request_id_data, $show_delete_data, 2);
+                                $delete_data->delete_data_table(2);
+                                $delete_data->check_existence(2);
                                 ?>
                             </tr>
                             <tr>
                                 <?php
-                                $delete_data->delete_data_table($show_delete_data,3);
-                                $delete_data->check_existence($delete_request_id_data, $show_delete_data, 3);
+                                $delete_data->delete_data_table(3);
+                                $delete_data->check_existence(3);
                                 ?>
                             </tr>
                             <tr>
                                 <?php
-                                $delete_data->delete_data_table($show_delete_data,4);
-                                $delete_data->check_existence($delete_request_id_data, $show_delete_data, 4);
+                                $delete_data->delete_data_table(4);
+                                $delete_data->check_existence(4);
                                 ?>
                             </tr>
                         </table>
