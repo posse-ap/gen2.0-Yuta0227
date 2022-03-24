@@ -10,11 +10,10 @@ $user = $_SESSION['user'];
 $moveMonth = $_GET['month'];
 $moveYear = $_GET['year'];
 $submit_date = '';
+$check->check_login($login_url);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($_POST['login_page'] != NULL) {
-        session_destroy();
-        header("Location:".$login_url);
-    }
+    $check->check_expire($login_url);
     $_SESSION['month'] = NULL;
     $_SESSION['year'] = NULL;
     if ($_POST['delete_id'] != NULL && $_POST['delete_reason'] != NULL) {
@@ -32,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['month'] = NULL;
             $_SESSION['year'] = NULL;
         };
-        header("Location:".$token_url."?delete_id=$delete_id&delete_reason=$delete_reason");
+        header("Location:" . $token_url . "?delete_id=$delete_id&delete_reason=$delete_reason");
         exit();
     };
     if ($_POST['date'] != NULL) {
@@ -121,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['month'] = NULL;
                     $_SESSION['year'] = NULL;
                 };
-                header("Location:".$token_url."?contents=$content_name&language=$language_name&hours=$div_submit_hours");
+                header("Location:" . $token_url . "?contents=$content_name&language=$language_name&hours=$div_submit_hours");
                 exit();
             }
         };
@@ -262,21 +261,21 @@ for ($j = 1; $j <= date('t'); $j++) {
     <header>
         <div class="logo-week">
             <img src="./img/posse_logo.png" alt="posseのロゴ" class="logo">
-            <span class="week"><?php switch(floor($date / 7)){
-                case 1;
-                echo '1';
-                break;
-                case 2;
-                echo '2';
-                break;
-                case 3;
-                echo '3';
-                break;
-                case 4;
-                echo '4';
-                break;
-            } ; 
-            echo ' 週目の'.$user[0]['user_name'] . 'さんの勉強時間'; ?>
+            <span class="week"><?php switch (floor($date / 7)) {
+                                    case 1;
+                                        echo '1';
+                                        break;
+                                    case 2;
+                                        echo '2';
+                                        break;
+                                    case 3;
+                                        echo '3';
+                                        break;
+                                    case 4;
+                                        echo '4';
+                                        break;
+                                };
+                                echo ' 週目の' . $user[0]['user_name'] . 'さんの勉強時間'; ?>
             </span>
         </div>
         <select name="buttons" class="button-container">
@@ -402,90 +401,35 @@ for ($j = 1; $j <= date('t'); $j++) {
                                 <th>削除依頼ボタン</th>
                             </tr>
                             <tr>
-                                <td><?php echo $show_delete_data[0]['id']; ?></td>
-                                <td><?php echo $show_delete_data[0]['updated_at']; ?></td>
-                                <td><?php echo $show_delete_data[0]['date']; ?></td>
-                                <td><?php echo $show_delete_data[0]['content']; ?></td>
-                                <td><?php echo $show_delete_data[0]['language']; ?></td>
-                                <td><?php echo $show_delete_data[0]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[0]['id']; ?>" id="delete-request-0" <?php $count0 = 0;
-                                                                                                                                                        foreach ($delete_request_id_data as $data) {
-                                                                                                                                                            if ($show_delete_data[0]['id'] == $data['delete_id']) {
-                                                                                                                                                                $count0++;
-                                                                                                                                                            }
-                                                                                                                                                        }
-                                                                                                                                                        if ($count0 != 0) {
-                                                                                                                                                            print_r('disabled');
-                                                                                                                                                        } ?>></input>
-                                </td>
+                                <?php
+                                $delete_data->delete_data_table($show_delete_data,0);
+                                $delete_data->check_existence($delete_request_id_data, $show_delete_data, 0);
+                                ?>
+
                             </tr>
                             <tr>
-                                <td><?php echo $show_delete_data[1]['id']; ?></td>
-                                <td><?php echo $show_delete_data[1]['updated_at']; ?></td>
-                                <td><?php echo $show_delete_data[1]['date']; ?></td>
-                                <td><?php echo $show_delete_data[1]['content']; ?></td>
-                                <td><?php echo $show_delete_data[1]['language']; ?></td>
-                                <td><?php echo $show_delete_data[1]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[1]['id']; ?>" id="delete-request-1" <?php $count1 = 0;
-                                                                                                                                                        foreach ($delete_request_id_data as $data) {
-                                                                                                                                                            if ($show_delete_data[1]['id'] == $data['delete_id']) {
-                                                                                                                                                                $count1++;
-                                                                                                                                                            }
-                                                                                                                                                        }
-                                                                                                                                                        if ($count1 != 0) {
-                                                                                                                                                            print_r('disabled');
-                                                                                                                                                        } ?>></input></td>
+                                <?php
+                                $delete_data->delete_data_table($show_delete_data,1);
+                                $delete_data->check_existence($delete_request_id_data, $show_delete_data, 1);
+                                ?>
                             </tr>
                             <tr>
-                                <td><?php echo $show_delete_data[2]['id']; ?></td>
-                                <td><?php echo $show_delete_data[2]['updated_at']; ?></td>
-                                <td><?php echo $show_delete_data[2]['date']; ?></td>
-                                <td><?php echo $show_delete_data[2]['content']; ?></td>
-                                <td><?php echo $show_delete_data[2]['language']; ?></td>
-                                <td><?php echo $show_delete_data[2]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[2]['id']; ?>" id="delete-request-2" <?php $count2 = 0;
-                                                                                                                                                        foreach ($delete_request_id_data as $data) {
-                                                                                                                                                            if ($show_delete_data[2]['id'] == $data['delete_id']) {
-                                                                                                                                                                $count2++;
-                                                                                                                                                            }
-                                                                                                                                                        }
-                                                                                                                                                        if ($count2 != 0) {
-                                                                                                                                                            print_r('disabled');
-                                                                                                                                                        } ?>></input></td>
+                                <?php
+                                $delete_data->delete_data_table($show_delete_data,2);
+                                $delete_data->check_existence($delete_request_id_data, $show_delete_data, 2);
+                                ?>
                             </tr>
                             <tr>
-                                <td><?php echo $show_delete_data[3]['id']; ?></td>
-                                <td><?php echo $show_delete_data[3]['updated_at']; ?></td>
-                                <td><?php echo $show_delete_data[3]['date']; ?></td>
-                                <td><?php echo $show_delete_data[3]['content']; ?></td>
-                                <td><?php echo $show_delete_data[3]['language']; ?></td>
-                                <td><?php echo $show_delete_data[3]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[3]['id']; ?>" id="delete-request-3" <?php $count3 = 0;
-                                                                                                                                                        foreach ($delete_request_id_data as $data) {
-                                                                                                                                                            if ($show_delete_data[3]['id'] == $data['delete_id']) {
-                                                                                                                                                                $count3++;
-                                                                                                                                                            }
-                                                                                                                                                        }
-                                                                                                                                                        if ($count3 != 0) {
-                                                                                                                                                            print_r('disabled');
-                                                                                                                                                        } ?>></input></td>
+                                <?php
+                                $delete_data->delete_data_table($show_delete_data,3);
+                                $delete_data->check_existence($delete_request_id_data, $show_delete_data, 3);
+                                ?>
                             </tr>
                             <tr>
-                                <td><?php echo $show_delete_data[4]['id']; ?></td>
-                                <td><?php echo $show_delete_data[4]['updated_at']; ?></td>
-                                <td><?php echo $show_delete_data[4]['date']; ?></td>
-                                <td><?php echo $show_delete_data[4]['content']; ?></td>
-                                <td><?php echo $show_delete_data[4]['language']; ?></td>
-                                <td><?php echo $show_delete_data[4]['hours']; ?></td>
-                                <td><input name="delete_id" type="radio" value="<?php echo (int)$show_delete_data[4]['id']; ?>" id="delete-request-4" <?php $count4 = 0;
-                                                                                                                                                        foreach ($delete_request_id_data as $data) {
-                                                                                                                                                            if ($show_delete_data[4]['id'] == $data['delete_id']) {
-                                                                                                                                                                $count4++;
-                                                                                                                                                            }
-                                                                                                                                                        }
-                                                                                                                                                        if ($count4 != 0) {
-                                                                                                                                                            print_r('disabled');
-                                                                                                                                                        } ?>></input></td>
+                                <?php
+                                $delete_data->delete_data_table($show_delete_data,4);
+                                $delete_data->check_existence($delete_request_id_data, $show_delete_data, 4);
+                                ?>
                             </tr>
                         </table>
                         <div id="delete-reason">
