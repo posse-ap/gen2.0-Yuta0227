@@ -41,6 +41,7 @@ class post{
             global $delete_id;
             global $delete_reason;
             global $user;
+            global $post_time;
             $delete_request = $dbh->prepare("INSERT into delete_request (delete_id,delete_reason,user_id) values (?,?,?);");
             $delete_request->bindValue(1, $delete_id, PDO::PARAM_INT);
             $delete_request->bindValue(2, $delete_reason);
@@ -51,7 +52,8 @@ class post{
             } else {
                 $post->reset_time();
             };
-            header("Location:" . $token_url . "?delete_id=$delete_id&delete_reason=$delete_reason");
+            $post_time=date('Y/m/d');
+            header("Location:" . $token_url . "?delete_id=$delete_id&delete_reason=$delete_reason&date=$post_time");
             exit();
         };
     }
@@ -134,6 +136,7 @@ class post{
         global $language_name;
         global $token_url;
         global $user;
+        global $post_time;
         for ($i = 1; $i <= count($submit_contents_id); $i++) {
             global ${"submit".$i};
             //コンテンツの個数回データ挿入
@@ -168,7 +171,8 @@ class post{
                     $_SESSION['month'] = NULL;
                     $_SESSION['year'] = NULL;
                 };
-                header("Location:" . $token_url . "?contents=$content_name&language=$language_name&hours=$div_submit_hours");
+                $post_time=date('Y/m/d');
+                header("Location:" . $token_url . "?contents=$content_name&language=$language_name&hours=$div_submit_hours&date=$post_time");
                 exit();
             }
         };

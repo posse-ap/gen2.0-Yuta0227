@@ -54,6 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_email = $_POST['new_email'];
     if ($new_username == null && $new_password == null) {
         if ($manager_data[0]['user_name'] == $username && $manager_data[0]["AES_DECRYPT(`user_password`,'ENCRYPT-KEY')"] == $password && $checkResult == true) {
+            $root_stmt=$dbh->prepare("SELECT * from users where user_name=?");
+            $root_stmt->bindValue(1,$username);
+            $root_stmt->execute();
+            $root_data=$root_stmt->fetchAll();
+            $_SESSION['user']=$root_data;
             header("Location:".$manager_url);
         } elseif ($decode_password[0]["AES_DECRYPT(`user_password`,'ENCRYPT-KEY')"] == $password && $checkResult == true) {
             $users_stmt1 = $dbh->prepare("SELECT * from users where user_name=?");
@@ -61,9 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $users_stmt1->execute();
             $users_data1 = $users_stmt1->fetchAll();
             $_SESSION['user'] = $users_data1;
-            // print_r('<pre>');
-            // var_dump($_SESSION['user']);
-            // print_r('</pre>');
             header("Location:".$webapp_url);
         } else {
             echo 'ログイン失敗';

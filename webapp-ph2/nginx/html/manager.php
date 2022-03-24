@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'db-connect.php';
 require_once "url.php";
 require_once "function.php";
@@ -15,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $delete_time_stmt = $dbh->prepare("DELETE from time where id = ?;");
             $delete_time_stmt->bindValue(1, $delete);
             $delete_time_stmt->execute();
-            header("Location:".$token_url."?delete_id=$delete");
+            $post_time=date('Y/m/d');
+            header("Location:".$token_url."?delete_id=$delete&date=$post_time");
             exit();
         }
     } elseif ($_POST['delete'] != NULL && $_POST['reject_reason'] != NULL) {
@@ -26,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $delete_delete_request_stmt->bindValue(1, $delete);
             $delete_delete_request_stmt->execute();
             $reject_reason = $_POST['reject_reason'];
-            header("Location:".$token_url."?delete_id=$delete&reject_reason=$reject_reason");
+            $post_time=date('Y/m/d');
+            header("Location:".$token_url."?delete_id=$delete&reject_reason=$reject_reason&date=$post_time");
             exit();
         }
     }
