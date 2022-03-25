@@ -12,7 +12,6 @@ $email_array=[];
 foreach($email_data as $data){
     array_push($email_array,$data['user_email']);
 }
-print_r($email_array);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($_POST['delete'] != NULL && $_POST['reject_reason'] == NULL) {
         foreach ($_POST['delete'] as $delete) {

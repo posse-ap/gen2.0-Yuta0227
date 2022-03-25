@@ -23,7 +23,7 @@ if(!isset($_SESSION['start'])){
     $reject_reason=$_GET['reject_reason'];
     $post_fields = [
         "channel" => "#削除依頼",
-        "text" => $_GET['date']."に管理者が削除依頼".$delete_id."を".$reject_reason."の理由で却下しました",
+        "text" => $_GET['date']."に管理者が投稿".$delete_id."の削除依頼を".$reject_reason."の理由で却下しました。",
         "as_user" => true
     ];
 }elseif(isset($_GET['delete_id'])&&!isset($_GET['reject_reason'])&&!isset($_GET['delete_reason'])&&isset($_GET['date'])){
@@ -32,7 +32,7 @@ if(!isset($_SESSION['start'])){
     $delete_id=$_GET['delete_id'];
     $post_fields = [
         "channel" => "#削除依頼",
-        "text" => $_GET['date']."に管理者が削除依頼".$delete_id."を承認しました",
+        "text" => $_GET['date']."に管理者が投稿".$delete_id."の削除依頼を承認しました。",
         "as_user" => true
     ];
 }elseif(isset($_GET['delete_id'])&&isset($_GET['delete_reason'])&&isset($_GET['date'])){

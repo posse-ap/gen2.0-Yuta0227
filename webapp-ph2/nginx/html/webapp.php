@@ -198,7 +198,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                 </div>
             </div>
             <div class="bargraph-container">
-                <canvas id="hour-bargraph"></canvas>
+                <canvas id="hour-bargraph" style="width:100%;height:100%;"></canvas>
             </div>
         </div>
         <!-- 二段目 -->
