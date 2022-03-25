@@ -184,7 +184,7 @@ function start_timer(){
     if (!isset($_SESSION['user'])||!isset($_SESSION['start'])) {
         header("Location:".$login_url);
     }
-    if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > 10)) {
+    if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > 1200)) {
         unset($_SESSION['user']);
         unset($_SESSION['start']);
         header("Location:".$login_url);

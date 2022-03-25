@@ -8,7 +8,7 @@ create table time (
     year int,
     language varchar(255),
     content varchar(255),
-    hours float,
+    hours int,
     content_id int,
     language_id int,
     user_id int,

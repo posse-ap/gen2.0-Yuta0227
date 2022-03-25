@@ -6,6 +6,13 @@ require_once "function.php";
 start_timer();
 $delete_request_stmt = $dbh->query("SELECT delete_id,delete_reason,user_id from delete_request;");
 $delete_request_data = $delete_request_stmt->fetchAll();
+$email_stmt=$dbh->query("SELECT user_email from users where user_id!=1;");
+$email_data=$email_stmt->fetchAll();
+$email_array=[];
+foreach($email_data as $data){
+    array_push($email_array,$data['user_email']);
+}
+print_r($email_array);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($_POST['delete'] != NULL && $_POST['reject_reason'] == NULL) {
         foreach ($_POST['delete'] as $delete) {
@@ -89,7 +96,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h2 style="text-align:center;font-size:25px;padding:20px;">メール作成</h2>
         <form action="" method="POST">
             <div>
-                <textarea style="width:100%;margin:0 auto;" placeholder="送り先を記入してください" type="text" name="to"></textarea>
+                <select name="to">
+                    <?php foreach($email_array as $email){
+                        print_r('<option>'.$email.'</option>');
+                    }?>
+                </select>
             </div>
             <div>
                 <textarea style="width:100%;margin:0 auto;"placeholder="件名を記入してください" type="text" name="title"></textarea>

@@ -131,6 +131,7 @@ for ($j = 1; $j <= date('t'); $j++) {
     };
     array_push($date_array, ${"date_data" . $j}[0]["sum(hours)"]);
 };
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -418,7 +419,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                         <div class="form-right">
                             <div class="hour-container">
                                 <div>学習時間</div>
-                                <textarea type="text" name="hours" id="time" placeholder="半角数字で入力してください" size="20" class="textbox" oninput="value = value.replace(/[^\d]+/i,'');" / required></textarea>
+                                <input type="number" name="hours" id="time" size="20" class="textbox" required></input>
                                 <!-- 半角数字以外入力無効 -->
                             </div>
                             <div class="comment-container">
@@ -470,7 +471,7 @@ for ($j = 1; $j <= date('t'); $j++) {
     var myChart = new Chart(hourBargraphCtx, {
         type: "bar", // ★必須　グラフの種類
         data: {
-            labels: ["2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30"], // Ｘ軸のラベル
+            labels: [,"","2","", "4","", "6","", "8","", "10","", "12","", "14","", "16","", "18","", "20","", "22","", "24","", "26","", "28","", "30"], // Ｘ軸のラベル
             datasets: [{
                 label: "Data", // 系列名
                 data: [
@@ -513,7 +514,7 @@ for ($j = 1; $j <= date('t'); $j++) {
         },
 
         options: { // オプション
-            responsive: true, // canvasサイズ自動設定機能を使わない。HTMLで指定したサイズに固定
+            responsive: false, // canvasサイズ自動設定機能を使わない。HTMLで指定したサイズに固定
             title: { // タイトル
                 display: false, // 表示設定
                 fontSize: 18, // フォントサイズ
@@ -574,8 +575,8 @@ for ($j = 1; $j <= date('t'); $j++) {
                 padding: { // 余白
                     left: 0,
                     right: 0,
-                    top: 50,
-                    bottom: 0
+                    top: 0,
+                    bottom: 1
                 }
             },
             plugins: {
@@ -589,7 +590,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                     display: false
                 }
             },
-            maintainAspectRatio: true
+            // maintainAspectRatio: true
         }
     });
 
