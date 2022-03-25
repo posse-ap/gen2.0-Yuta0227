@@ -9,7 +9,7 @@ class check{
     }
     public function check_login(){
         global $login_url;
-        if ($_SESSION['user'] == NULL) {
+        if ($_SESSION['user'] == NULL||$_SESSION['user'][0]['user_name']=='root') {
             session_destroy();
             header("Location:" . $login_url);
         }
@@ -181,15 +181,13 @@ class post{
 $post=new post;
 function start_timer(){
     global $login_url;
-    if (!isset($_SESSION['user'])) {
+    if (!isset($_SESSION['user'])||!isset($_SESSION['start'])) {
         header("Location:".$login_url);
-    } else {
-        //ログインしてから時間測る
-        $_SESSION['start'] = time();
     }
-    if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > 1200)) {
+    if (isset($_SESSION['start']) && (time() - $_SESSION['start'] > 10)) {
         unset($_SESSION['user']);
         unset($_SESSION['start']);
+        header("Location:".$login_url);
     }
 };
 class delete_data{
