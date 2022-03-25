@@ -5,6 +5,9 @@ require_once "function.php";
 // var_dump($_SESSION['user']);//NULLになってる
 
 start_timer();
+// print_r('<pre>');
+// var_dump($_SESSION);
+// print_r('</pre>');
 require "db-connect.php";
 $user = $_SESSION['user'];
 $moveMonth = $_GET['month'];
@@ -198,7 +201,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                 </div>
             </div>
             <div class="bargraph-container">
-                <canvas id="hour-bargraph" style="width:100%;height:100%;"></canvas>
+                <canvas id="hour-bargraph" style="width:100%;height:90%;"></canvas>
             </div>
         </div>
         <!-- 二段目 -->
@@ -590,7 +593,7 @@ for ($j = 1; $j <= date('t'); $j++) {
                     display: false
                 }
             },
-            // maintainAspectRatio: true
+            maintainAspectRatio: true
         }
     });
 

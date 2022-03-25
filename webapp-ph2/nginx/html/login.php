@@ -6,9 +6,10 @@ session_start();
 //Google認証システムで表示される名前
 $auth_title = "webapp";
 $secret = "";
-if($ga==NULL){
-    $ga = new PHPGangsta_GoogleAuthenticator();
-}
+$ga = new PHPGangsta_GoogleAuthenticator();
+
+
+
 //$secret呼び出し
 if (isset($_SESSION['secret'])) {
     $secret = $_SESSION['secret'];
@@ -18,18 +19,21 @@ if ($secret == "") {
     $_SESSION['secret'] = $secret;
 }
 //QR個＾－度のURLを生成
-$qrCodeUrl = $ga->getQRCodeGoogleUrl($auth_title, $secret);
-
+if($_SESSION['save_qr']==NULL){
+    $qrCodeUrl = $ga->getQRCodeGoogleUrl($auth_title, $secret);
+    $_SESSION['save_qr']=$qrCodeUrl;
+}
 $checkResult = false;
 $is_valid = false; //post判定
 $oneCode = "";
 
 //コードを入力された場合はvarifyCodeで認証する
-if (isset($_POST['one_code']) && isset($_POST['one_code']) != "") {
-    $is_valid = true;
-    $oneCode = $_POST['one_code'];
-    $checkResult = $ga->verifyCode($secret, $oneCode, 2);
-}
+    if (isset($_POST['one_code']) && isset($_POST['one_code']) != "") {
+        $is_valid = true;
+        $oneCode = $_POST['one_code'];
+        $checkResult = $ga->verifyCode($secret, $oneCode, 2);
+    }
+
 
 $manager_stmt = $dbh->query("SELECT user_name,AES_DECRYPT(`user_password`,'ENCRYPT-KEY') from users where user_id=1");
 $manager_data = $manager_stmt->fetchAll();
@@ -93,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location:" . $webapp_url);
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -131,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input id="one_code" type="text" oninput="value = value.replace(/[^0-9A-Za-z_]+/,'');" name="one_code" maxlength="6"></input>
         </div>
         <div style="text-align:center;">
-            <img src="<?php echo $qrCodeUrl; ?>" alt="">
+            <img src="<?php echo $_SESSION['save_qr']; ?>" alt="">
         </div>
         <div style="display:flex;justify-content:center;margin-top:10px;">
             <input type="submit" value="ログイン"></input>

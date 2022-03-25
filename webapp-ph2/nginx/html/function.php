@@ -3,14 +3,16 @@ class check{
     public function check_expire(){
         global $login_url;
         if ($_POST['login_page'] != NULL) {
-            session_destroy();
+            unset($_SESSION['user']);
+            unset($_SESSION['start']);
             header("Location:" . $login_url);
         }
     }
     public function check_login(){
         global $login_url;
         if ($_SESSION['user'] == NULL||$_SESSION['user'][0]['user_name']=='root') {
-            session_destroy();
+            unset($_SESSION['user']);
+            unset($_SESSION['start']);
             header("Location:" . $login_url);
         }
     }
