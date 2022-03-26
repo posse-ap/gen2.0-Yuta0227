@@ -14,10 +14,11 @@ $moveMonth = $_GET['month'];
 $moveYear = $_GET['year'];
 $submit_date = '';
 $check->check_login();
+$post->reset_time();
 //slack投稿日時
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $check->check_expire();
-    $post->reset_time();
+    $post->set_time();
     $post->delete_sql();
     $post->set_date_array();
     $post->set_contents_array();

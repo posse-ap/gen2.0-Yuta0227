@@ -3,12 +3,14 @@ class check{
     public function check_expire(){
         global $login_url;
         if ($_POST['login_page'] != NULL) {
+            //POSTでlogin_pageが送信されたらlogin.phpへ
             unset($_SESSION['user']);
             unset($_SESSION['start']);
             header("Location:" . $login_url);
         }
     }
     public function check_login(){
+        //ログイン済み判定
         global $login_url;
         if ($_SESSION['user'] == NULL||$_SESSION['user'][0]['user_name']=='root') {
             unset($_SESSION['user']);
@@ -35,10 +37,9 @@ class post{
     }
     public function delete_sql(){
         if ($_POST['delete_id']&& $_POST['delete_reason']) {
-            global $post;
             global $moveMonth;
-            global $token_url;
-            $post->receive_post();
+            global $slack_url;
+            $this->receive_post();
             global $dbh;
             global $delete_id;
             global $delete_reason;
@@ -50,12 +51,12 @@ class post{
             $delete_request->bindValue(3, $user[0]['user_id']);
             $delete_request->execute();
             if (isset($_GET['month']) && isset($_GET['year']) && $moveMonth <= 12) {
-                $post->set_time();
+                $this->set_time();
             } else {
-                $post->reset_time();
+                $this->reset_time();
             };
             $post_time=date('Y/m/d');
-            header("Location:" . $token_url . "?delete_id=$delete_id&delete_reason=$delete_reason&date=$post_time");
+            header("Location:" . $slack_url . "?delete_id=$delete_id&delete_reason=$delete_reason&date=$post_time");
             exit();
         };
     }
@@ -136,7 +137,7 @@ class post{
         global $submit_language_id;
         global $content_name;
         global $language_name;
-        global $token_url;
+        global $slack_url;
         global $user;
         global $post_time;
         for ($i = 1; $i <= count($submit_contents_id); $i++) {
@@ -167,14 +168,12 @@ class post{
                 $content_name = $submit_contents[$i - 1]['content_name'];
                 $language_name = $submit_language['language_name'];
                 if (isset($_GET['month']) && isset($_GET['year'])) {
-                    $_SESSION['month'] = $moveMonth;
-                    $_SESSION['year'] = $moveYear;
+                    $this->set_time();
                 } else {
-                    $_SESSION['month'] = NULL;
-                    $_SESSION['year'] = NULL;
+                    $this->reset_time();
                 };
-                $post_time=date('Y/m/d');
-                header("Location:" . $token_url . "?contents=$content_name&language=$language_name&hours=$div_submit_hours&date=$post_time");
+                $post_time=$submit_date['year'].'/'.$submit_date['month'].'/'.$submit_date['date'];
+                header("Location:" . $slack_url . "?contents=$content_name&language=$language_name&hours=$div_submit_hours&date=$post_time");
                 exit();
             }
         };

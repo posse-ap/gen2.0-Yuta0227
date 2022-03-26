@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $delete_time_stmt->bindValue(1, $delete);
             $delete_time_stmt->execute();
             $post_time=date('Y/m/d');
-            header("Location:".$token_url."?delete_id=$delete&date=$post_time");
+            header("Location:".$slack_url."?delete_id=$delete&date=$post_time");
             exit();
         }
     } elseif ($_POST['delete'] != NULL && $_POST['reject_reason'] != NULL) {
@@ -35,11 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $delete_delete_request_stmt->execute();
             $reject_reason = $_POST['reject_reason'];
             $post_time=date('Y/m/d');
-            header("Location:".$token_url."?delete_id=$delete&reject_reason=$reject_reason&date=$post_time");
+            header("Location:".$slack_url."?delete_id=$delete&reject_reason=$reject_reason&date=$post_time");
             exit();
         }
     }
     if($_POST['logout']!=NULL){
+        unset($_SESSION['user']);
+        unset($_SESSION['start']);
         header("Location:".$login_url);
     }
     mb_language("Japanese");
@@ -76,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php for ($i = 0; $i < count($delete_request_data); $i++) { ?>
                 <div style="display:flex;background-color:lightblue;padding:10px;">
                     <div>ユーザーID:<?php echo $delete_request_data[$i]['user_id']; ?></div>
-                    <div>ID:<?php echo $delete_request_data[$i]['delete_id']; ?></div>
+                    <div>投稿ID:<?php echo $delete_request_data[$i]['delete_id']; ?></div>
                     <div style="margin-left:20px;">理由:<?php echo $delete_request_data[$i]['delete_reason']; ?></div>
                     <label>
                         <input name="delete[]" style="margin-left:20px;" type="checkbox" value="<?php echo $delete_request_data[$i]['delete_id']; ?>">
